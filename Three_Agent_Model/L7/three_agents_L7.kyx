@@ -1,0 +1,248 @@
+﻿/* Exported from KeYmaera X v4.8.0 */
+
+Theorem"distance proof"
+Description "Specification for three agents".
+
+Definitions
+
+
+  /*
+  for majority of invariants, we assume i=1, j=2, k=3. For a few invariants, we assume i=3, j=2, k=1.
+  
+  slot1/slot3/etc. - flag variables set to 4 when respective agent replans (i.e. sets a new nonzero estimated robustness) and decrements every step until reaching 0 where it remains
+  l4flg31 - flag variable set to 1 when agent 1 replans, and 3 is not a FN of 1, implying 2 is an FN of 1. increments indefinitely until it resets to 1 or 0 when agent 1 replans
+  exitflg31 - flag set to 1 when N1C3=0 and N1C3=1 one period before
+  
+  These flags are set in the hybrid program before the agents move
+  
+  
+  
+  */
+
+
+  /*Function for calculating distance*/
+  Real distance(Real x1, Real y1, Real x2, Real y2) = (((y1-y2)^2+(x1-x2)^2));
+
+  HP increasedistance ::= {
+      {?((slot1=4)|(slot1=0)|(flgl4<=1)|(slot1+flgl4!=5)|
+        ((slot1=1|slot1=2|slot1=3)&flgl4>1&(slot1+flgl4=5)&distance(x1,y1,x2,y2)<=commrange-slot1*er1/n-slot1*Vm^2*delta^2 & 
+        (distance(x2,y2,x3,y3)<=commrange - (2*slot1)*Vm^2*delta^2)));}  /*Lemma 4 inv 1*/
+        
+      {?(
+          slot1=4 | flgl4<=1 | (slot1+flgl4>5) | ((slot1<4)&flgl4>1&(slot1+flgl4=5)&distance(x1,y1,x2,y2)<=commrange-slot1*er1/n-slot1*Vm^2*delta^2 & 
+        (distance(x2,y2,x3,y3)<=commrange - (2*slot1)*Vm^2*delta^2))
+      );} /*lemma 4 inv 1 rewrite*/
+        
+      /*{?((slot1=4)|(slot1=0)|(flgl4<=1)|(e1N2C3=0)|(e1N3C2=0)|(flgl4+slot1!=5)| ((slot1=1|slot1=2|slot1=3) & flgl4>1 & (flgl4+slot1=5) & N2C3=1 & N3C2=1 & N1C2=1));}*/ /*Lemma 4 inv 2*/
+      
+      /*{?((slot1=4)|(slot1=0)|(flgl4<=1)|(slot12<3)|(flgl4+slot1!=5)|((slot1=1|slot1=2|slot1=3)&flgl4>1 & (flgl4+slot1=5) & slot12=3 & N2C1=1));}*/ /*Lemma 4 inv 3*/
+      
+      /*{?(a3flgl4<=1 | slot3=0 | slot3=4 | a3flgl4+slot3!=5 | loiterflg1=0 | slot1>0 | exitflg31=0 |
+      (a3flgl4>1 & (slot3=1|slot3=2|slot3=3) & 
+      a3flgl4+slot3=5 & loiterflg1=1 &slot1=0 & exitflg31=1 & distance(x1,y1,x2,y2)<=commrange-2*slot3*Vm^2*delta^2
+      & distance(x2,y2,x3,y3)<=commrange - slot3*(er3/n)-slot3*Vm^2*delta^2));}*/  /*Lemma 6 inv 2*/
+      
+      /*{?(slot1 = 4 | flgl4<=1 | exitflg31 = 0 | (slot1+flgl4>5) | 
+    (slot1+flgl4=5 & flgl4>1 & exitflg31=1 & distance(x1,y1,x2,y2)<=commrange-slot1*er1/n-slot1*Vm^2*delta^2 & 
+        (distance(x2,y2,x3,y3)<=commrange - (2*slot1)*Vm^2*delta^2)));}*/
+      {?(flgl4<=1 | (flgl4>1&distance(x1,y1,x2,y2)<=commrange));}
+      {?(a3flgl4<=1 | (a3flgl4>1&distance(x2,y2,x3,y3)<=commrange));}
+      
+  };
+  
+  Bool l6invariant1(Real N3C1,Real slot1, Real flgl4, Real v3, Real w3, Real N1C2, Real N2C3, Real N3C2, Real e1N2C3, Real e1N3C2)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | v3!=0 | w3!=0 | flgl4+slot1!=5 | e1N2C3=0 | e1N3C2=0 | (flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & v3=0 & w3=0 & (N3C1=0|N3C1=1) & N1C2=1 & N2C3=1 & N3C2=1)  
+  );
+  
+  Bool l6invariant2(Real N3C1,Real slot1, Real flgl4, Real v3, Real w3, Real x1, Real y1, Real x2, Real y2, Real commrange, Real er1, Real n, Real Vm, Real delta)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | v3!=0 | w3!=0 | flgl4+slot1!=5| (flgl4>1 & (slot1=1|slot1=2|slot1=3) & 
+      flgl4+slot1=5 & v3=0 & w3=0 & (N3C1=0|N3C1=1) & distance(x1,y1,x2,y2)<=commrange-slot1*(er1/n)-slot1*Vm^2*delta^2)
+  ); /*i=3, j=2, k=1*/
+  
+  Bool l6invariant2reverse()<->
+  (
+      a3flgl4<=1 | slot3=0 | slot3=4 | a3flgl4+slot3!=5 | loiterflg1=0 | slot1>0 | exitflg31=0 |
+      (a3flgl4>1 & (slot3=1|slot3=2|slot3=3) & 
+      a3flgl4+slot3=5 & loiterflg1=1 &slot1=0 & exitflg31=1 & distance(x1,y1,x2,y2)<=commrange-2*slot3*Vm^2*delta^2
+      & distance(x2,y2,x3,y3)<=commrange - slot3*(er3/n)-slot3*Vm^2*delta^2) 
+  ); /*i=1, j=2, k=3*/
+  
+  Bool l5invariant1(Real slot1)<->
+  (
+    slot1 = 4 | flgl4<=1 | exitflg31 = 0 | 
+    (slot1+flgl4>=5 & flgl4>1 & exitflg31=1 & distance(x1,y1,x2,y2)<=commrange-slot1*er1/n-slot1*Vm^2*delta^2 & 
+        (distance(x2,y2,x3,y3)<=commrange - (2*slot1)*Vm^2*delta^2))
+  );
+  
+  Bool l6invariant3(Real N3C1,Real slot1, Real flgl4, Real v3, Real w3, Real slot12, Real N2C1)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | v3!=0 | w3!=0 | flgl4+slot1!=5| slot12<3 | (flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & v3=0 & w3=0 & (N3C1=0|N3C1=1) & slot12=3 & N2C1=1)
+  );
+  
+  Bool l7invariant1(Real slot1, Real flgl4, Real loiterflg1, Real loiterflg3, Real exitflg31,
+  Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real commrange, Real er1, Real n, Real Vm, Real delta)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | flgl4+slot1!=5 | loiterflg1=0 | loiterflg3 = 0 | exitflg31 = 0 | 
+      (
+          flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & loiterflg1=1 & loiterflg3 = 1 & exitflg31=1 & distance(x1,y1,x2,y2)<=commrange-slot1*(er1/n)-slot1*Vm^2*delta^2 
+          & distance(x2,y2,x3,y3)<= commrange - (2*slot1)*Vm^2*delta^2
+      )
+  );
+  
+  Bool l7invariant2(Real slot1, Real flgl4, Real loiterflg1, Real loiterflg3, Real exitflg31,
+  Real N3C2, Real N2C3, Real N1C2,  Real e1N2C3, Real e1N3C2)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | flgl4+slot1!=5 | loiterflg1=0 | loiterflg3 = 0 | exitflg31 = 0 | e1N2C3=0 | e1N3C2=0 |
+      (
+          flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & loiterflg1=1 & loiterflg3 = 1 & exitflg31=1 & N3C2=1 & N2C3=1 & N1C2=1
+      )
+  );
+  
+  Bool l7invariant3(Real slot1, Real a3flgl4, Real loiterflg1, Real loiterflg3, Real exitflg31,
+  Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real commrange, Real er3, Real n, Real Vm, Real delta, Real slot3)<->
+  (
+      slot1>0 | a3flgl4 <=1 | loiterflg3=0 | loiterflg1=0 | exitflg31=0 | slot3 = 0 | slot3=4| a3flgl4+slot3!=5 |
+      (slot1=0 & (slot3=1|slot3=2|slot3=3)& a3flgl4>1 & loiterflg1=1 & loiterflg3=1 & exitflg31=1 &a3flgl4+slot3=5& distance(x1,y1,x2,y2)<=commrange-2*slot3*Vm^2*delta^2
+      & distance(x2,y2,x3,y3)<=commrange - slot3*(er3/n)-slot3*Vm^2*delta^2)
+  );
+  
+  Bool l7invariant4(Real slot1, Real slot3, Real loiterflg1, Real loiterflg3, Real exitflg31,
+  Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real commrange, Real er1, Real n, Real Vm, Real delta, Real flgl4, Real a3flgl4)<->
+  (
+      slot1>0 | slot3>0 | loiterflg1=0 | loiterflg3=0 | exitflg31=0 | flgl4<=1 | a3flgl4<=1 |
+      (slot1=0 & slot3=0 & loiterflg1=1 & loiterflg3=1 & exitflg31=1 & flgl4>1 & a3flgl4>1 & distance(x1,y1,x2,y2)<=commrange 
+          & distance(x2,y2,x3,y3)<= commrange)
+  );
+  
+  Bool varinv(Real N3C1)<->
+  ((N3C1=1|N3C1=0));
+
+  Bool init(Real N3C1,Real slot1, Real flgl4, Real v3, Real w3, Real x1, Real y1, Real x2, Real y2, Real commrange, Real er1, Real n, Real Vm, Real delta, Real N1C2, Real N2C3, Real N3C2) <->
+  (
+      N3C1 = 0 & slot1 = 4 & flgl4 = 1 & v3 = 0 & w3 = 0 & N1C2 = 1 & N2C3=1 & N3C2=1 & distance(x1,y1,x2,y2)<commrange & commrange=100 & er1>0 & n=3 & Vm = 1 & delta=10 &
+      e1N2C3=1 & e1N3C2=1
+  );
+  
+  
+End.
+
+
+
+ProgramVariables
+
+  Real x1, y1, x2, y2, x3, y3;
+  Real Vm, er1, n, commrange, N3C1, slot1, flgl4, N1C2, N2C3, N3C2;
+  Real delta;
+  Real slot12, N2C1, e1N2C3, e1N3C2, v3, w3;
+  Real loiterflg1, loiterflg3, exitflg31, a3flgl4, slot3, er3;
+
+  
+End.
+
+
+Problem
+
+  (N3C1=0|N3C1=1) & (e1N2C3=0|e1N2C3=1) & (e1N3C2=0|e1N3C2=1) &
+  (loiterflg1=0|loiterflg1=1) & (loiterflg3=0|loiterflg3=1) & (exitflg31=0|exitflg31=1) &
+  (slot1=1|slot1=0) & (slot3=1|slot3=0)
+  ->                          
+  [{increasedistance;}]
+   (l7invariant4( slot1,  slot3,  loiterflg1,  loiterflg3,  exitflg31,
+   x1,  y1,  x2,  y2,  x3,  y3,  commrange,  er1,  n,  Vm,  delta,  flgl4,  a3flgl4))
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+nil
+End.
+
+Tactic "distance proof: Proof"
+implyR(1) ; US("varinv(•)~>•=1|•=0") ; US("l7invariant4((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17))~>•_0>0|•_1>0|•_2=0|•_3=0|•_4=0|•_16<=1|•_17<=1|•_0=0&•_1=0&•_2=1&•_3=1&•_4=1&•_0+•_16>5&distance((•_5,•_6,•_7,•_8))<=•_11-•_0*(•_12/•_13)-•_0*•_14^2*•_15^2&distance((•_7,•_8,•_9,•_10))<=•_11-2*•_0*•_14^2*•_15^2") ; US("l6invariant2reverse()~>a3flgl4<=1|slot3=0|slot3=4|a3flgl4+slot3!=5|loiterflg1=0|slot1>0|exitflg31=0|a3flgl4>1&(slot3=1|slot3=2|slot3=3)&a3flgl4+slot3=5&loiterflg1=1&slot1=0&exitflg31=1&distance((x1,y1,x2,y2))<=commrange-2*slot3*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-slot3*(er3/n)-slot3*Vm^2*delta^2") ; US("init((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16))~>•_0=0&•_1=4&•_2=1&•_3=0&•_4=0&•_14=1&•_15=1&•_16=1&distance((•_5,•_6,•_7,•_8)) < •_9&•_9=100&•_10>0&•_11=3&•_12=1&•_13=10&e1N2C3=1&e1N3C2=1") ; US("l7invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15))~>•_0=0|•_0=4|•_1<=1|•_1+•_0!=5|•_2=0|•_3=0|•_4=0|•_1>1&(•_0=1|•_0=2|•_0=3)&•_1+•_0=5&•_2=1&•_3=1&•_4=1&distance((•_5,•_6,•_7,•_8))<=•_11-•_0*(•_12/•_13)-•_0*•_14^2*•_15^2&distance((•_7,•_8,•_9,•_10))<=•_11-2*•_0*•_14^2*•_15^2") ; US("l6invariant3((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_5 < 3|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&•_5=3&•_6=1") ; US("l6invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_8=0|•_9=0|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&•_5=1&•_6=1&•_7=1") ; US("l7invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9))~>•_0=0|•_0=4|•_1<=1|•_1+•_0!=5|•_2=0|•_3=0|•_4=0|•_8=0|•_9=0|•_1>1&(•_0=1|•_0=2|•_0=3)&•_1+•_0=5&•_2=1&•_3=1&•_4=1&•_5=1&•_6=1&•_7=1") ; US("l6invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&distance((•_5,•_6,•_7,•_8))<=•_9-•_1*(•_10/•_11)-•_1*•_12^2*•_13^2") ; US("l7invariant3((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16))~>•_0>0|•_1<=1|•_3=0|•_2=0|•_4=0|•_16=0|•_16=4|•_1+•_16!=5|•_0=0&(•_16=1|•_16=2|•_16=3)&•_1>1&•_2=1&•_3=1&•_4=1&•_1+•_16=5&distance((•_5,•_6,•_7,•_8))<=•_11-2*•_16*•_14^2*•_15^2&distance((•_7,•_8,•_9,•_10))<=•_11-•_16*(•_12/•_13)-•_16*•_14^2*•_15^2") ; US("l5invariant1(•)~>•=4|flgl4<=1|exitflg31=0|•+flgl4>=5&flgl4>1&exitflg31=1&distance((x1,y1,x2,y2))<=commrange-•*er1/n-•*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-2*•*Vm^2*delta^2") ; US("increasedistance;~>?slot1=4|slot1=0|flgl4<=1|slot1+flgl4!=5|(slot1=1|slot1=2|slot1=3)&flgl4>1&slot1+flgl4=5&distance((x1,y1,x2,y2))<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-2*slot1*Vm^2*delta^2;?slot1=4|flgl4<=1|slot1+flgl4>5|slot1 < 4&flgl4>1&slot1+flgl4=5&distance((x1,y1,x2,y2))<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-2*slot1*Vm^2*delta^2;?slot1=4|slot1=0|flgl4<=1|e1N2C3=0|e1N3C2=0|flgl4+slot1!=5|(slot1=1|slot1=2|slot1=3)&flgl4>1&flgl4+slot1=5&N2C3=1&N3C2=1&N1C2=1;?slot1=4|slot1=0|flgl4<=1|slot12 < 3|flgl4+slot1!=5|(slot1=1|slot1=2|slot1=3)&flgl4>1&flgl4+slot1=5&slot12=3&N2C1=1;?slot1=4|flgl4<=1|exitflg31=0|slot1+flgl4>5|slot1+flgl4=5&flgl4>1&exitflg31=1&distance((x1,y1,x2,y2))<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-2*slot1*Vm^2*delta^2;") ; US("distance((•_0,•_1,•_2,•_3))~>(•_1-•_3)^2+(•_0-•_2)^2") ; unfold ; hideL(-1=="slot1=4|slot1=0|flgl4<=1|slot1+flgl4!=5|(slot1=1|slot1=2|slot1=3)&flgl4>1&slot1+flgl4=5&(y1-y2)^2+(x1-x2)^2<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&(y2-y3)^2+(x2-x3)^2<=commrange-2*slot1*Vm^2*delta^2") ; hideL(-1=="slot1=4|flgl4<=1|slot1+flgl4>5|slot1 < 4&flgl4>1&slot1+flgl4=5&(y1-y2)^2+(x1-x2)^2<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&(y2-y3)^2+(x2-x3)^2<=commrange-2*slot1*Vm^2*delta^2") ; hideL(-1=="slot1=4|slot1=0|flgl4<=1|e1N2C3=0|e1N3C2=0|flgl4+slot1!=5|(slot1=1|slot1=2|slot1=3)&flgl4>1&flgl4+slot1=5&N2C3=1&N3C2=1&N1C2=1") ; hideL(-1=="slot1=4|slot1=0|flgl4<=1|slot12 < 3|flgl4+slot1!=5|(slot1=1|slot1=2|slot1=3)&flgl4>1&flgl4+slot1=5&slot12=3&N2C1=1") ; orL(-1) ; <(
+  QE,
+  orL(-1) ; <(
+    QE,
+    orL(-1) ; <(
+      QE,
+      orL(-1) ; <(
+        nil,
+        nil
+        )
+      )
+    )
+  )
+End.
+
+Tactic "distance proof: Proof"
+implyR(1) ; US("varinv(•)~>•=1|•=0");US("l7invariant4((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17))~>•_0>0|•_1>0|•_2=0|•_3=0|•_4=0|•_16<=1|•_17<=1|•_0=0&•_1=0&•_2=1&•_3=1&•_4=1&•_16>1&•_17>1&distance((•_5,•_6,•_7,•_8))<=•_11&distance((•_7,•_8,•_9,•_10))<=•_11");US("l6invariant2reverse()~>a3flgl4<=1|slot3=0|slot3=4|a3flgl4+slot3!=5|loiterflg1=0|slot1>0|exitflg31=0|a3flgl4>1&(slot3=1|slot3=2|slot3=3)&a3flgl4+slot3=5&loiterflg1=1&slot1=0&exitflg31=1&distance((x1,y1,x2,y2))<=commrange-2*slot3*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-slot3*(er3/n)-slot3*Vm^2*delta^2");US("init((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16))~>•_0=0&•_1=4&•_2=1&•_3=0&•_4=0&•_14=1&•_15=1&•_16=1&distance((•_5,•_6,•_7,•_8)) < •_9&•_9=100&•_10>0&•_11=3&•_12=1&•_13=10&e1N2C3=1&e1N3C2=1");US("l7invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15))~>•_0=0|•_0=4|•_1<=1|•_1+•_0!=5|•_2=0|•_3=0|•_4=0|•_1>1&(•_0=1|•_0=2|•_0=3)&•_1+•_0=5&•_2=1&•_3=1&•_4=1&distance((•_5,•_6,•_7,•_8))<=•_11-•_0*(•_12/•_13)-•_0*•_14^2*•_15^2&distance((•_7,•_8,•_9,•_10))<=•_11-2*•_0*•_14^2*•_15^2");US("l6invariant3((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_5 < 3|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&•_5=3&•_6=1");US("l6invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_8=0|•_9=0|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&•_5=1&•_6=1&•_7=1");US("l7invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9))~>•_0=0|•_0=4|•_1<=1|•_1+•_0!=5|•_2=0|•_3=0|•_4=0|•_8=0|•_9=0|•_1>1&(•_0=1|•_0=2|•_0=3)&•_1+•_0=5&•_2=1&•_3=1&•_4=1&•_5=1&•_6=1&•_7=1");US("l6invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&distance((•_5,•_6,•_7,•_8))<=•_9-•_1*(•_10/•_11)-•_1*•_12^2*•_13^2");US("l7invariant3((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16))~>•_0>0|•_1<=1|•_3=0|•_2=0|•_4=0|•_16=0|•_16=4|•_1+•_16!=5|•_0=0&(•_16=1|•_16=2|•_16=3)&•_1>1&•_2=1&•_3=1&•_4=1&•_1+•_16=5&distance((•_5,•_6,•_7,•_8))<=•_11-2*•_16*•_14^2*•_15^2&distance((•_7,•_8,•_9,•_10))<=•_11-•_16*(•_12/•_13)-•_16*•_14^2*•_15^2");US("l5invariant1(•)~>•=4|flgl4<=1|exitflg31=0|•+flgl4>=5&flgl4>1&exitflg31=1&distance((x1,y1,x2,y2))<=commrange-•*er1/n-•*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-2*•*Vm^2*delta^2");US("increasedistance;~>?slot1=4|slot1=0|flgl4<=1|slot1+flgl4!=5|(slot1=1|slot1=2|slot1=3)&flgl4>1&slot1+flgl4=5&distance((x1,y1,x2,y2))<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-2*slot1*Vm^2*delta^2;?slot1=4|flgl4<=1|slot1+flgl4>5|slot1 < 4&flgl4>1&slot1+flgl4=5&distance((x1,y1,x2,y2))<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-2*slot1*Vm^2*delta^2;?flgl4<=1|flgl4>1&distance((x1,y1,x2,y2))<=commrange;?a3flgl4<=1|a3flgl4>1&distance((x2,y2,x3,y3))<=commrange;");US("distance((•_0,•_1,•_2,•_3))~>(•_1-•_3)^2+(•_0-•_2)^2") ; unfold ; hideL(-2=="slot1=4|flgl4<=1|slot1+flgl4>5|slot1 < 4&flgl4>1&slot1+flgl4=5&(y1-y2)^2+(x1-x2)^2<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&(y2-y3)^2+(x2-x3)^2<=commrange-2*slot1*Vm^2*delta^2") ; hideL(-1=="slot1=4|slot1=0|flgl4<=1|slot1+flgl4!=5|(slot1=1|slot1=2|slot1=3)&flgl4>1&slot1+flgl4=5&(y1-y2)^2+(x1-x2)^2<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&(y2-y3)^2+(x2-x3)^2<=commrange-2*slot1*Vm^2*delta^2") ; QE
+End.
+
+End.

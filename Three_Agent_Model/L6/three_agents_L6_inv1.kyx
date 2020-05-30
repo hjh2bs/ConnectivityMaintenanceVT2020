@@ -1,0 +1,1198 @@
+﻿/* Exported from KeYmaera X v4.8.0 */
+
+Theorem"Three Agents L6 inv1"
+Description "Specification for three agents".
+
+Definitions
+
+/*  Real n = 3;
+ /* Real delta = 10;
+  Real commrange = 100.0;*/
+  Real DL = 0;
+
+  /*Function for calculating distance*/
+  Real distance(Real x1, Real y1, Real x2, Real y2) = (((y1-y2)^2+(x1-x2)^2));
+
+/*  Real p1(Real j, Real k, Real newtransmitter, Real n) = abs(newtransmitter-j) + n + 1;
+  Real p2(Real k, Real newtransmitter, Real n) = abs(newtransmitter-k) + n + 1;*/
+
+  Real p1(Real j, Real newtransmitter, Real n) = newtransmitter - j + 2*n + 1; /* when j >= i_s*/
+  Real p2(Real j, Real newtransmitter,  Real n) = newtransmitter - j + n + 1; /* when j < i_s*/
+  
+  HP computea1t3 ::=
+  {
+    
+    {/*store old values of N and P for agent 1*/
+      {N1C2old:=N1C2;N1C3old:=N1C3;}
+      {P1C2old:=P1C2;P1C3old:=P1C3;}
+    }
+    
+    /*Computing the set Nbar and updating NiC (4 cases)*/
+    {
+        {?(N1C3=1 & e1N3C1=1); N1C3bar:= N1C3; N1C2bar:= N1C2;} /* why is e1N3C1 not used*/ /* N1C2 and N1C3 remain unchanged as 1 receives information from 3*/
+        ++ {?(N1C3=1 & e1N3C1=0); N1C3 := 0; N1C3bar:= 0; N1C2bar:= N1C2;} /*3 is removed from 1's N1C*/
+        ++ {?(N1C3=0 & e1N3C1=1); N1C3 := 1; N1C3bar:= 1; N1C2 := max(N1C2,e1P3C1); N1C2bar:= max(N1C2, e1P3C1);} /*3 is added to 1's NiC*/ /*2 is added if it is already in N1C or e1P3C1 = 1*/
+        ++ {?(N1C3=0 & e1N3C1=0); unchange1:=1;} /*if 3 is a new agent, then both N1C2 and N1C3 remain unchanged and N1C3bar and N1C2bar are set to zero*/
+    }
+    
+    {?(unchange1!=1);
+
+      /**************************************Rewrite of the previous section calculating pathdist123**********************************/
+      {
+            {
+                ?(
+                    N1C3bar=1 & N1tilde3=1 &
+                    commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p1(2,1,3)*Vm^2*delta^2 + p1(3,1,3)*Vm^2*delta^2 + 2*DL) <= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL)&
+                    commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p1(2,1,3)*Vm^2*delta^2 + p1(3,1,3)*Vm^2*delta^2 + 2*DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm^2*delta^2 + DL)
+                );
+                pathdist123 := commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p1(2,1,3)*Vm^2*delta^2 + p1(3,1,3)*Vm^2*delta^2 + 2*DL);
+                P1C2:=1;
+            }++
+            {
+                ?(
+                    N1C3bar=1 & N1tilde3=1 &
+                    commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p1(2,1,3)*Vm^2*delta^2 + p1(3,1,3)*Vm^2*delta^2 + 2*DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL)&
+                    commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm^2*delta^2 + DL)
+                );
+                pathdist123 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL);
+                P1C2:=1;
+            }++
+            {
+                ?(
+                    (
+                        N1C3bar=1 & N1tilde3=1 &
+                        commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm^2*delta^2 + DL) >= commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p1(2,1,3)*Vm^2*delta + p1(3,1,3)*Vm^2*delta^2 + 2*DL) &
+                        commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm^2*delta^2 + DL) >= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL)
+                    ) | 
+                    (N1C3bar=1 & N1tilde3=0)
+                );
+                pathdist123 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm^2*delta^2 + DL); 
+                P1C2:=0;
+            } ++
+            {?(N1C3bar=0); P1C3:=0; pathdist123:=0;}
+    }
+
+    
+    {
+        {
+            ?(
+                N1C2bar=1 & N1tilde2=1 &
+                commrange - (distance(e1x3,e1y3,e1x2,e1y2) + p1(3,1,3)*Vm*delta + p1(2,1,3)*Vm*delta + 2*DL) <= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm*delta + DL) &
+                commrange - (distance(e1x3,e1y3,e1x2,e1y2) + p1(3,1,3)*Vm*delta + p1(2,1,3)*Vm*delta + 2*DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL)
+            );
+            pathdist132 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL);
+            P1C3:=1;
+        } ++
+        {
+            ?(
+                N1C2bar=1 & N1tilde2=1 &
+                commrange - (distance(e1x3,e1y3,e1x2,e1y2) + p1(3,1,3)*Vm*delta + p1(2,1,3)*Vm*delta + 2*DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm*delta + DL) &
+                commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm*delta + DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL)
+            );
+            pathdist132 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm*delta + DL);
+            P1C3:=1;
+        } ++
+        {
+            ?(
+                (
+                    N1C2bar=1 & N1tilde2=1 &
+                    commrange - (distance(e1x3,e1y3,e1x2,e1y2) + p1(3,1,3)*Vm*delta + p1(2,1,3)*Vm*delta + 2*DL) <= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL) &
+                    commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,1,3)*Vm*delta + DL) <= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL)
+                ) | 
+                (N1C2bar=1 & N1tilde2=0)
+            );
+            pathdist132 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p1(2,1,3)*Vm^2*delta^2 + DL);
+            P1C3:=0;
+        } ++
+        {?(N1C2bar=0);P1C2:=0;pathdist132:=0;}
+    }
+    
+    /********************************************************/
+    
+    {
+        {
+            ?(
+                (N1C3bar = 1|N1C2bar = 1) &
+                (N1C3old=0 & e1N3C1=0)
+            );
+            N1C2 := N1C2old; /* revert to old values*/
+            N1C3 := N1C3old;
+            P1C2 := max(P1C2old*N1C2bar,P1C2old);
+            P1C3 := max(P1C3old*N1C3bar,P1C3old);
+        }++
+        {
+            ?(
+                (N1C3bar = 1|N1C2bar = 1) &
+                (N1C3old=1 | e1N3C1=1)
+            );
+            er1bar := max(min(pathdist123, pathdist132) - DL,0);
+            er1 := er1bar;      /*Agent 1 replans, set flag variables here */
+            {
+                {?(er1>0); slot1:=4;}++
+                {?(er1<=0);}
+            }
+        }++
+        {
+            ?(N1C3bar=0 & N1C2bar=0);
+            er1:=0; 
+            N1C2:=0; 
+            N1C3:=0; 
+            P1C2:=0; 
+            P1C3:=0;
+        }
+    }
+    
+    
+    /****************************************/
+    
+    /*{
+      {
+        ?(er1bar<=0); 
+        P1C2:=P1C2old;
+        P1C3:=P1C3old;
+      }
+    }*/
+    unchange1:=0;
+    }
+  };
+
+  HP updatea1t3 ::= {
+    {
+      ?(rflga1t3=1);
+/*      e1x3:=xt;e1y3:=yt;
+      e1N3C1:=NIC1t;               
+      e1N3C2:=NIC2t;
+      e1P3C1:=PIC1t;        
+      e1P3C2:=PIC2t;*/        
+      computea1t3;
+    } ++
+    {
+        ?(rflga1t3=0); /*update NiC*/
+        N1C3:=0; P1C3:=0; /*N1C2 and P1C2 remain unchanged*/
+    }
+  };
+
+/***************************************************************************************************************************************************************************************************************************/
+ HP computea1t2 ::=
+  {
+    {
+      {N1C2old:=N1C2;N1C3old:=N1C3;}
+      {P1C2old:=P1C2;P1C3old:=P1C3;}
+    }
+    {
+        {?(N1C2=1 & e1N2C1=1); N1C2bar:= N1C2; N1C3bar:= N1C3;}
+        /*++ {?(N1C2=1 & e1N2C1=0); N1C2:=0; N1C2bar:= 0; N1C3bar:=N1C3;}*/
+        ++ {?(N1C2=0 & e1N2C1=1); N1C2:=1; N1C2bar:= 1; N1C3 := max(N1C3,e1P2C1); N3C2bar:= max(N1C3,e1P2C1);}
+        /*++ {?(N1C2=0 & e1N2C1=0); N1C2bar:= 1; N1C3bar:= N1C3;}*/
+    }
+    /*{ 
+      {
+        ?(N1C3bar=1 & e1N3C1=1);      
+        N1tilde3:= N1C2bar*e1N3C2*e1N2C3;    
+      } ++ {?(N1C3bar=1 & e1N3C1=0); N1tilde3:=0;}  
+    }*/
+     /*{
+      {
+        ?(N1C3bar=1 & N1tilde3=1);
+        pathdist123A := min(commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,3)*Vm^2*delta^2 + DL), commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,3)*Vm^2*delta^2 + p1(3,3)*Vm^2*delta^2 + 2*DL));
+        pathdist123B := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3)*Vm^2*delta^2 + DL);
+        {{?(pathdist123A > pathdist123B); pathdist123 := pathdist123A; P1C2:=1;} ++ {?(pathdist123B >= pathdist123A); pathdist123 := pathdist123B; P1C2:=0;}}
+      } ++ 
+      {?(N1C3bar=1 & N1tilde3=0); pathdist123:= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3)*Vm^2*delta^2 + DL); P1C2:=0;} ++ 
+      {?(N1C3bar=0); P1C3:=0;}
+    }*/
+    
+    
+    {
+        {
+            ?(
+                N1C3bar=1 & N1tilde3=1 &
+                commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,3)*Vm^2*delta^2 + DL) <= commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,3)*Vm*delta + p1(3,3)*Vm^2*delta^2 + 2*DL) &
+                commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,3)*Vm^2*delta^2 + DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3)*Vm^2*delta^2 + DL)
+            );
+            pathdist123 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,3)*Vm^2*delta^2 + DL);
+            P1C2:=1;
+        }++
+        {
+            ?(
+                N1C3bar=1 & N1tilde3=1 &
+                commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,3)*Vm^2*delta^2 + DL) > commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,3)*Vm^2*delta^2 + p1(3,3)*Vm^2*delta^2 + 2*DL) &
+                commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,3)*Vm^2*delta^2 + p1(3,3)*Vm^2*delta^2 + 2*DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3)*Vm^2*delta^2 + DL)
+            );
+            pathdist123 := commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,3)*Vm^2*delta^2 + p1(3,3)*Vm^2*delta^2 + 2*DL);
+            P1C2:=1;
+        }++
+        {
+            ?(
+                (N1C3bar=1 & N1tilde3=1 &
+                commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,3)*Vm^2*delta^2 + DL) <=  commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3)*Vm^2*delta^2 + DL) &
+                commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,3)*Vm^2*delta^2 + p1(3,3)*Vm^2*delta^2 + 2*DL) <= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3)*Vm^2*delta^2 + DL))
+                | (N1C3bar=1 & N1tilde3=0)
+            );
+            pathdist123 :=  commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3)*Vm^2*delta^2 + DL);
+            P1C2:=0;
+        }++
+        {
+            ?(N1C3bar=0); P1C3:=0; pathdist123:=0;
+        }
+    }
+    /*{ 
+      {
+        ?(N1C2bar=1 & e1N2C1=1);      
+        N1tilde2:= N1C3bar*e1N2C3*e1N3C2;    
+      } ++ {?(N1C2bar=1 & e1N2C1=0); N1tilde2:=0;}  
+    }*/
+    /*{
+      {
+        ?(N1C2bar=1 & N1tilde2=1); */         /* line 33*/
+        /*pathdist132A := min(commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3)*Vm*delta + DL), commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,3)*Vm*delta + p1(3,3)*Vm*delta + 2*DL));
+        pathdist132B := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,3)*Vm*delta + DL);
+        {{?(pathdist132A > pathdist132B); pathdist132 := pathdist132A; P1C3:=1;} ++ {?(pathdist132B >= pathdist132A); pathdist132 := pathdist132B; P1C3:=0;}}
+      } ++ 
+      {?(N1C2bar=1 & N1tilde2=0); pathdist132:= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,3)*Vm*delta + DL); P1C3:=0;} ++ 
+      {?(N1C2bar=0); P1C2:=0;}
+    }*/
+    
+    {
+        {?(N1C3bar = 1 | N1C2bar = 1);
+           /*er1bar := max(min(pathdist123, pathdist132) - DL,0);  line 41, */ 
+           /*****Compute er1bar Lemma 4 inv1b***/
+           er1bar:= max(pathdist123-DL,0);
+           {{
+             /*2 is a new agent*/
+                ?(N1C2old=0 & e1N2C1=0); 
+                {{
+                    ?(er1bar>er1);      /*line 43-45*/
+                    er1 := er1bar;
+                    N1C2 := N1C2bar;
+                    N1C3 := N1C3bar;
+                    {?(er1>0); slot1:=4;A1FN2:= N1C2*(1-P1C3);A1FN3:=N1C3*(1-P1C2);}
+                } ++ 
+                { 
+                    ?(er1bar<=er1);
+                    N1C2 := N1C2old;
+                    N1C3 := N1C3old;
+                    P1C2 := max(P1C2old*N1C2bar,P1C2old);
+                    P1C3 := max(P1C3old*N1C3bar,P1C3old);
+                }}
+            
+            } ++
+           {?(N1C2old=1 | e1N2C1=1); er1:=er1bar; {?(er1>0); slot1:=4;A1FN2:= N1C2*(1-P1C3);A1FN3:=N1C3*(1-P1C2);}}}
+        } ++ 
+        {?(N1C3bar=0 & N1C2bar=0); er1:=0; N1C2:=0; N1C3:=0; P1C2:=0; P1C3:=0;} /*lines 52-53*/
+    }
+    
+    /*{
+      {
+        ?(er1bar<=0); 
+        P1C2:=P1C2old;
+        P1C3:=P1C3old;
+      }
+    }*/
+  };
+
+  HP updatea1t2 ::= {
+    {
+      ?(rflga1t2=1);
+      /*e1x2:=xt;e1y2:=yt;
+      e1N2C1:=NIC1t;               
+      e1N2C3:=NIC3t;
+      e1P2C1:=PIC1t;        
+      e1P2C3:=PIC3t;*/        
+      computea1t2;
+    }
+    ++
+    { 
+      ?(rflga1t2=0);
+      N1C2:=0; P1C2:=0;
+    }
+  };
+
+/***************************************************************************************************************************************************************************************************************************/
+  HP computea2t1 ::=
+  {
+    {/*store old values of N and P for agent 2*/
+      {N2C1old:=N2C1; N2C3old:=N2C3;}
+      {P2C1old:=P2C1; P2C3old:=P2C3;}
+    }
+    /*4 cases*/
+    {
+        {?(N2C1=1 & e2N1C2=1); N2C1bar:= N2C1; N2C3bar:= N2C3;}
+        /*++ 
+        {?(N2C1=1 & e2N1C2=0); N2C1 := 0; N2C1bar:= 0; N2C3bar:= N2C3;}*/
+        ++ 
+        {?(N2C1=0 & e2N1C2=1); N2C1 := 1; N2C1bar:= 1; N2C3 := max(N2C3,e2P1C2); N2C3bar:= max(N2C3, e2P1C2);}
+        /*++ 
+        {?(N2C1=0 & e2N1C2=0); unchange2:=1;}*/
+    }
+    
+    {?(unchange2!=1);/*
+    { 
+      {
+        ?(N2C1bar=1 & e2N1C2=1);*/      /*for k in N_bar, we clear PiC(t, k), then check N_k^c to obtain j to use for est_r*/
+        /*N2tilde1:= N2C3bar * e2N3C2 * e2N3C1 * e2N1C3; */   /*Line 28, in the case where j=3, i=2, k=1*/
+      /*} ++ {?(N2C1bar=1 & e2N1C2=0); N2tilde1:=0;}*/  /*Line 32 for when k=1*/
+    /*}*/
+      
+    /*{
+      {
+        ?(N2C1bar=1 & N2tilde1=1);  */       /* line 33*/
+        /*pathdist231A :=  min(commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2,3)*Vm*delta + DL), commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2,3)*Vm*delta + p2(1,2,3)*Vm*delta + 2*DL));
+        pathdist231B := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2,3)*Vm*delta + DL);
+        {{?(pathdist231A > pathdist231B); pathdist231 := pathdist231A; P2C3:=1;} ++ {?(pathdist231B >= pathdist231A); pathdist231 := pathdist231B; P2C3:=0;}}
+      } 
+        ++ {?(N2C1bar=1 & N2tilde1=0); pathdist231:= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2,3)*Vm*delta + DL); P2C3:=0;} ++
+        {?(N2C1bar=0); P2C1:=0;}*/ /* 39 */
+    /*}*/
+
+    /*{ 
+      {
+        ?(N2C3bar=1 & e2N3C2=1); */     /*for k in N_bar, we clear PiC(t, k), then check N_k^c to obtain j to use for est_r*/
+        /*N2tilde3:= N2C1bar * e2N1C2 * e2N1C3 * e2N3C1;*/    /*Line 28, in the case where j=1, i=2, k=3*/
+      /*} ++ {?(N2C3bar=1 & e2N3C2=0); N2tilde3:=0;}*/  /*Line 32 for when k=1*/
+    /*}*/
+      
+    /*{
+      {
+        ?(N2C3bar=1 & N2tilde3=1);     */    /* line 33*/
+        /*pathdist213A := min(commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2,3)*Vm*delta + DL), commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2,3)*Vm*delta + p2(1,2,3)*Vm*delta + 2*DL));
+        pathdist213B := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2,3)*Vm*delta + DL);
+        {{?(pathdist213A > pathdist213B); pathdist213 := pathdist213A; P2C1:=1;} ++ {?(pathdist213B >= pathdist213A); pathdist213 := pathdist213B; P2C1:=0;}}
+      } ++ {?(N2C3bar=1 & N2tilde3=0); pathdist213:= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2,3)*Vm*delta + DL); P2C1:=0;} ++
+      {?(N2C3bar=0); P2C3:=0;}*//* 39 */
+    /*}*/
+    
+    {
+    { ?(N2C3bar = 1 | N2C1bar = 1);
+      er2bar:= max(min(pathdist213, pathdist231)-DL,0);  /*line 41, */ 
+      {?(N2C1old=0 & e2N1C2=0); 
+        N2C1:= N2C1old;
+        N2C3:= N2C3old;
+        P2C1:= max(P2C1old*N2C1bar,P2C1old);
+        P2C3:= max(P2C3old*N2C3bar,P2C3old);
+      } ++
+      {?(N2C1old=1 | e2N1C2=1); er2:=er2bar;}
+    }
+    /*++ {?(N2C3bar = 0 & N2C1bar = 0); er2:=0; N2C1:=0; N2C3:=0; P2C1:=0; P2C3:=0;}*/ /*lines 52-53*/
+    }
+    /*{
+      {
+        ?(er2bar<=0); 
+        P2C1:=P2C1old;
+        P2C3:=P2C3old;
+      }
+    }*/
+    unchange2:=0;
+    }
+  };
+  
+  HP updatea2t1 ::= {
+    {
+      ?(rflga2t1=1);
+      /*e2x1:=xt; e2y1:=yt;
+      e2N1C2:=NIC2t;              
+      e2N1C3:=NIC3t;
+      e2P1C2:=PIC2t;     
+      e2P1C3:=PIC3t;*/        
+      computea2t1;
+    }
+    ++ {?(rflga2t1=0 & distance(x1o,y1o,x2,y2)>commrange); N2C1:=0; P2C1:=0;}   /* lines 54-58*/
+  };
+  
+  /***************************************************************************************************************************************************************************************************************************/
+
+ HP computea2t3 ::=
+  {
+    
+    {/*store old values of N and P for agent 2*/
+      {N2C1old:=N2C1; N2C3old:=N2C3;}
+      {P2C1old:=P2C1; P2C3old:=P2C3;}
+    }
+
+    {
+    {?(N2C3=1 & e2N3C2=1); N2C1bar:= N2C1; N2C3bar:= N2C3;}
+    /*++ {?(N2C3=1 & e2N3C2=0); N2C3 := 0; N2C3bar:= 0; N2C1bar:= N2C1;}*/
+    ++ {?(N2C3=0 & e2N3C2=1); N2C3 := 1; N2C3bar:= 1; N2C1 := max(N2C1,e2P3C2); N2C1bar:= max(N2C1, e2P3C2);}
+    /*++ {?(N2C3=0 & e2N3C2=0); N2C3bar:= 1; N2C1bar:= N2C1;}*/
+    }
+    
+    /*{ 
+      {
+        ?(N2C1bar=1 & e2N1C2=1);      
+        N2tilde1:= N2C3bar * e2N1C3 * e2N3C1;    
+      } ++ {?(N2C1bar=1 & e2N1C2=0); N2tilde1:=0;}  
+    }
+    {
+      {
+        ?(N2C1bar=1 & N2tilde1=1);        
+        pathdist231A:= min(commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,1,3)*Vm*delta + DL), commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(1,1,3)*Vm*delta + p1(3,1,3)*Vm*delta + 2*DL));
+        pathdist231B:= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p1(1,1,3)*Vm*delta + DL);
+        {{?(pathdist231A > pathdist231B); pathdist231 := pathdist231A; P2C3:=1;} ++ {?(pathdist231B >= pathdist231A); pathdist231 := pathdist231B; P2C3:=0;}}
+      } ++ {?(N2C1bar=1 & N2tilde1=0); pathdist231:= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p1(1,1,3)*Vm*delta + DL); P2C3:=0;} ++
+      {?(N2C1bar=0); P2C1:=0;}
+    }
+
+    { 
+      {
+        ?(N2C3bar=1 & e2N3C2=1);      
+        N2tilde3:= N2C1bar*e2N3C1*e2N1C3;   
+      } ++ {?(N2C3bar=1 & e2N3C2=0); N2tilde3:=0;}  
+    }
+      
+    {
+      {
+        ?(N2C3bar=1 & N2tilde3=1);     
+        pathdist213A:= min(commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p1(1,1,3)*Vm*delta + DL), commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(1,1,3)*Vm*delta + p1(3,1,3)*Vm*delta + 2*DL));
+        pathdist213B:= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,1,3)*Vm*delta + DL);
+        {{?(pathdist213A > pathdist213B); pathdist213 := pathdist213A; P2C1:=1;} ++ {?(pathdist213B >= pathdist213A); pathdist213 := pathdist213B; P2C1:=0;}}
+      } ++ {?(N2C3bar=1 & N2tilde3=0); pathdist213:= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,1,3)*Vm*delta + DL); P2C1:=0;} ++
+      {?(N2C3bar=0); P2C3:=0;}
+    }*/
+    
+    {
+        {?(N2C3bar = 1 | N2C1bar = 1);
+            er2bar:=max(min(pathdist213, pathdist231)-DL,0);  /*line 41, */ 
+            {
+                ?(N2C3old=0 & e2N3C2=0); 
+                {
+                    ?(er2bar>er2);      /*line 43-45*/
+                    er2:=er2bar;
+                    N2C1:=N2C1bar;
+                    N2C3:=N2C3bar;
+                } ++ 
+                {
+                    ?(er2bar<=er2); /*Lines 47-51, revert to old values*/
+                    N2C1:=N2C1old;  
+                    N2C3:=N2C3old;
+                    P2C1:=max(P2C1old*N2C1bar,P2C1old);
+                    P2C3:=max(P2C3old*N2C3bar,P2C3old);
+                }
+            } ++
+            {?(N2C3old=1 | e2N3C2=1); er2:=er2bar;} /*lines 52-53*/
+        } /*++
+        {?(N2C3bar = 0 & N2C1bar = 0); er2:=0; N2C1:=0; N2C3:=0; P2C1:=0; P2C3:=0;}*/
+    }
+    
+    /*{
+      {
+        ?(er2bar<=0); 
+        P2C1:=P2C1old;
+        P2C3:=P2C3old;
+      }
+    }*/
+  };
+  
+   HP updatea2t3 ::= {
+    {
+      ?(rflga2t3=1);
+      /*e2x3:=xt;e2y3:=yt;
+      e2N3C1:=NIC1t;               
+      e2N3C2:=NIC3t;
+      e2P3C1:=PIC1t;        
+      e2P3C2:=PIC3t;*/        
+      computea2t3;
+    }
+    ++{?(rflga2t3=0); N2C3:=0; P2C3:=0;}
+  };
+
+/***************************************************************************************************************************************************************************************************************************/
+
+  HP computea3t2 ::=
+  {
+    
+    {/*store old values of N and P for agent 2*/
+      {N3C1old:=N3C1; N3C2old:=N3C2;}
+      {P3C1old:=P3C1; P3C2old:=P3C2;}
+    }
+    /*4 cases*/
+    {?(N3C2=1 & e3N2C3=1); N3C1bar:= N3C1; N3C2bar:= N3C2;}
+    /*++ {?(N3C2=1 & e3N2C3=0); N3C2 := 0;N3C2bar:= 0; N3C1bar:= N3C1;}*/
+    ++ {?(N3C2=0 & e3N2C3=1); N3C2 := 1;N3C2bar:= 1;N3C1 := max(N3C1,e3P2C3);N3C1bar:= max(N3C1, e3P2C3);}
+    /*++ {?(N3C2=0 & e3N2C3=0); unchange3:= 1;}*/
+    
+    {?(unchange3!=1);/*
+    {*/ /*****line 22, for k in N_bar, case where k = 1. Here we are calculating pathdist321*****/
+      /*{
+        ?(N3C1bar=1 & e3N1C3=1);
+        N3tilde1:= N3C2bar * e3N2C3 * e3N2C1 * e3N1C2; */   /*Line 28, case where j=2, i=3, k=1*/
+      /*} ++ {?(N3C1bar=1 & e3N1C3=0); N3tilde1:=0;}*/  /*Line 32 for when k=1*/
+    /*}*/
+      
+    /*{
+      {
+        ?(N3C1bar=1 & N3tilde1=1); */         /* line 33*/
+        /*pathdist321A:= min(commrange - (distance(x3+v3*delta,y3+w3*delta,e3x2,e3y2) + p2(2,3,3)*Vm*delta + DL), commrange - (distance(e3x2,e3y2,e3x1,e3y1) + p2(2,3,3)*Vm*delta + p2(1,3,3)*Vm*delta + 2*DL));
+        pathdist321B:= commrange - (distance(x3+v3*delta,y3+w3*delta,e3x1,e3y1) + p2(1,3,3)*Vm*delta + DL);
+        {{?(pathdist321A > pathdist321B); pathdist321 := pathdist321A; P3C2:=1;} ++ {?(pathdist321B >= pathdist321A); pathdist321 := pathdist321B; P3C2:=0;}}
+       } ++ {?(N3C1bar=1 & N3tilde1=0); pathdist321:= commrange - (distance(x3+v3*delta,y3+w3*delta,e3x1,e3y1) + p2(1,3,3)*Vm*delta + DL); P3C2:=0;} ++
+       {?(N3C1bar=0); P3C1:=0;}*/ /* 39 */
+    /*}*/
+
+    /*{*/ /*****line 22, for k in N_bar, case where k = 2. Here we are calculating pathdist312*****/
+      /*{
+        ?(N3C2bar=1 & e3N2C3=1);      
+        N3tilde2:= N3C1bar * e3N1C3 * e3N1C2 * e3N2C1; */    /*Line 28*/
+      /*} ++ {?(N3C2bar=1 & e3N2C3=0); N3tilde2:=0;} */ /*Line 32, k=2*/
+    /*}
+    {
+      {
+        ?(N3C2bar=1 & N3tilde2=1); */        /* line 33*/
+        /*pathdist312A:= min(commrange - (distance(x3+v3*delta,y3+w3*delta,e3x1,e3y1) + p2(1,3,3)*Vm*delta + DL), commrange - (distance(e3x2,e3y2,e3x1,e3y1) + p2(2,3,3)*Vm*delta + p2(1,3,3)*Vm*delta + 2*DL));
+        pathdist312B:= commrange - (distance(x3+v3*delta,y3+w3*delta,e3x2,e3y2) + p2(2,3,3)*Vm*delta + DL);
+        {{?(pathdist312A > pathdist312B); pathdist312 := pathdist312A; P3C1:=1;} ++ {?(pathdist312B >= pathdist312A); pathdist312 := pathdist312B; P3C1:=0;}}
+       } ++ {?(N3C2bar=1 & N3tilde2=0);pathdist312:= commrange - (distance(x3+v3*delta,y3+w3*delta,e3x2,e3y2) + p2(2,3,3)*Vm*delta + DL); P3C1:=0;} ++
+       {?(N3C2bar=0); P3C2:=0;} 
+    }*/
+    
+    {
+        { ?(N3C2bar = 1 | N3C1bar = 1);
+            er3bar:=max(min(pathdist321, pathdist312)-DL,0);
+            { 
+            {?(N3C2old=0 & e3N2C3=0); 
+             N3C1:=N3C1old;     /*Lines 47-51, revert to old values*/
+             N3C2:=N3C2old;
+             P3C1:=max(P3C1old*N3C1bar,P3C1old);
+             P3C2:=max(P3C2old*N3C2bar,P3C2old);
+            } ++
+            {?(N3C2old=1 | e3N2C3=1); er3:=er3bar; {?(er3>0); slot3:=3; A3FN2:= N3C2*(1-P3C1);}}
+            }
+        } /*++
+        {?(N3C2bar=0 & N3C1bar=0); er3:=0; N3C1:=0; N3C2:=0; P3C1:=0; P3C2:=0;}*/
+    }
+    
+    /*{
+      {
+        ?(er3bar<=0); 
+        P3C1:=P3C1old;
+        P3C2:=P3C2old;
+      }
+    }*/
+    unchange3:= 0;
+    }
+  };
+  
+   HP updatea3t2 ::= {
+    {
+      ?(rflga3t2=1);
+      /*e3x2:=xt;e3y2:=yt;
+      e3N2C1:=NIC1t;               
+      e3N2C3:=NIC3t;
+      e3P2C1:=PIC1t;        
+      e3P2C3:=PIC3t;*/        
+      computea3t2;
+    }
+    ++{?(rflga3t2=0); N3C2:=0; P3C2:=0;}
+  };
+
+/***************************************************************************************************************************************************************************************************************************/
+
+ HP computea3t1 ::=
+  {
+    
+    {/*store old values of N and P for agent 2*/
+      {N3C1old:=N3C1;N3C2old:=N3C2;}
+      {P3C1old:=P3C1;P3C2old:=P3C2;}
+    }
+    /*4 cases*/
+    /*{?(N3C1=1 & e3N1C3=1);N3C1bar:= N3C1;N3C2bar:= N3C2;}
+    ++ {?(N3C1=1 & e3N1C3=0);N3C1:=0;N3C1bar:= 0;N3C2bar:=N3C2;}
+    ++ {?(N3C1=0 & e3N1C3=1);N3C1:=1;N3C1bar:= 1;N3C2 := max(N3C2,e3P1C3);N3C2bar:= max(N3C2,e3P1C3);}
+    ++ */{?(N3C1=0 & e3N1C3=0);N3C1bar:= 1;N3C2bar:= N3C2;}
+    
+    { 
+      {
+        ?(N3C1bar=1 & e3N1C3=1);      
+        N3tilde1:= N3C2bar * e3N1C2 * e3N2C1;    
+      } ++ {?(N3C1bar=1 & e3N1C3=0); N3tilde1:=0;}  
+    }
+    /*{
+      {
+        ?(N3C1bar=1 & N3tilde1=1); 
+        pathdist321A:= min(commrange - (distance(x3+v3*delta,y3+w3*delta,e3x2,e3y2) + p1(2,2,3)*Vm*delta + DL), commrange - (distance(e3x2,e3y2,e3x1,e3y1) + p1(2,2,3)*Vm*delta + p2(1,2,3)*Vm*delta + 2*DL));
+        pathdist321B:= commrange - (distance(x3+v3*delta,y3+w3*delta,e3x1,e3y1) + p2(1,2,3)*Vm*delta + DL);
+        {{?(pathdist321A > pathdist321B); pathdist321 := pathdist321A; P3C2:=1;} ++ {?(pathdist321B >= pathdist321A); pathdist321 := pathdist321B; P3C2:=0;}}
+      } ++ {?(N3C1bar=1 & N3tilde1=0); pathdist321:= commrange - (distance(x3+v3*delta,y3+w3*delta,e3x1,e3y1) + p2(1,2,3)*Vm*delta + DL); P3C2:=0;} ++
+      {?(N3C1bar=0); P3C1:=0;}
+    }*/
+
+    /*{ 
+      {
+        ?(N3C2bar=1 & e3N2C3=1);      
+        N3tilde2:= N3C1bar * e3N2C1 * e3N1C2;   
+      } ++ {?(N3C2bar=1 & e3N2C3=0); N3tilde2:=0;}
+    }
+      
+    {
+      {
+        ?(N3C2bar=1 & N3tilde2=1);
+        pathdist312A:= min(commrange - (distance(x3+v3*delta,y3+w3*delta,e3x1,e3y1) + p2(1,2,3)*Vm*delta + DL), commrange - (distance(e3x2,e3y2,e3x1,e3y1) + p2(1,2,3)*Vm*delta + p1(2,2,3)*Vm*delta + 2*DL));
+        pathdist312B:= commrange - (distance(x3+v3*delta,y3+w3*delta,e3x2,e3y2) + p1(2,2,3)*Vm*delta + DL);
+        {{?(pathdist312A > pathdist312B); pathdist312 := pathdist312A; P3C1:=1;} ++ {?(pathdist312B >= pathdist312A); pathdist312 := pathdist312B; P3C1:=0;}}
+      } ++ {?(N3C2bar=1 & N3tilde2=0);pathdist312:= commrange - (distance(x3+v3*delta,y3+w3*delta,e3x2,e3y2) + p1(2,2,3)*Vm*delta + DL); P3C1:=0;} ++
+      {?(N3C2bar=0); P3C2:=0;}
+    }*/
+    
+    {
+        {?(N3C2bar = 1 | N3C1bar = 1);
+        er3bar:=max(min(pathdist321, pathdist312)-DL,0);  
+        {?(N3C1old=0 & e3N1C3=0); 
+        {?(er3bar>er3);      
+          er3:=er3bar;
+          N3C1:=N3C1bar;
+          N3C2:=N3C2bar;
+          {?(er3>0); slot3:=3; A3FN1:= N3C1*(1-P3C2);}
+        } ++ 
+        {?(er3bar<=er3); 
+          N3C1:=N3C1old;
+          N3C2:=N3C2old;
+          P3C1:=max(P3C1old*N3C1bar,P3C1old);
+          P3C2:=max(P3C2old*N3C2bar,P3C2old);
+        }
+        } ++ {?(N3C1old=1 | e3N1C3=1); er3:=er3bar; {?(er3>0); slot3:=3; A3FN1:= N3C1*(1-P3C2);}} 
+    } ++ 
+    {?(N3C2bar=0 & N3C1bar=0); er3:=0; N3C1:=0; N3C2:=0; P3C1:=0; P3C2:=0;}
+    }
+    
+    {
+      {
+        ?(er3bar<=0); 
+        P3C1:=P3C1old;
+        P3C2:=P3C2old;
+      }
+    }
+  };
+
+  HP updatea3t1 ::= {
+    {
+      ?(rflga3t1=1);
+      /*e3x1:=xt;e3y1:=yt;
+      e3N1C2:=NIC2t;               
+      e3N1C3:=NIC3t;
+      e3P1C2:=PIC2t;        
+      e3P1C3:=PIC3t;*/        
+      computea3t1;
+    }
+    ++{?(rflga3t1=0); N3C1:=0; P3C1:=0;A3FN1:= N3C1*(1-P3C2);}
+  };
+  
+
+/***************************************************************************************************************************************************************************************************************************/
+
+  /*Discrete program that decides which agent is transmitting*/
+  /*HP updatetransmitinfo ::= {*/
+  /*{
+   {{?(transmitter=1); trflg1:=1;} ++ {?(transmitter=2 | transmitter=3); trflg1:= trflg1 + 1;}}
+   {{?(transmitter=2); trflg2:=1;} ++ {?(transmitter=1 | transmitter=3); trflg2:= trflg2 + 1;}}
+   {{?(transmitter=3); trflg3:=1;} ++ {?(transmitter=1 | transmitter=2); trflg3:= trflg3 + 1;}}
+  }*/
+  /*{
+  {
+    {?(transmitter=1 & distance(xt,yt,x2,y2)<=commrange); 
+      e2x1:=xt; e2y1:=yt;
+      e2N1C2:=NIC2t;              
+      e2N1C3:=NIC3t;
+      e2P1C2:=PIC2t;    
+      e2P1C3:=PIC3t;
+      rflga2t1:= 1;} ++ {?(transmitter=1 & distance(xt,yt,x2,y2)>commrange); rflga2t1:= 0;}
+  }
+  {
+    {?(transmitter=1 & distance(xt,yt,x3,y3)<=commrange); 
+      e3x1:=xt; e3y1:=yt;
+      e3N1C2:=NIC2t;               
+      e3N1C3:=NIC3t;
+      e3P1C2:=PIC2t;        
+      e3P1C3:=PIC3t; 
+      rflga3t1:= 1;} ++ {?(transmitter=1 & distance(xt,yt,x3,y3)>commrange); rflga3t1:= 0;}    
+  }
+  } ++
+  {
+  {{?(transmitter=2 & distance(xt,yt,x1,y1)<=commrange); 
+      e1x2:=xt; e1y2:=yt;
+      e1N2C1:=NIC1t;               
+      e1N2C3:=NIC3t;
+      e1P2C1:=PIC1t;        
+      e1P2C3:=PIC3t;
+      rflga1t2:= 1;} ++ {?(transmitter=2 & distance(xt,yt,x1,y1)>commrange); rflga1t2:= 0;}   
+  }
+  {{?(transmitter=2 & distance(xt,yt,x3,y3)<=commrange); 
+      e3x2:=xt;e3y2:=yt;
+      e3N2C1:=NIC1t;               
+      e3N2C3:=NIC3t;
+      e3P2C1:=PIC1t;        
+      e3P2C3:=PIC3t; 
+      rflga3t2:= 1;} ++ {?(transmitter=2 & distance(xt,yt,x3,y3)>commrange); rflga3t2:= 0;}
+  }
+  } ++
+  {
+  {{?(transmitter=3 & distance(xt,yt,x1,y1)<=commrange); 
+      e1x3:=xt;e1y3:=yt;
+      e1N3C1:=NIC1t;               
+      e1N3C2:=NIC2t;
+      e1P3C1:=PIC1t;        
+      e1P3C2:=PIC2t; 
+      rflga1t3:= 1;} ++ {?(transmitter=3 & distance(xt,yt,x1,y1)>commrange); rflga1t3:= 0;}
+  }
+  {{?(transmitter=3 & distance(xt,yt,x2,y2)<=commrange); 
+      e2x3:=xt;e2y3:=yt;
+      e2N3C1:=NIC1t;               
+      e2N3C2:=NIC3t;
+      e2P3C1:=PIC1t;        
+      e2P3C2:=PIC3t;
+      rflga2t3:= 1;} ++ {?(transmitter=3 & distance(xt,yt,x2,y2)>commrange); rflga2t3:= 0;}
+  }
+  }*/
+  /*{ 
+      {?(N1C3=0);} ++ {?(N1C3=1 & distance(x3,y3,e3x1,e3y1) <= trflg1*Vm*delta);}   
+  }*/
+  /*};*/
+
+/***************************************************************************************************************************************************************************************************************************/
+
+  /*Discrete program that decides which agent is transmitting*/
+  HP rotatetransmittingagent ::= {
+  {
+    ?(transmitter=3); transmitter:=1;
+    xt:=x1; yt:=y1; NIC2t:=N1C2; NIC3t:=N1C3;
+    PIC2t:=P1C2old; PIC3t:=P1C3old;
+  } ++
+  {?(transmitter=2); transmitter:=3;
+    xt:=x3; yt:=y3; NIC1t:=N3C1; NIC2t:=N3C2;
+    PIC1t:=P3C1old; PIC2t:=P3C2old;
+  } ++
+  {?(transmitter=1); transmitter:=2;
+    xt:=x2; yt:=y2; NIC1t:=N2C1; NIC3t:=N2C3;
+    PIC1t:=P2C1old; PIC3t:=P2C3old;
+  }
+  };
+  
+/***************************************************************************************************************************************************************************************************************************/
+
+  HP transmitinfo ::= {
+    /*flgN31old:= flgN31;   
+    {{?(trflg1=2 | trflg1=1); flgN31:= new31;} ++ {?(trflg1=3); flgN31:= flgN31old;}}*/
+    slot1 := max(slot1 - 1,0);
+    slot3 := max(slot3 - 1,0);
+    { /* AiFNj denotes whether j is a first-degree neighbor of agent i in the previous time slot*/
+        A1FN2:= N1C2*(1-P1C3);
+        A1FN3:= N1C3*(1-P1C2);
+        /*A2FN1:= N2C1*(1-P2C3);
+        A2FN3:= N2C3*(1-P2C1);
+        A3FN1:= N3C1*(1-P3C2);
+        A3FN2:= N3C2*(1-P3C1);*/
+    }
+    {{?(transmitter=1);
+      /*updatea2t1;*/
+      /*updatea3t1*/
+      transmit23:=0;
+    }
+    ++ {?(transmitter=2);
+      /*updatea1t2;
+      updatea3t2;
+      transmit23:=4;*/
+    }
+    ++ {?(transmitter=3);
+      /*updatea1t3;*/
+      /*updatea2t3;*/
+      transmit23:=3;
+    }}
+    /*{new12:= (1-N1C2old)*(1-e1N2C1)*N1C2;}
+    {{?(new12=1); slot12:=1;} ++ 
+     {?(new12=0 & slot12=0); slot12:=0;} ++
+     {?(new12=0 & slot12=1); slot12:=2;} ++
+     {?(new12=0 & slot12=2 & transmitter=1); slot12:=3;} ++
+     {?(new12=0 & slot12=3); slot12:=0;}}
+    {
+     {?(slot1=4); flgl4:= N1C3*N1C2*(1-A1FN3);} ++
+     {?(slot1!=4); flgl4:=0;}
+    }
+    {
+     {?(flgl4=1);flgl4:=2;}++
+     {?(flgl4=2);flgl4:=3;}++
+     {?(flgl4=3);flgl4:=4;}++
+     {?(flgl4=4);flgl4:=0;}++
+     {?(flgl4=0);flgl4:=0;}
+    }*/ 
+    
+  };
+  
+    /***************************************************************************************************************************************************************************************************************************/
+  
+  /* Continuous Evolution*/
+  /* We only execute all following programs if the norm of v,w is equal to the correct linear velocities*/
+  /* Continuous Evolution*/
+  /* We only execute all following programs if the norm of v,w is equal to the correct linear velocities*/
+  HP updatevelocities ::= {
+    /*A1moving:=0;
+    A2moving:=0;
+    A3moving:=0;
+    velocityflag:=0;
+    {
+      {?(er1>0);v1:=*;w1:=*;A1moving:=1;}
+      ++
+      {?(er1<=0);er1:=0;v1:=0;w1:=0;}
+    }
+    {
+      {?(er2>0);v2:=*;w2:=*;A2moving:=1;}
+      ++
+      {?(er2<=0);er2:=0;v2:=0;w2:=0;}
+    }
+    {
+      {?(er3>0);v3:=*;w3:=*;A3moving:=1;}
+      ++
+      {?(er3<=0);er3:=0;v3:=0;w3:=0;}
+    }*/
+    {
+      v2:=*;w2:=*;v3:=*;w3:=*;
+      ?((v1^2+w1^2) = (er1/(n*delta))^2 &
+      (v2^2+w2^2) = (er2/(n*delta))^2 &
+      (v3^2+w3^2) = (er3/(n*delta))^2) &
+      (v1*delta^2+w1*delta^2<=Vm^2) &
+      ((v2*delta)^2+(w2*delta)^2<=delta^2*Vm^2) &
+      ((v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2);
+      velocityflag := 1;
+      er1old:= er1;
+    }
+  };
+/***************************************************************************************************************************************************************************************************************************/
+  /* We can initialize the agents in 2 configurations */
+  /*initializes agents in a straight line configuration*/
+  Bool inita1sl(Real v1, Real w1, Real e1x2, Real e1y2, Real N1C2,
+    Real N1C3, Real P1C2, Real P1C3, Real N1tilde2, Real N1tilde3,
+    Real N1C2old, Real N1C3old, Real P1C2old, Real P1C3old, Real N1C2bar,
+    Real N1C3bar, Real e1N2C1, Real e1N2C3, Real e1N3C1, Real e1N3C2, Real e1P2C1, Real e1P2C3,
+    Real e1P3C1, Real e1P3C2, Real er1, Real x2, Real y2
+  ) <-> v1=0 & w1=0 &                                    /* set all initial velocities to 0*/
+    e1x2=x2 & e1y2=y2 &                                                  /*a1 only knows of a2's position initially */
+    N1C2=1 & N1C3=0 & P1C2=0 & P1C3=0 & N1tilde2=0 & N1tilde3=0 &        /* only neighbor in N1C is agent 2, and it's a first degree neighbor as indicated by setting N1tilde2=0*/ 
+    N1C2old=1 & N1C3old=0 & P1C2old=0 & P1C3old=0 & N1C2bar=1 & N1C3bar=0 &             /* P1C2 will be 1 after receiving a2's transmission?*/
+    e1N2C1=1 & e1N2C3=1 & e1N3C1=0 & e1N3C2=0 &                          /* a1 only knows of a2's NiC, which should include both a1 and a3*/
+    e1P2C1=0 & e1P2C3=0 & e1P3C1=0 & e1P3C2=0 &                          /* PiC of other agents shou be 0 initially*/
+    er1=0;                                                                /* er1 is 0 as agents are non moving initially, er1 will increase after recalculating*/
+
+  Bool inita2sl(
+    Real v2, Real w2, Real e2x1, Real e2y1, Real e2x3,
+    Real e2y3, Real N2C1, Real N2C3, Real P2C1, Real P2C3, 
+    Real N2tilde1, Real N2tilde3, Real N2C1old, Real N2C3old,
+    Real P2C1old, Real P2C3old, Real N2C1bar, Real N2C3bar, Real e2N1C2,
+    Real e2N1C3, Real e2N3C1, Real e2N3C2, Real e2P1C2, Real e2P1C3,
+    Real e2P3C1, Real e2P3C2, Real er2, Real x1, Real y1, Real x3, Real y3
+  ) <-> v2=0 & w2=0 &                                    /* set all initial velocities to 0*/
+    e2x1=x1 & e2y1=y1 & e2x3=x3 & e2y3=y3 &                            /*a2 knows a1 and a3's positions */
+    N2C1=1 & N2C3=1 & P2C1=0 & P2C3=0 & N2tilde1=0 & N2tilde3=0 &      /* a2's NiC contains both a1 and a3, both are first degree neighbors as indicated by N2tilde1=0, N2tilde3=0*/ 
+    N2C1old=1 & N2C3old=1 & P2C1old=0 & P2C3old=0 & N2C1bar=1 & N2C3bar=1 &
+    e2N1C2=1 & e2N1C3=0 & e2N3C1=0 & e2N3C2=1 &                          /* a2 knows of a1 and a3's NiC*/
+    e2P1C2=0 & e2P1C3=0 & e2P3C1=0 & e2P3C2=0 &                          /* PiC of other agents should be 0 initially*/
+    er2=0;                                                                /* er2 is 0 as agents are non moving initially, will increase after recalculating*/
+
+  Bool inita3sl(
+    Real v3, Real w3, Real e3x2, Real e3y2,
+    Real N3C1, Real N3C2, Real P3C1, Real P3C2, Real N3tilde1, Real N3tilde2,
+    Real N3C1old, Real N3C2old, Real P3C1old, Real P3C2old, Real N3C1bar, Real N3C2bar,
+    Real e3N1C2, Real e3N1C3, Real e3N2C1, Real e3N2C3,
+    Real e3P1C2, Real e3P1C3, Real e3P2C1, Real e3P2C3, Real er3, Real x2, Real y2
+  ) <-> v3=0 & w3=0 &                                    /* set all initial velocities to 0*/
+    e3x2=x2 & e3y2=y2 &                                                 /*a3 knows a2's positions */
+    N3C1=0 & N3C2=1 & P3C1=0 & P3C2=0 & N3tilde1=0 & N3tilde2=0 &      /* a3's NiC contains a2, first degree neighbors as indicated by N3tilde2=0, N2tilde3=0*/ 
+    N3C1old=0 & N3C2old=1 & P3C1old=0 & P3C2old=0 & N3C1bar=0 & N3C2bar=1 &
+    e3N1C2=0 & e3N1C3=0 & e3N2C1=1 & e3N2C3=1 &                          /* a3 knows of a2's NiC*/
+    e3P1C2=0 & e3P1C3=0 & e3P2C1=0 & e3P2C3=0 &                          /* PiC of other agents should be 0 initially*/
+    er3=0;                                                                /* er3 is 0 as agents are non moving initially, will increase after recalculating*/
+
+  /*initializes agents in a triangle configuration*/
+  Bool inita1tr(
+    Real v1, Real w1, Real e1x2, Real e1y2, Real e1x3,
+    Real e1y3, Real N1C2, Real N1C3, Real P1C2, Real P1C3,
+    Real N1tilde2, Real N1tilde3, Real e1N2C1, Real e1N2C3,
+    Real e1N3C1, Real e1N3C2, Real e1P2C1, Real e1P2C3, Real e1P3C1,
+    Real e1P3C2, Real er1
+  ) <-> v1=0 & w1=0 &                                    /* set all initial velocities to 0*/
+    e1x2=x2 & e1y2=y2 & e1x3=x3 & e1y3=y3 &                            /*a1 only knows of a2 and a3's position initially */
+    N1C2=1 & N1C3=1 & P1C2=0 & P1C3=0 & N1tilde2=0 & N1tilde3=0 &      /* first degree neighbors are a2,a3
+                                                                       /* P1C2 will be 1 after receiving a2's transmission?*/
+    e1N2C1=1 & e1N2C3=1 & e1N3C1=1 & e1N3C2=1 &                          /* a1 only knows of a2 and a3's NiC,*/
+    e1P2C1=0 & e1P2C3=0 & e1P3C1=0 & e1P3C2=0 &                          /* PiC of other agents should be 0 initially*/
+    er1=0;                                                                /* er1 is 0 as agents are non moving initially, will increase after recalculating*/
+
+  /*Bool inita2tr() <-> v2=0 & w2=0 &     */                               /* set all initial velocities to 0*/
+    /*e2x1=x1 & e2y1=y1 & e2x3=x3 & e2y3=y3 &  */                          /*a2 knows a1 and a3's positions */
+    /*N2C1=1 & N2C3=1 & P2C1=0 & P2C3=0 & N2tilde1=0 & N2tilde3=0 &   */   /* a2's NiC contains both a1 and a3, both are first degree neighbors as indicated by N2tilde1=0, N2tilde3=0*/ 
+    /*e2N1C2=1 & e2N1C3=1 & e2N3C1=1 & e2N3C2=1 &    */                      /* a2 knows of a1 and a3's NiC*/
+    /*e2P1C2=0 & e2P1C3=0 & e2P3C1=0 & e2P3C2=0 & */                         /* PiC of other agents should be 0 initially*/
+    /*er2=0;*/                                                                /* er2 is 0 as agents are non moving initially, will increase after recalculating*/
+
+  /*Bool inita3tr() <-> v3=0 & w3=0 &     */                               /* set all initial velocities to 0*/
+    /*e3x2=x2 & e3y2=y2 & e3x1=x1 & e3y1=y1 &*/                             /*a3 knows a1 and a2's positions */
+    /*N3C1=1 & N3C2=1 & P3C1=0 & P3C2=0 & N3tilde1=0 & N3tilde2=0 & */     /* a3's NiC contains a2 and a1, first degree neighbors as indicated by N3tilde2=0, N2tilde3=0*/ 
+    /*e3N1C2=1 & e3N1C3=1 & e3N2C1=1 & e3N2C3=1 &  */                        /* a3 knows of a1 and a2's NiC*/
+    /*e3P1C2=0 & e3P1C3=0 & e3P2C1=0 & e3P2C3=0 &    */                      /* PiC of other agents should be 0 initially*/
+    /*er3=0;          */                                                      /* er3 is 0 as agents are non moving initially, will increase after recalculating*/  
+    
+  /*Bool l3invariant1() <-> (A3FN1=0 | slot3=0 | rflga3t1=0 | (A3FN1=1 & (slot3=1 | slot3=2 | slot3=3) & distance(x1,y1,x3,y3) <= commrange - slot3*er3/n - slot3*Vm*delta));
+  
+  Bool l3invariant1o() <-> (A3FN1=0 | slot3=0 | rflga3t1=0 | (A3FN1=1 & (slot3=1 | slot3=2 | slot3=3) & distance(x1,y1,x3o,y3o) <= commrange));
+  
+  Bool l3invariant2() <-> ((slot31=0 & slot3>=0) | (slot31=1 & slot3=3) | (slot31=2 & slot3>=2) | (slot31=3 & slot3>=1));
+  
+  Bool l3invariant3() <-> ((slot31=0) | ((slot31=1 | slot31=2) & distance(x1,y1,x3,y3) <= commrange) | (slot31=3 & distance(x1,y1,x3,y3) <= commrange & N1C3=1));
+  
+  Bool l4invariant1() <-> ((slot1=4)|(slot1=0)|(flgl4=0)|(flgl4=1)|(slot1+flgl4!=5)|
+  ((slot1=3|slot1=2|slot1=1)&(flgl4=2|flgl4=3|flgl4=4)&(slot1+flgl4=5)&distance(x1,y1,x2,y2)<=commrange-slot1*er1/n-slot1*Vm^2*delta^2 & 
+  (distance(x2,y2,x3,y3)<=commrange - (2*slot1)*Vm^2*delta^2)));
+  
+  Bool l4invariant1a() <-> ((slot1=4)|(slot1=0)|(flgl4=0)|(flgl4=1)|(slot1+flgl4!=5)|
+  ((slot1=3|slot1=2|slot1=1)&(flgl4=2|flgl4=3|flgl4=4)&(slot1+flgl4=5)&distance(x1,y1,x2,y2)<=commrange-slot1*er1/n-slot1*Vm*delta & 
+  (distance(x2o,y2o,x3,y3)<=commrange - (2*slot1)*Vm*delta)));
+
+  Bool l4invariant2() <-> ((slot1=4)|(slot1=0)|(flgl4=0)|(flgl4=1)|(e1N2C3=0)|(e1N3C2=0)|(flgl4+slot1!=5)| (slot1<4 & slot1>0 & flgl4>1 & (flgl4+slot1=5) & N2C3=1 & N3C2=1));
+
+  Bool l4invariant3() <-> ((slot1=4)|(slot1=0)|(flgl4=0)|(flgl4=1)|(slot12!=3)|(flgl4+slot1!=5)|(slot1<4 & slot1>0 & flgl4>1 & (flgl4+slot1=5) & slot12=3 & N2C1=1));*/
+
+  Bool l5invariant1(Real N1C3, Real slot1, Real flgl4, Real N3C2, Real N2C3, Real N1C2) <-> 
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | flgl4+slot1!=5 | (flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & (N1C3=0|N1C3=1) & N3C2=1 & N2C3=1 & N1C2=1)
+  );
+  
+  Bool l5invariant2(Real N1C3, Real slot1, Real flgl4, Real N2C1, Real slot12)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | flgl4+slot1!=5 | slot12 < 3 |(flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & (N1C3=0|N1C3=1)& slot12=3 & N2C1=1)
+  );
+  
+  Bool l6invariant1(Real N3C1,Real slot1, Real flgl4, Real v3, Real w3, Real N1C2, Real N2C3, Real N3C2)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | v3!=0 | w3!=0 | flgl4+slot1!=5 | (flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & v3=0 & w3=0 & (N3C1=0|N3C1=1) & N1C2=1 & N2C3=1 & N3C2=1)  
+  );
+  
+  Bool l6invariant2(Real N3C1,Real slot1, Real flgl4, Real v3, Real w3, Real x1, Real y1, Real x2, Real y2, Real commrange, Real er1, Real n, Real Vm, Real delta)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | v3!=0 | w3!=0 | flgl4+slot1!=5| (flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & v3=0 & w3=0 & (N3C1=0|N3C1=1) & distance(x1,y1,x2,y2)<=commrange-slot1*(er1/n)-slot1*Vm*delta)
+  );
+  
+  Bool l6invariant3(Real N3C1,Real slot1, Real flgl4, Real v3, Real w3, Real slot12, Real N2C1)<->
+  (
+      slot1=0 | slot1=4 | flgl4<=1 | v3!=0 | w3!=0 | flgl4+slot1!=5| slot12<3 | (flgl4>1 & (slot1=1|slot1=2|slot1=3) & flgl4+slot1=5 & v3=0 & w3=0 & (N3C1=0|N3C1=1) & slot12=3 & N2C1=1)
+  );
+  
+
+  Bool a3typechecking(
+    Real N3C1, Real N3C2, Real P3C1, Real P3C2, Real e3N1C2, Real e3N1C3, Real e3N2C1, Real e3N2C3,
+    Real e3P1C2, Real e3P1C3, Real e3P2C1, Real e3P2C3, Real er3, Real commrange, Real n, Real delta, Real Vm
+  ) <-> ((N3C1=0 | N3C1=1) & (N3C2=0 | N3C2=1) & (P3C1=0 | P3C1=1) & (P3C2=0 | P3C2=1) & (e3N1C2=0 | e3N1C2=1) & (e3N1C3=0 | e3N1C3=1) & (e3N2C1=0 | e3N2C1=1) & (e3N2C3=0|e3N2C3=1) &
+  (e3P1C2=0|e3P1C2=1) & (e3P1C3=0|e3P1C3=1) & (e3P2C1=0|e3P2C1=1) & (e3P2C3=0|e3P2C3=1) & er3<=commrange  & er3/(n*delta)<=Vm);
+  
+  Bool a1typechecking(
+    Real N1C2, Real N1C3, Real e1N2C1, Real e1N2C3, Real e1N3C1, Real e1N3C2, Real e1P2C1,
+    Real e1P2C3, Real e1P3C1, Real e1P3C2, Real er1, Real commrange, Real n, Real delta, Real Vm, Real rflga1t3, Real P1C3, 
+    Real P1C2, Real slot1
+  ) <-> ((N1C2=0 | N1C2=1)& (N1C3=0 | N1C3=1) & (e1N2C1=0 | e1N2C1=1)  & (e1N2C3=0|e1N2C3=1) & (e1N3C1=0|e1N3C1=1)& (e1N3C2=0|e1N3C2=1) &
+  (e1P2C1=0|e1P2C1=1) & (e1P2C3=0|e1P2C3=1)& (e1P3C1=0|e1P3C1=1) & (e1P3C2=0|e1P3C2=1) & er1<=commrange & er1/(n*delta)<=Vm & (rflga1t3=0|rflga1t3=1) & (P1C3=0|P1C3=1) & (P1C2=0|P1C2=1) & (slot1=0|slot1=1|slot1=2|slot1=3|slot1=4));
+
+  Bool varstypechecking(Real flgl4, Real transmitter) <-> ((flgl4>=0 & flgl4<=4) & (transmitter=1|transmitter=2|transmitter=3));
+
+  /* constrain the distances so that a1 and a2 are connected, a2 and a3 are connected, and a1 and a3 are not connected*/
+  Bool initdistancesstraightline(
+      Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real commrange
+  ) <-> (distance(x1,y1,x2,y2)<=commrange & distance(x3,y3,x2,y2)<=commrange & distance(x1,y1,x3,y3)>commrange);
+
+  /* constrain the distances so that a1 and a2 are connected, a2 and a3 are connected, and a1 and a3 are connected*/
+  /*Bool initdistancestriangle() <-> (distance(x1,y1,x2,y2)<=commrange & distance(x3,y3,x2,y2)<=commrange & distance(x1,y1,x3,y3)<=commrange);*/
+  
+  Bool varinitsl(
+    Real slot3, Real slot31, Real trflg1, Real flgN31, Real new31, Real xt, Real yt,
+    Real x1, Real y1, Real Vm, Real trflg3, Real rflga1t3, Real flgl4, Real slot1     
+  ) <-> (slot3=0 & slot31=0 & trflg1=1 & flgN31=0 & new31=0 & xt=x1 & yt=y1 & Vm>0 & trflg3=0 & rflga1t3=0 & flgl4=0 & slot1=0);
+
+  Bool initsl(
+    Real transmitter, Real time, Real n, Real delta, Real commrange, Real velocityflag, 
+    Real v1, Real w1, Real e1x2, Real e1y2, Real N1C2,
+    Real N1C3, Real P1C2, Real P1C3, Real N1tilde2, Real N1tilde3,
+    Real N1C2old, Real N1C3old, Real P1C2old, Real P1C3old, Real N1C2bar,
+    Real N1C3bar, Real e1N2C1, Real e1N2C3, Real e1N3C1, Real e1N3C2, Real e1P2C1, Real e1P2C3,
+    Real e1P3C1, Real e1P3C2, Real er1,
+    Real v2, Real w2, Real e2x1, Real e2y1, Real e2x3,
+    Real e2y3, Real N2C1, Real N2C3, Real P2C1, Real P2C3, 
+    Real N2tilde1, Real N2tilde3, Real N2C1old, Real N2C3old,
+    Real P2C1old, Real P2C3old, Real N2C1bar, Real N2C3bar, Real e2N1C2,
+    Real e2N1C3, Real e2N3C1, Real e2N3C2, Real e2P1C2, Real e2P1C3,
+    Real e2P3C1, Real e2P3C2, Real er2,
+    Real v3, Real w3, Real e3x2, Real e3y2,
+    Real N3C1, Real N3C2, Real P3C1, Real P3C2, Real N3tilde1, Real N3tilde2,
+    Real N3C1old, Real N3C2old, Real P3C1old, Real P3C2old, Real N3C1bar, Real N3C2bar,
+    Real e3N1C2, Real e3N1C3, Real e3N2C1, Real e3N2C3,
+    Real e3P1C2, Real e3P1C3, Real e3P2C1, Real e3P2C3, Real er3
+    Real x1, Real y1, Real x2, Real y2, Real x3, Real y3,
+    Real slot3, Real slot31, Real trflg1, Real flgN31, Real new31, Real xt, Real yt,
+    Real Vm, Real trflg3, Real rflga1t3, Real flgl4, Real slot1     
+  ) <-> (
+      transmitter=1 & time=10 & n=3 & delta = 10 & commrange=100 & velocityflag=0 &
+      inita1sl( 
+            v1, w1, e1x2, e1y2, N1C2,
+            N1C3,  P1C2, P1C3, N1tilde2, N1tilde3,
+            N1C2old, N1C3old, P1C2old, P1C3old, N1C2bar,
+            N1C3bar, e1N2C1, e1N2C3, e1N3C1, e1N3C2, e1P2C1, e1P2C3,
+            e1P3C1, e1P3C2, er1, x2, y2
+     ) &
+      inita2sl(
+            v2, w2, e2x1, e2y1, e2x3,
+            e2y3, N2C1, N2C3, P2C1, P2C3, 
+            N2tilde1, N2tilde3, N2C1old, N2C3old,
+            P2C1old, P2C3old, N2C1bar, N2C3bar, e2N1C2,
+            e2N1C3, e2N3C1, e2N3C2, e2P1C2, e2P1C3,
+            e2P3C1, e2P3C2, er2, x1, y1, x3, y3
+          ) & 
+      inita3sl(
+            v3, w3, e3x2, e3y2,
+            N3C1, N3C2,  P3C1, P3C2,  N3tilde1, N3tilde2,
+            N3C1old, N3C2old, P3C1old, P3C2old, N3C1bar, N3C2bar,
+            e3N1C2, e3N1C3, e3N2C1,  e3N2C3,
+            e3P1C2, e3P1C3,  e3P2C1, e3P2C3, er3, x2, y2
+          ) &
+      initdistancesstraightline(x1, y1, x2, y2, x3, y3, commrange) & 
+      varinitsl(slot3, slot31, trflg1, flgN31, new31, xt, yt,
+      x1, y1, Vm, trflg3, rflga1t3, flgl4, slot1));
+  
+  /*Bool inittriangle() <-> (transmitter=1 & time=10 & n=3 & delta = 10 & commrange=100 & velocityflag=0 & inita1tr() & inita2tr() & inita3tr() & initdistancestriangle());*/
+
+
+  
+/***************************************************************************************************************************************************************************************************************************/
+
+  HP discreteprogram ::= {
+      updatevelocities;
+      {?(velocityflag=1);
+      transmitinfo;
+      time:=0;
+      /*rotatetransmittingagent;*/
+      }
+      /*++ {?(velocityflag=0);}*/
+  };
+
+  HP continuousprogram ::= {
+    { 
+      {?(velocityflag=1); 
+      { 
+        x1o:= x1; y1o:=y1; x2o:=x2; y2o:=y2; x3o:=x3; y3o:=y3; timeo:=time;   
+        x1:= x1o+v1*delta; y1:= y1o+w1*delta;   
+        x2:= x2o+v2*delta; y2:= y2o+w2*delta; 
+        x3:= x3o+v3*delta; y3:= y3o+w3*delta; 
+        time:= timeo+delta; 
+        /*updatetransmitinfo;*/
+      }}
+      {?((slot1=4)|(slot1=0)|(flgl4=0)|(flgl4=1)|(slot1+flgl4!=5)|
+        ((slot1<4& slot1>0)&(flgl4=2|flgl4=3|flgl4=4)&(slot1+flgl4=5)&distance(x1,y1,x2,y2)<=commrange-slot1*er1/n-slot1*Vm^2*delta^2 & 
+        (distance(x2,y2,x3,y3)<=commrange - (2*slot1)*Vm^2*delta^2)));}
+      {?((slot1=4)|(slot1=0)|(flgl4=0)|(flgl4=1)|(e1N2C3=0)|(e1N3C2=0)|(flgl4+slot1!=5)| (slot1<4 & slot1>0 & flgl4>1 & (flgl4+slot1=5) & N2C3=1 & N3C2=1));} /*Lemma 4 inv 2*/
+      {?((slot1=4)|(slot1=0)|(flgl4=0)|(flgl4=1)|(slot12!=3)|(flgl4+slot1!=5)|(slot1<4 & slot1>0 & flgl4>1 & (flgl4+slot1=5) & slot12=3 & N2C1=1));} /*Lemma 4 inv 3*/
+    }
+    ++ {?(velocityflag=0);}
+  };
+  
+
+
+End.
+
+
+
+ProgramVariables
+
+  Real x1, y1, x2, y2, x3, y3;
+  Real N1C2, N1C3, P1C2, P1C3;
+  Real N1tilde2, N1tilde3, N1C2bar, N1C3bar;
+  Real Vm, v1, w1, N1C2old, N1C3old, P1C2old, P1C3old;
+  Real e1x2, e1y2, e1x3, e1y3, e1N2C1, e1N2C3, e1N3C1, e1N3C2;
+  Real e1P2C1, e1P2C3, e1P3C1, e1P3C2;
+  Real pathdist123, pathdist132;
+  Real er1bar, er1;
+
+  Real N2C1, N2C3, P2C1, P2C3;
+  Real N2tilde1, N2tilde3, N2C1bar, N2C3bar;
+  Real v2, w2, N2C1old, N2C3old, P2C1old, P2C3old;
+  Real e2x1, e2y1, e2x3, e2y3, e2N1C2, e2N1C3, e2N3C1, e2N3C2;
+  Real e2P1C2, e2P1C3, e2P3C1, e2P3C2;
+  Real pathdist213, pathdist231;
+  Real er2bar, er2;
+  
+  Real N3C1, N3C2, P3C1, P3C2;
+  Real N3tilde1, N3tilde2, N3C2bar, N3C1bar;
+  Real v3, w3, N3C1old, N3C2old, P3C1old, P3C2old;
+  Real e3x2, e3y2, e3x1, e3y1, e3N2C1, e3N2C3, e3N1C2, e3N1C3;
+  Real e3P2C1, e3P2C3, e3P1C2, e3P1C3;
+  Real pathdist312, pathdist321;
+  Real er3bar, er3, t, time;
+  Real x1o, y1o, x2o, y2o, x3o, y3o, timeo;
+
+  /*Transmitted coordinates*/
+  Real xt, yt, vt, wt, NIC1t, NIC2t, NIC3t, PIC1t, PIC2t, PIC3t, transmitter;
+  Real pathdist123A, pathdist123B, pathdist132A, pathdist132B, pathdist231A, pathdist231B;
+  Real pathdist213A, pathdist213B, pathdist321A, pathdist321B, pathdist312A, pathdist312B;
+  
+  /*additional variables*/
+  Real omega1, omega2, omega3, unchange1, unchange2, unchange3, commrange, velocityflag, delta, n;
+  /*Real n, delta, commrange, DL; */
+  Real A1moving, A2moving, A3moving, A1FN2, A1FN3, A2FN1, A2FN3, A3FN1, A3FN2;
+  Real trflg1, trflg2, trflg3, rflga2t1, rflga3t1, rflga1t2, rflga3t2, rflga1t3, rflga2t3, er1old, er2old, er3old;
+  Real new31, flgN31old, flgN31, slot3, slot31; 
+  Real new12, slot1, slot12, flgl4, transmit23; /*initialize flgl4 to 0, set to 1 whenever slot1=3&N1C3=1&N1C2=1&A1FN3=0*/
+  
+  
+End.
+
+
+Problem
+
+  
+  initsl(
+       transmitter,  time,  n,  delta,  commrange,  velocityflag, 
+     v1, w1,  e1x2,  e1y2,  N1C2,
+     N1C3,  P1C2,  P1C3,  N1tilde2,  N1tilde3,
+     N1C2old,  N1C3old,  P1C2old,  P1C3old,  N1C2bar,
+     N1C3bar,  e1N2C1,  e1N2C3,  e1N3C1,  e1N3C2,  e1P2C1,  e1P2C3,
+     e1P3C1,  e1P3C2,  er1,
+     v2,  w2,  e2x1,  e2y1,  e2x3,
+     e2y3,  N2C1,  N2C3,  P2C1,  P2C3, 
+     N2tilde1,  N2tilde3,  N2C1old,  N2C3old,
+     P2C1old,  P2C3old,  N2C1bar,  N2C3bar,  e2N1C2,
+     e2N1C3,  e2N3C1,  e2N3C2,  e2P1C2,  e2P1C3,
+     e2P3C1,  e2P3C2,  er2,
+     v3,  w3,  e3x2,  e3y2,
+     N3C1,  N3C2,  P3C1,  P3C2,  N3tilde1,  N3tilde2,
+     N3C1old,  N3C2old,  P3C1old,  P3C2old,  N3C1bar,  N3C2bar,
+     e3N1C2,  e3N1C3,  e3N2C1,  e3N2C3,
+     e3P1C2,  e3P1C3,  e3P2C1,  e3P2C3,  er3,
+     x1,  y1,  x2,  y2,  x3,  y3,
+     slot3,  slot31,  trflg1,  flgN31,  new31,  xt,  yt,
+     Vm,  trflg3,  rflga1t3,  flgl4,  slot1 
+      ) ->                          
+  [{discreteprogram;continuousprogram;}*
+  @invariant(a1typechecking(N1C2,  N1C3,  e1N2C1,  e1N2C3,  e1N3C1,  e1N3C2,  e1P2C1,
+     e1P2C3,  e1P3C1,  e1P3C2,  er1,  commrange,  n,  delta,  Vm,  rflga1t3,  P1C3, 
+     P1C2,  slot1) &
+     a3typechecking(N3C1,  N3C2,  P3C1,  P3C2,  e3N1C2,  e3N1C3,  e3N2C1,  e3N2C3,
+     e3P1C2,  e3P1C3,  e3P2C1,  e3P2C3,  er3,  commrange,  n,  delta,  Vm) &
+     varstypechecking(flgl4, transmitter) & 
+     l6invariant1( N3C1, slot1,  flgl4,  v3,  w3,  N1C2,  N2C3,  N3C2)
+    )
+  ]
+  (l6invariant1(N3C1, slot1,  flgl4,  v3,  w3,  N1C2,  N2C3,  N3C2))
+End.
+
+Tactic "Three Agents L5 inv2: Proof"
+nil
+End.
+
+Tactic "Three Agents L6 inv1 from tactic"
+US("a1typechecking((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17,•_18))~>(•_0=0|•_0=1)&(•_1=0|•_1=1)&(•_2=0|•_2=1)&(•_3=0|•_3=1)&(•_4=0|•_4=1)&(•_5=0|•_5=1)&(•_6=0|•_6=1)&(•_7=0|•_7=1)&(•_8=0|•_8=1)&(•_9=0|•_9=1)&•_10<=•_11&•_10/(•_12*•_13)<=•_14&(•_15=0|•_15=1)&(•_16=0|•_16=1)&(•_17=0|•_17=1)&(•_18=0|•_18=1|•_18=2|•_18=3|•_18=4)");US("continuousprogram;~>{?velocityflag=1;x1o:=x1;y1o:=y1;x2o:=x2;y2o:=y2;x3o:=x3;y3o:=y3;timeo:=time;x1:=x1o+v1*delta;y1:=y1o+w1*delta;x2:=x2o+v2*delta;y2:=y2o+w2*delta;x3:=x3o+v3*delta;y3:=y3o+w3*delta;time:=timeo+delta;}?slot1=4|slot1=0|flgl4=0|flgl4=1|slot1+flgl4!=5|(slot1 < 4&slot1>0)&(flgl4=2|flgl4=3|flgl4=4)&slot1+flgl4=5&distance((x1,y1,x2,y2))<=commrange-slot1*er1/n-slot1*Vm^2*delta^2&distance((x2,y2,x3,y3))<=commrange-2*slot1*Vm^2*delta^2;?slot1=4|slot1=0|flgl4=0|flgl4=1|e1N2C3=0|e1N3C2=0|flgl4+slot1!=5|slot1 < 4&slot1>0&flgl4>1&flgl4+slot1=5&N2C3=1&N3C2=1;?slot1=4|slot1=0|flgl4=0|flgl4=1|slot12!=3|flgl4+slot1!=5|slot1 < 4&slot1>0&flgl4>1&flgl4+slot1=5&slot12=3&N2C1=1;++?velocityflag=0;");US("varstypechecking((•_0,•_1))~>(•_0>=0&•_0<=4)&(•_1=1|•_1=2|•_1=3)");US("initsl((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17,•_18,•_19,•_20,•_21,•_22,•_23,•_24,•_25,•_26,•_27,•_28,•_29,•_30,•_31,•_32,•_33,•_34,•_35,•_36,•_37,•_38,•_39,•_40,•_41,•_42,•_43,•_44,•_45,•_46,•_47,•_48,•_49,•_50,•_51,•_52,•_53,•_54,•_55,•_56,•_57,•_58,•_59,•_60,•_61,•_62,•_63,•_64,•_65,•_66,•_67,•_68,•_69,•_70,•_71,•_72,•_73,•_74,•_75,•_76,•_77,•_78,•_79,•_80,•_81,•_82,•_83,•_84,•_85,•_86,•_87,•_88,•_89,•_90,•_91,•_92,•_93,•_94,•_95,•_96,•_97,•_98,•_99,•_100))~>•_0=1&•_1=10&•_2=3&•_3=10&•_4=100&•_5=0&inita1sl((•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17,•_18,•_19,•_20,•_21,•_22,•_23,•_24,•_25,•_26,•_27,•_28,•_29,•_30,•_85,•_86))&inita2sl((•_31,•_32,•_33,•_34,•_35,•_36,•_37,•_38,•_39,•_40,•_41,•_42,•_43,•_44,•_45,•_46,•_47,•_48,•_49,•_50,•_51,•_52,•_53,•_54,•_55,•_56,•_57,•_83,•_84,•_87,•_88))&inita3sl((•_58,•_59,•_60,•_61,•_62,•_63,•_64,•_65,•_66,•_67,•_68,•_69,•_70,•_71,•_72,•_73,•_74,•_75,•_76,•_77,•_78,•_79,•_80,•_81,•_82,•_85,•_86))&initdistancesstraightline((•_83,•_84,•_85,•_86,•_87,•_88,•_4))&varinitsl((•_89,•_90,•_91,•_92,•_93,•_94,•_95,•_83,•_84,•_96,•_97,•_98,•_99,•_100))");US("varinitsl((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13))~>•_0=0&•_1=0&•_2=1&•_3=0&•_4=0&•_5=•_7&•_6=•_8&•_9>0&•_10=0&•_11=0&•_12=0&•_13=0");US("updatea2t1;~>?rflga2t1=1;computea2t1;++?rflga2t1=0&distance((x1o,y1o,x2,y2))>commrange;N2C1:=0;P2C1:=0;");US("computea2t1;~>{{N2C1old:=N2C1;N2C3old:=N2C3;}P2C1old:=P2C1;P2C3old:=P2C3;}{?N2C1=1&e2N1C2=1;N2C1bar:=N2C1;N2C3bar:=N2C3;++?N2C1=0&e2N1C2=1;N2C1:=1;N2C1bar:=1;N2C3:=max((N2C3,e2P1C2));N2C3bar:=max((N2C3,e2P1C2));}?unchange2!=1;{?N2C3bar=1|N2C1bar=1;er2bar:=max((min((pathdist213,pathdist231))-DL(),0));?N2C1old=0&e2N1C2=0;N2C1:=N2C1old;N2C3:=N2C3old;P2C1:=max((P2C1old*N2C1bar,P2C1old));P2C3:=max((P2C3old*N2C3bar,P2C3old));++?N2C1old=1|e2N1C2=1;er2:=er2bar;}unchange2:=0;");US("l5invariant2((•_0,•_1,•_2,•_3,•_4))~>•_1=0|•_1=4|•_2<=1|•_2+•_1!=5|•_4 < 3|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&(•_0=0|•_0=1)&•_4=3&•_3=1");US("discreteprogram;~>updatevelocities;?velocityflag=1;transmitinfo;time:=0;");US("inita1tr((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17,•_18,•_19,•_20))~>•_0=0&•_1=0&•_2=x2&•_3=y2&•_4=x3&•_5=y3&•_6=1&•_7=1&•_8=0&•_9=0&•_10=0&•_11=0&•_12=1&•_13=1&•_14=1&•_15=1&•_16=0&•_17=0&•_18=0&•_19=0&•_20=0");US("inita2sl((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17,•_18,•_19,•_20,•_21,•_22,•_23,•_24,•_25,•_26,•_27,•_28,•_29,•_30))~>•_0=0&•_1=0&•_2=•_27&•_3=•_28&•_4=•_29&•_5=•_30&•_6=1&•_7=1&•_8=0&•_9=0&•_10=0&•_11=0&•_12=1&•_13=1&•_14=0&•_15=0&•_16=1&•_17=1&•_18=1&•_19=0&•_20=0&•_21=1&•_22=0&•_23=0&•_24=0&•_25=0&•_26=0");US("updatea1t2;~>?rflga1t2=1;computea1t2;++?rflga1t2=0;N1C2:=0;P1C2:=0;");US("computea1t2;~>{{N1C2old:=N1C2;N1C3old:=N1C3;}P1C2old:=P1C2;P1C3old:=P1C3;}{?N1C2=1&e1N2C1=1;N1C2bar:=N1C2;N1C3bar:=N1C3;++?N1C2=0&e1N2C1=1;N1C2:=1;N1C2bar:=1;N1C3:=max((N1C3,e1P2C1));N3C2bar:=max((N1C3,e1P2C1));}{?N1C3bar=1&N1tilde3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,3))*Vm^2*delta^2+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,3))*Vm*delta+p1((3,3))*Vm^2*delta^2+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,3))*Vm^2*delta^2+DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3))*Vm^2*delta^2+DL());pathdist123:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,3))*Vm^2*delta^2+DL());P1C2:=1;++?N1C3bar=1&N1tilde3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,3))*Vm^2*delta^2+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,3))*Vm^2*delta^2+p1((3,3))*Vm^2*delta^2+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,3))*Vm^2*delta^2+p1((3,3))*Vm^2*delta^2+2*DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3))*Vm^2*delta^2+DL());pathdist123:=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,3))*Vm^2*delta^2+p1((3,3))*Vm^2*delta^2+2*DL());P1C2:=1;++?N1C3bar=1&N1tilde3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,3))*Vm^2*delta^2+DL())<=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3))*Vm^2*delta^2+DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,3))*Vm^2*delta^2+p1((3,3))*Vm^2*delta^2+2*DL())<=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3))*Vm^2*delta^2+DL())|N1C3bar=1&N1tilde3=0;pathdist123:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3))*Vm^2*delta^2+DL());P1C2:=0;++?N1C3bar=0;P1C3:=0;pathdist123:=0;}{?N1C3bar=1|N1C2bar=1;er1bar:=max((pathdist123-DL(),0));{?N1C2old=0&e1N2C1=0;{?er1bar>er1;er1:=er1bar;N1C2:=N1C2bar;N1C3:=N1C3bar;?er1>0;slot1:=4;A1FN2:=N1C2*(1-P1C3);A1FN3:=N1C3*(1-P1C2);++?er1bar<=er1;N1C2:=N1C2old;N1C3:=N1C3old;P1C2:=max((P1C2old*N1C2bar,P1C2old));P1C3:=max((P1C3old*N1C3bar,P1C3old));}++?N1C2old=1|e1N2C1=1;er1:=er1bar;?er1>0;slot1:=4;A1FN2:=N1C2*(1-P1C3);A1FN3:=N1C3*(1-P1C2);}++?N1C3bar=0&N1C2bar=0;er1:=0;N1C2:=0;N1C3:=0;P1C2:=0;P1C3:=0;}");US("l6invariant3((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_5 < 3|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&•_5=3&•_6=1");US("inita3sl((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17,•_18,•_19,•_20,•_21,•_22,•_23,•_24,•_25,•_26))~>•_0=0&•_1=0&•_2=•_25&•_3=•_26&•_4=0&•_5=1&•_6=0&•_7=0&•_8=0&•_9=0&•_10=0&•_11=1&•_12=0&•_13=0&•_14=0&•_15=1&•_16=0&•_17=0&•_18=1&•_19=1&•_20=0&•_21=0&•_22=0&•_23=0&•_24=0");US("inita1sl((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16,•_17,•_18,•_19,•_20,•_21,•_22,•_23,•_24,•_25,•_26))~>•_0=0&•_1=0&•_2=•_25&•_3=•_26&•_4=1&•_5=0&•_6=0&•_7=0&•_8=0&•_9=0&•_10=1&•_11=0&•_12=0&•_13=0&•_14=1&•_15=0&•_16=1&•_17=1&•_18=0&•_19=0&•_20=0&•_21=0&•_22=0&•_23=0&•_24=0");US("l6invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&•_5=1&•_6=1&•_7=1");US("transmitinfo;~>slot1:=max((slot1-1,0));slot3:=max((slot3-1,0));{A1FN2:=N1C2*(1-P1C3);A1FN3:=N1C3*(1-P1C2);}{?transmitter=1;transmit23:=0;++?transmitter=2;++?transmitter=3;transmit23:=3;}");US("a3typechecking((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13,•_14,•_15,•_16))~>(•_0=0|•_0=1)&(•_1=0|•_1=1)&(•_2=0|•_2=1)&(•_3=0|•_3=1)&(•_4=0|•_4=1)&(•_5=0|•_5=1)&(•_6=0|•_6=1)&(•_7=0|•_7=1)&(•_8=0|•_8=1)&(•_9=0|•_9=1)&(•_10=0|•_10=1)&(•_11=0|•_11=1)&•_12<=•_13&•_12/(•_14*•_15)<=•_16");US("updatea2t3;~>?rflga2t3=1;computea2t3;++?rflga2t3=0;N2C3:=0;P2C3:=0;");US("l6invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11,•_12,•_13))~>•_1=0|•_1=4|•_2<=1|•_3!=0|•_4!=0|•_2+•_1!=5|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&•_3=0&•_4=0&(•_0=0|•_0=1)&distance((•_5,•_6,•_7,•_8))<=•_9-•_1*(•_10/•_11)-•_1*•_12*•_13");US("rotatetransmittingagent;~>?transmitter=3;transmitter:=1;xt:=x1;yt:=y1;NIC2t:=N1C2;NIC3t:=N1C3;PIC2t:=P1C2old;PIC3t:=P1C3old;++?transmitter=2;transmitter:=3;xt:=x3;yt:=y3;NIC1t:=N3C1;NIC2t:=N3C2;PIC1t:=P3C1old;PIC2t:=P3C2old;++?transmitter=1;transmitter:=2;xt:=x2;yt:=y2;NIC1t:=N2C1;NIC3t:=N2C3;PIC1t:=P2C1old;PIC3t:=P2C3old;");US("computea2t3;~>{{N2C1old:=N2C1;N2C3old:=N2C3;}P2C1old:=P2C1;P2C3old:=P2C3;}{?N2C3=1&e2N3C2=1;N2C1bar:=N2C1;N2C3bar:=N2C3;++?N2C3=0&e2N3C2=1;N2C3:=1;N2C3bar:=1;N2C1:=max((N2C1,e2P3C2));N2C1bar:=max((N2C1,e2P3C2));}{?N2C3bar=1|N2C1bar=1;er2bar:=max((min((pathdist213,pathdist231))-DL(),0));{?N2C3old=0&e2N3C2=0;?er2bar>er2;er2:=er2bar;N2C1:=N2C1bar;N2C3:=N2C3bar;++?er2bar<=er2;N2C1:=N2C1old;N2C3:=N2C3old;P2C1:=max((P2C1old*N2C1bar,P2C1old));P2C3:=max((P2C3old*N2C3bar,P2C3old));}++?N2C3old=1|e2N3C2=1;er2:=er2bar;}");US("updatea3t1;~>?rflga3t1=1;computea3t1;++?rflga3t1=0;N3C1:=0;P3C1:=0;A3FN1:=N3C1*(1-P3C2);");US("updatea1t3;~>?rflga1t3=1;computea1t3;++?rflga1t3=0;N1C3:=0;P1C3:=0;");US("computea1t3;~>{{N1C2old:=N1C2;N1C3old:=N1C3;}P1C2old:=P1C2;P1C3old:=P1C3;}{?N1C3=1&e1N3C1=1;N1C3bar:=N1C3;N1C2bar:=N1C2;++?N1C3=1&e1N3C1=0;N1C3:=0;N1C3bar:=0;N1C2bar:=N1C2;++?N1C3=0&e1N3C1=1;N1C3:=1;N1C3bar:=1;N1C2:=max((N1C2,e1P3C1));N1C2bar:=max((N1C2,e1P3C1));++?N1C3=0&e1N3C1=0;unchange1:=1;}?unchange1!=1;{?N1C3bar=1&N1tilde3=1&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p1((2,1,3))*Vm^2*delta^2+p1((3,1,3))*Vm^2*delta^2+2*DL())<=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p1((2,1,3))*Vm^2*delta^2+p1((3,1,3))*Vm^2*delta^2+2*DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm^2*delta^2+DL());pathdist123:=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p1((2,1,3))*Vm^2*delta^2+p1((3,1,3))*Vm^2*delta^2+2*DL());P1C2:=1;++?N1C3bar=1&N1tilde3=1&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p1((2,1,3))*Vm^2*delta^2+p1((3,1,3))*Vm^2*delta^2+2*DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm^2*delta^2+DL());pathdist123:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL());P1C2:=1;++?N1C3bar=1&N1tilde3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm^2*delta^2+DL())>=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p1((2,1,3))*Vm^2*delta+p1((3,1,3))*Vm^2*delta^2+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm^2*delta^2+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL())|N1C3bar=1&N1tilde3=0;pathdist123:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm^2*delta^2+DL());P1C2:=0;++?N1C3bar=0;P1C3:=0;pathdist123:=0;}{?N1C2bar=1&N1tilde2=1&commrange-(distance((e1x3,e1y3,e1x2,e1y2))+p1((3,1,3))*Vm*delta+p1((2,1,3))*Vm*delta+2*DL())<=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm*delta+DL())&commrange-(distance((e1x3,e1y3,e1x2,e1y2))+p1((3,1,3))*Vm*delta+p1((2,1,3))*Vm*delta+2*DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL());pathdist132:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL());P1C3:=1;++?N1C2bar=1&N1tilde2=1&commrange-(distance((e1x3,e1y3,e1x2,e1y2))+p1((3,1,3))*Vm*delta+p1((2,1,3))*Vm*delta+2*DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm*delta+DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm*delta+DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL());pathdist132:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm*delta+DL());P1C3:=1;++?N1C2bar=1&N1tilde2=1&commrange-(distance((e1x3,e1y3,e1x2,e1y2))+p1((3,1,3))*Vm*delta+p1((2,1,3))*Vm*delta+2*DL())<=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,1,3))*Vm*delta+DL())<=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL())|N1C2bar=1&N1tilde2=0;pathdist132:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p1((2,1,3))*Vm^2*delta^2+DL());P1C3:=0;++?N1C2bar=0;P1C2:=0;pathdist132:=0;}{?(N1C3bar=1|N1C2bar=1)&N1C3old=0&e1N3C1=0;N1C2:=N1C2old;N1C3:=N1C3old;P1C2:=max((P1C2old*N1C2bar,P1C2old));P1C3:=max((P1C3old*N1C3bar,P1C3old));++?(N1C3bar=1|N1C2bar=1)&(N1C3old=1|e1N3C1=1);er1bar:=max((min((pathdist123,pathdist132))-DL(),0));er1:=er1bar;{?er1>0;slot1:=4;++?er1<=0;}++?N1C3bar=0&N1C2bar=0;er1:=0;N1C2:=0;N1C3:=0;P1C2:=0;P1C3:=0;}unchange1:=0;");US("p1((•_0,•_1,•_2))~>•_1-•_0+2*•_2+1");US("updatea3t2;~>?rflga3t2=1;computea3t2;++?rflga3t2=0;N3C2:=0;P3C2:=0;");US("computea3t2;~>{{N3C1old:=N3C1;N3C2old:=N3C2;}P3C1old:=P3C1;P3C2old:=P3C2;}?N3C2=1&e3N2C3=1;N3C1bar:=N3C1;N3C2bar:=N3C2;++{?N3C2=0&e3N2C3=1;N3C2:=1;N3C2bar:=1;N3C1:=max((N3C1,e3P2C3));N3C1bar:=max((N3C1,e3P2C3));}?unchange3!=1;{?N3C2bar=1|N3C1bar=1;er3bar:=max((min((pathdist321,pathdist312))-DL(),0));{?N3C2old=0&e3N2C3=0;N3C1:=N3C1old;N3C2:=N3C2old;P3C1:=max((P3C1old*N3C1bar,P3C1old));P3C2:=max((P3C2old*N3C2bar,P3C2old));++?N3C2old=1|e3N2C3=1;er3:=er3bar;?er3>0;slot3:=3;A3FN2:=N3C2*(1-P3C1);}}unchange3:=0;");US("p2((•_0,•_1,•_2))~>•_1-•_0+•_2+1");US("updatevelocities;~>v2:=*;w2:=*;v3:=*;w3:=*;?(v1^2+w1^2=(er1/(n*delta))^2&v2^2+w2^2=(er2/(n*delta))^2&v3^2+w3^2=(er3/(n*delta))^2)&v1*delta^2+w1*delta^2<=Vm^2&(v2*delta)^2+(w2*delta)^2<=delta^2*Vm^2&(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2;velocityflag:=1;er1old:=er1;");US("computea3t1;~>{{N3C1old:=N3C1;N3C2old:=N3C2;}P3C1old:=P3C1;P3C2old:=P3C2;}{?N3C1=0&e3N1C3=0;N3C1bar:=1;N3C2bar:=N3C2;}{?N3C1bar=1&e3N1C3=1;N3tilde1:=N3C2bar*e3N1C2*e3N2C1;++?N3C1bar=1&e3N1C3=0;N3tilde1:=0;}{{?N3C2bar=1|N3C1bar=1;er3bar:=max((min((pathdist321,pathdist312))-DL(),0));{?N3C1old=0&e3N1C3=0;?er3bar>er3;er3:=er3bar;N3C1:=N3C1bar;N3C2:=N3C2bar;?er3>0;slot3:=3;A3FN1:=N3C1*(1-P3C2);++?er3bar<=er3;N3C1:=N3C1old;N3C2:=N3C2old;P3C1:=max((P3C1old*N3C1bar,P3C1old));P3C2:=max((P3C2old*N3C2bar,P3C2old));}++?N3C1old=1|e3N1C3=1;er3:=er3bar;?er3>0;slot3:=3;A3FN1:=N3C1*(1-P3C2);}++?N3C2bar=0&N3C1bar=0;er3:=0;N3C1:=0;N3C2:=0;P3C1:=0;P3C2:=0;}?er3bar<=0;P3C1:=P3C1old;P3C2:=P3C2old;");US("DL()~>0");US("initdistancesstraightline((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>distance((•_0,•_1,•_2,•_3))<=•_6&distance((•_4,•_5,•_2,•_3))<=•_6&distance((•_0,•_1,•_4,•_5))>•_6");US("distance((•_0,•_1,•_2,•_3))~>(•_1-•_3)^2+(•_0-•_2)^2");US("l5invariant1((•_0,•_1,•_2,•_3,•_4,•_5))~>•_1=0|•_1=4|•_2<=1|•_2+•_1!=5|•_2>1&(•_1=1|•_1=2|•_1=3)&•_2+•_1=5&(•_0=0|•_0=1)&•_3=1&•_4=1&•_5=1") ; implyR(1) ; loop("((N1C2=0|N1C2=1)&(N1C3=0|N1C3=1)&(e1N2C1=0|e1N2C1=1)&(e1N2C3=0|e1N2C3=1)&(e1N3C1=0|e1N3C1=1)&(e1N3C2=0|e1N3C2=1)&(e1P2C1=0|e1P2C1=1)&(e1P2C3=0|e1P2C3=1)&(e1P3C1=0|e1P3C1=1)&(e1P3C2=0|e1P3C2=1)&er1<=commrange&er1/(n*delta)<=Vm&(rflga1t3=0|rflga1t3=1)&(P1C3=0|P1C3=1)&(P1C2=0|P1C2=1)&(slot1=0|slot1=1|slot1=2|slot1=3|slot1=4))&((N3C1=0|N3C1=1)&(N3C2=0|N3C2=1)&(P3C1=0|P3C1=1)&(P3C2=0|P3C2=1)&(e3N1C2=0|e3N1C2=1)&(e3N1C3=0|e3N1C3=1)&(e3N2C1=0|e3N2C1=1)&(e3N2C3=0|e3N2C3=1)&(e3P1C2=0|e3P1C2=1)&(e3P1C3=0|e3P1C3=1)&(e3P2C1=0|e3P2C1=1)&(e3P2C3=0|e3P2C3=1)&er3<=commrange&er3/(n*delta)<=Vm)&((flgl4>=0&flgl4<=4)&(transmitter=1|transmitter=2|transmitter=3))&(slot1=0|slot1=4|flgl4<=1|v3!=0|w3!=0|flgl4+slot1!=5|flgl4>1&(slot1=1|slot1=2|slot1=3)&flgl4+slot1=5&v3=0&w3=0&(N3C1=0|N3C1=1)&N1C2=1&N2C3=1&N3C2=1)", 1) ; <(
+  master,
+  master,
+  composeb(1) ; composeb(1) ; composeb(1.1) ; composeb(1.1.1) ; composeb(1.1.1) ; composeb(1.1.1.1) ; composeb(1.1.1.1.1) ; master
+  )
+End.
+
+Tactic "Three Agents L6 inv1 from tactic"
+implyR(1) ; loop("((N1C2=0|N1C2=1)&(N1C3=0|N1C3=1)&(e1N2C1=0|e1N2C1=1)&(e1N2C3=0|e1N2C3=1)&(e1N3C1=0|e1N3C1=1)&(e1N3C2=0|e1N3C2=1)&(e1P2C1=0|e1P2C1=1)&(e1P2C3=0|e1P2C3=1)&(e1P3C1=0|e1P3C1=1)&(e1P3C2=0|e1P3C2=1)&er1<=commrange&er1/(n*delta)<=Vm&(rflga1t3=0|rflga1t3=1)&(P1C3=0|P1C3=1)&(P1C2=0|P1C2=1)&(slot1=0|slot1=1|slot1=2|slot1=3|slot1=4))&((N3C1=0|N3C1=1)&(N3C2=0|N3C2=1)&(P3C1=0|P3C1=1)&(P3C2=0|P3C2=1)&(e3N1C2=0|e3N1C2=1)&(e3N1C3=0|e3N1C3=1)&(e3N2C1=0|e3N2C1=1)&(e3N2C3=0|e3N2C3=1)&(e3P1C2=0|e3P1C2=1)&(e3P1C3=0|e3P1C3=1)&(e3P2C1=0|e3P2C1=1)&(e3P2C3=0|e3P2C3=1)&er3<=commrange&er3/(n*delta)<=Vm)&((flgl4>=0&flgl4<=4)&(transmitter=1|transmitter=2|transmitter=3))&(slot1=0|slot1=4|flgl4<=1|v3!=0|w3!=0|flgl4+slot1!=5|flgl4>1&(slot1=1|slot1=2|slot1=3)&flgl4+slot1=5&v3=0&w3=0&(N3C1=0|N3C1=1)&N1C2=1&N2C3=1&N3C2=1)", 1) ; <(
+  master,
+  master,
+  composeb(1) ; composeb(1) ; composeb(1.1) ; composeb(1.1.1) ; composeb(1.1.1) ; composeb(1.1.1.1) ; composeb(1.1.1.1.1) ; master
+  )
+End.
+
+End.
