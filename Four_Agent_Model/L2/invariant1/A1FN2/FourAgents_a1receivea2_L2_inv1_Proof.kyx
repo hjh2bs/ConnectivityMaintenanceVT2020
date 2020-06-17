@@ -1,0 +1,214 @@
+﻿/* Exported from KeYmaera X v4.8.0 */
+
+Theorem"FourAgents_a1receivea2_L2_inv1_with_tactic"
+Description "Specification for four agents".
+ 
+ 
+ Definitions
+
+  Real DL = 0;
+
+  /*Function for calculating distance*/
+  Real distance(Real x1, Real y1, Real x2, Real y2) = (((y1-y2)^2+(x1-x2)^2)^0.5);
+
+  Real p1(Real j, Real newtransmitter, Real n) = newtransmitter - j + 2*n + 1; /* when j >= i_s*/
+  Real p2(Real j, Real newtransmitter, Real n) = newtransmitter - j + n + 1; /* when j < i_s*/
+ 
+  HP setvelocities ::= {
+      Rhat1old := Rhat1;
+        Rhat2old := Rhat2;
+        Rhat3old := Rhat3;
+        Rhat4old := Rhat4;
+  };
+  
+  
+  HP rotatetransmittingagent ::= {
+    {
+        ?(transmitter=2);
+        xt:=x2;
+        yt:=y2;
+    }
+  };
+  
+  HP moveagents ::= {
+        x1o:= x1; y1o:=y1; x2o:=x2; y2o:=y2; x3o:=x3; y3o:=y3; x4o:=x4; y4o:=y4; timeo:=time;   
+        x1:=x1o+v1*deltacopy; y1:=y1o+w1*deltacopy;
+        x2:=x2o+v2*deltacopy; y2:=y2o+w2*deltacopy;
+        x3:=x3o+v3*deltacopy; y3:=y3o+w3*deltacopy;
+        x4:=x4o+v4*deltacopy; y4:=y4o+w4*deltacopy;
+        ?(
+            /*distance(v1*deltacopy,w1*deltacopy,0,0) <= Vm*delta &
+            distance(v2*deltacopy,w2*deltacopy,0,0) <= Vm*delta &
+            distance(v3*deltacopy,w3*deltacopy,0,0) <= Vm*delta &
+            distance(v4*deltacopy,w4*deltacopy,0,0) <= Vm*delta*/
+            distance(v1*deltacopy,w1*deltacopy,0,0) <= Rhat1old/n /*&
+            distance(v2*deltacopy,w2*deltacopy,0,0) <= Rhat2old/n &
+            distance(v3*deltacopy,w3*deltacopy,0,0) <= Rhat3old/n &
+            distance(v4*deltacopy,w4*deltacopy,0,0) <= Rhat4old/n*/
+        );
+  };
+  
+  HP settransmitflag ::= {
+      
+    {
+        {
+            ?(transmitter=2 & a2transmitted=4);
+            a2transmitted:=5;
+        }
+    }
+    
+  };
+  
+  HP flaginvariantspre ::={
+      ?(A1FN2=1 | A1FN2=0);
+      ?(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta >=0);
+      {
+        ?(replan1=1|replan1=2|replan1=3|replan1=4);
+        replan1:=replan1-1;
+      }
+  };
+  
+  HP typeinvariants ::= {
+      
+      ?((N1C2=0|N1C2=1) & (N1C3=0|N1C3=1) & (N1C4=0|N1C4=1) & (N1C2bar=0|N1C2bar=1) & (N1C3bar=0|N1C3bar=1) & (N1C4bar=0|N1C4bar=1) & (N1C2old=0|N1C2old=1) & (N1C3old=0|N1C3old=1) &  (N1C4old=0|N1C4old=1));
+      ?((e1N3C1=0|e1N3C1=1) & (e1N3C2=0|e1N3C2=1) & (e1N3C4=0|e1N3C4=1) & (e1N2C1=0|e1N2C1=1) & (e1N2C3=0|e1N2C3=1) & (e1N2C4=0|e1N2C4=1) & (e1N4C1=0|e1N4C1=1) & (e1N4C2=0|e1N4C2=1) & (e1N4C3=0|e1N4C3=1));
+        
+  };
+  
+  HP flaginvariantspost ::={
+      ?(a2transmitted>=1 & Rhat1>=0);
+      ?(time=0 & Vm>0 & deltacopy=10 & n=4 & delta=10 & commrange=100);
+  };
+  
+  HP program ::= {
+        flaginvariantspre;
+        setvelocities;
+        transmitter:=2;
+        rotatetransmittingagent;
+        moveagents;
+        settransmitflag; /*settransmitflag, updatetransmitinfo*/
+        flaginvariantspost;
+    };
+  
+  
+
+/***************************************************************************************************************************************************************************************************************************/
+    Bool systemtypeinvariant(Real transmitter) <->
+    (
+        (transmitter=1|transmitter=2|transmitter=3|transmitter=4)
+    );
+
+    Bool initstraightline(Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real x4, Real y4)<->
+    (
+        x1=0 & y1=0 & x2=15 & y2=0 & x3=60 & y3=0 & x4=80 & y4=0
+    );
+
+    Bool initsystemvars(Real time, Real Vm, Real delta, Real commrange, Real transmitter, Real n, Real deltacopy)<->
+    (
+        time=0 & Vm>0 & transmitter=1 & deltacopy=10
+    );
+    
+    Bool initflagvars(Real a1receivea2, Real A1FN2)<->
+    (
+        a1receivea2=0 & A1FN2=0
+    );
+    
+    Bool lemma2invariant1(Real A1FN2, Real a2transmitted, Real replan1, Real Rhat1, Real x1, Real y1, Real e1x2, Real e1y2, Real Vm, Real delta, Real n Real commrange) <->
+    (
+        A1FN2!=1 | distance(x1,y1, e1x2,e1y2)<= commrange-replan1*(Rhat1/n)- (a2transmitted+replan1)* Vm * delta
+    );
+    
+    Bool lemma2invariant2(Real a1receivea2, Real a2transmitted, Real x2, Real y2, Real e1x2, Real e1y2, Real Vm, Real delta) <->
+    (
+        a1receivea2!=1 | distance(x2,y2, e1x2,e1y2)<= a2transmitted * Vm * delta
+    );
+
+End.
+
+
+
+ProgramVariables
+
+  /* System Variables */
+    Real x1, y1, x2, y2, x3, y3, x4, y4, x1o, y1o, x2o, y2o, x3o, y3o, x4o, y4o;
+    Real v1,w1, v2, w2, v3, w3, v4, w4;
+    Real Rhat1old, Rhat2old, Rhat3old, Rhat4old, time, timeo, Vm;
+    Real Rhat1, Rhat2, Rhat3, Rhat4, transmitter, xt, yt, deltacopy, n, delta, commrange;
+    
+    /* Agent 1 Internal Variables */
+    Real N1C2, N1C3, N1C4, N1C2bar, N1C3bar, N1C4bar, N1C2old, N1C3old, N1C4old;
+    Real e1N3C1, e1N3C2, e1N3C4, e1N2C1, e1N2C3, e1N2C4, e1N4C1, e1N4C2, e1N4C3;
+    Real Rbar1, path12, path13, path14;
+    Real e1x3, e1y3, e1x2, e1y2, e1x4, e1y4;
+    
+    /* Flag variables */
+    Real a1receivea2, a2transmitted, replan1, A1FN2;
+  
+End.
+
+
+Problem
+
+      initstraightline(x1,y1,x2,y2,x3,y3,x4,y4) & initsystemvars(time, Vm, delta, commrange, transmitter, n, deltacopy) & initflagvars(a1receivea2, A1FN2)
+    ->
+    [{program;}*@invariant(systemtypeinvariant(transmitter) & lemma2invariant1(A1FN2,  a2transmitted,  replan1,  Rhat1,  x1,  y1,  e1x2,  e1y2,  Vm,  delta,  n, commrange))]
+    (
+        A1FN2!=1 | distance(x1,y1, e1x2,e1y2)<= commrange-replan1*(Rhat1/n)- (a2transmitted+replan1)* Vm * delta
+    )
+  
+End.
+
+Tactic "FourAgents_a1receivea2_L2_inv1_with_tactic from tactic"
+implyR(1) ; loop("systemtypeinvariant(transmitter)&lemma2invariant1((A1FN2,a2transmitted,replan1,Rhat1,x1,y1,e1x2,e1y2,Vm,delta,n,commrange))", 1) ; <(
+  US("initsystemvars((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_0=0&•_1>0&•_4=1&•_6=10") ; US("typeinvariants;~>?(N1C2=0|N1C2=1)&(N1C3=0|N1C3=1)&(N1C4=0|N1C4=1)&(N1C2bar=0|N1C2bar=1)&(N1C3bar=0|N1C3bar=1)&(N1C4bar=0|N1C4bar=1)&(N1C2old=0|N1C2old=1)&(N1C3old=0|N1C3old=1)&(N1C4old=0|N1C4old=1);?(e1N3C1=0|e1N3C1=1)&(e1N3C2=0|e1N3C2=1)&(e1N3C4=0|e1N3C4=1)&(e1N2C1=0|e1N2C1=1)&(e1N2C3=0|e1N2C3=1)&(e1N2C4=0|e1N2C4=1)&(e1N4C1=0|e1N4C1=1)&(e1N4C2=0|e1N4C2=1)&(e1N4C3=0|e1N4C3=1);") ; US("p1((•_0,•_1,•_2))~>•_1-•_0+2*•_2+1") ; US("systemtypeinvariant(•)~>•=1|•=2|•=3|•=4") ; US("lemma2invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0!=1|distance((•_2,•_3,•_4,•_5))<=•_1*•_6*•_7") ; US("initflagvars((•_0,•_1))~>•_0=0&•_1=0") ; US("DL()~>0") ; US("lemma2invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11))~>•_0!=1|distance((•_4,•_5,•_6,•_7))<=•_11-•_2*(•_3/•_10)-(•_1+•_2)*•_8*•_9") ; US("initstraightline((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0=0&•_1=0&•_2=15&•_3=0&•_4=60&•_5=0&•_6=80&•_7=0") ; US("program;~>flaginvariantspre;setvelocities;transmitter:=2;rotatetransmittingagent;moveagents;settransmitflag;flaginvariantspost;") ; US("flaginvariantspre;~>?A1FN2=1|A1FN2=0;?commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta>=0;?replan1=1|replan1=2|replan1=3|replan1=4;replan1:=replan1-1;") ; US("flaginvariantspost;~>?a2transmitted>=1&Rhat1>=0;?time=0&Vm>0&deltacopy=10&n=4&delta=10&commrange=100;") ; US("moveagents;~>x1o:=x1;y1o:=y1;x2o:=x2;y2o:=y2;x3o:=x3;y3o:=y3;x4o:=x4;y4o:=y4;timeo:=time;x1:=x1o+v1*deltacopy;y1:=y1o+w1*deltacopy;x2:=x2o+v2*deltacopy;y2:=y2o+w2*deltacopy;x3:=x3o+v3*deltacopy;y3:=y3o+w3*deltacopy;x4:=x4o+v4*deltacopy;y4:=y4o+w4*deltacopy;?distance((v1*deltacopy,w1*deltacopy,0,0))<=Rhat1old/n;") ; US("distance((•_0,•_1,•_2,•_3))~>((•_1-•_3)^2+(•_0-•_2)^2)^0.5") ; US("setvelocities;~>Rhat1old:=Rhat1;Rhat2old:=Rhat2;Rhat3old:=Rhat3;Rhat4old:=Rhat4;") ; US("rotatetransmittingagent;~>?transmitter=2;xt:=x2;yt:=y2;") ; US("settransmitflag;~>?transmitter=2&a2transmitted=4;a2transmitted:=5;") ; US("p2((•_0,•_1,•_2))~>•_1-•_0+•_2+1") ; QE,
+  US("initsystemvars((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_0=0&•_1>0&•_4=1&•_6=10") ; US("typeinvariants;~>?(N1C2=0|N1C2=1)&(N1C3=0|N1C3=1)&(N1C4=0|N1C4=1)&(N1C2bar=0|N1C2bar=1)&(N1C3bar=0|N1C3bar=1)&(N1C4bar=0|N1C4bar=1)&(N1C2old=0|N1C2old=1)&(N1C3old=0|N1C3old=1)&(N1C4old=0|N1C4old=1);?(e1N3C1=0|e1N3C1=1)&(e1N3C2=0|e1N3C2=1)&(e1N3C4=0|e1N3C4=1)&(e1N2C1=0|e1N2C1=1)&(e1N2C3=0|e1N2C3=1)&(e1N2C4=0|e1N2C4=1)&(e1N4C1=0|e1N4C1=1)&(e1N4C2=0|e1N4C2=1)&(e1N4C3=0|e1N4C3=1);") ; US("p1((•_0,•_1,•_2))~>•_1-•_0+2*•_2+1") ; US("systemtypeinvariant(•)~>•=1|•=2|•=3|•=4") ; US("lemma2invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0!=1|distance((•_2,•_3,•_4,•_5))<=•_1*•_6*•_7") ; US("initflagvars((•_0,•_1))~>•_0=0&•_1=0") ; US("DL()~>0") ; US("lemma2invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11))~>•_0!=1|distance((•_4,•_5,•_6,•_7))<=•_11-•_2*(•_3/•_10)-(•_1+•_2)*•_8*•_9") ; US("initstraightline((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0=0&•_1=0&•_2=15&•_3=0&•_4=60&•_5=0&•_6=80&•_7=0") ; US("program;~>flaginvariantspre;setvelocities;transmitter:=2;rotatetransmittingagent;moveagents;settransmitflag;flaginvariantspost;") ; US("flaginvariantspre;~>?A1FN2=1|A1FN2=0;?commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta>=0;?replan1=1|replan1=2|replan1=3|replan1=4;replan1:=replan1-1;") ; US("flaginvariantspost;~>?a2transmitted>=1&Rhat1>=0;?time=0&Vm>0&deltacopy=10&n=4&delta=10&commrange=100;") ; US("moveagents;~>x1o:=x1;y1o:=y1;x2o:=x2;y2o:=y2;x3o:=x3;y3o:=y3;x4o:=x4;y4o:=y4;timeo:=time;x1:=x1o+v1*deltacopy;y1:=y1o+w1*deltacopy;x2:=x2o+v2*deltacopy;y2:=y2o+w2*deltacopy;x3:=x3o+v3*deltacopy;y3:=y3o+w3*deltacopy;x4:=x4o+v4*deltacopy;y4:=y4o+w4*deltacopy;?distance((v1*deltacopy,w1*deltacopy,0,0))<=Rhat1old/n;") ; US("distance((•_0,•_1,•_2,•_3))~>((•_1-•_3)^2+(•_0-•_2)^2)^0.5") ; US("setvelocities;~>Rhat1old:=Rhat1;Rhat2old:=Rhat2;Rhat3old:=Rhat3;Rhat4old:=Rhat4;") ; US("rotatetransmittingagent;~>?transmitter=2;xt:=x2;yt:=y2;") ; US("settransmitflag;~>?transmitter=2&a2transmitted=4;a2transmitted:=5;") ; US("p2((•_0,•_1,•_2))~>•_1-•_0+•_2+1") ; unfold ; cut("(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(5+(replan1-1))*Vm*delta)^2") ; <(
+    hideL(-1=="A1FN2=1|A1FN2=0") ; andR(1) ; <(
+      QE,
+      orR(1) ; hideL(-16=="commrange=100") ; hideL(-11=="time=0") ; hideL(-4=="A1FN2!=1|((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-3=="transmitter=1|transmitter=2|transmitter=3|transmitter=4") ; hideL(-4=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n") ; orL(-2) ; <(
+        allL2R(-2) ; hideL(-2=="replan1=1") ; allL2R(-4) ; QE,
+        allL2R(-5) ; hideL(-5=="a2transmitted=4") ; orL(-2) ; <(
+          allL2R(-2) ; QE,
+          orL(-2) ; <(
+            allL2R(-2) ; QE,
+            allL2R(-2) ; QE
+            )
+          )
+        )
+      ),
+    cut("(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2") ; <(
+      cut("(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(Rhat1/n)^2") ; <(
+        hideR(1=="(2=1|2=2|2=3|2=4)&(A1FN2!=1|((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(5+(replan1-1))*Vm*delta)") ; hideL(-1=="A1FN2=1|A1FN2=0") ; hideL(-4=="A1FN2!=1|((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-4=="2=2") ; hideL(-5=="2=2") ; allL2R(-5) ; hideL(-5=="a2transmitted=4") ; hideL(-5=="5>=1") ; hideL(-11=="commrange=100") ; hideL(-3=="transmitter=1|transmitter=2|transmitter=3|transmitter=4") ; hideL(-3=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n") ; hideL(-4=="time=0") ; orL(-2) ; <(
+          allL2R(-2) ; hideL(-2=="replan1=1") ; QE,
+          orL(-2) ; <(
+            allL2R(-2) ; hideL(-2=="replan1=2") ; QE,
+            orL(-2) ; <(
+              allL2R(-2) ; hideL(-2=="replan1=3") ; QE,
+              allL2R(-2) ; hideL(-2=="replan1=4") ; QE
+              )
+            )
+          ),
+        hideR(1=="(2=1|2=2|2=3|2=4)&(A1FN2!=1|((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(5+(replan1-1))*Vm*delta)") ; hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(5+(replan1-1))*Vm*delta)^2") ; hideL(-18=="(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2") ; hideL(-6=="2=2") ; hideL(-5=="A1FN2!=1|((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-4=="transmitter=1|transmitter=2|transmitter=3|transmitter=4") ; hideL(-3=="replan1=1|replan1=2|replan1=3|replan1=4") ; hideL(-1=="A1FN2=1|A1FN2=0") ; hideL(-1=="commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta>=0") ; QE
+        ),
+      andR(1) ; <(
+        QE,
+        orR(1) ; orL(-5) ; <(
+          QE,
+          hideL(-4=="transmitter=1|transmitter=2|transmitter=3|transmitter=4") ; hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(5+(replan1-1))*Vm*delta)^2") ; hideR(2=="A1FN2!=1") ; hideR(2=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(5+(replan1-1))*Vm*delta") ; hideL(-1=="A1FN2=1|A1FN2=0") ; hideL(-5=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n") ; allL2R(-6) ; hideL(-6=="a2transmitted=4") ; hideL(-13=="commrange=100") ; orL(-2) ; <(
+            allL2R(-2) ; QE,
+            orL(-2) ; <(
+              allL2R(-2) ; QE,
+              orL(-2) ; <(
+                allL2R(-2) ; QE,
+                QE
+                )
+              )
+            )
+          )
+        )
+      )
+    ),
+  US("initsystemvars((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_0=0&•_1>0&•_4=1&•_6=10") ; US("typeinvariants;~>?(N1C2=0|N1C2=1)&(N1C3=0|N1C3=1)&(N1C4=0|N1C4=1)&(N1C2bar=0|N1C2bar=1)&(N1C3bar=0|N1C3bar=1)&(N1C4bar=0|N1C4bar=1)&(N1C2old=0|N1C2old=1)&(N1C3old=0|N1C3old=1)&(N1C4old=0|N1C4old=1);?(e1N3C1=0|e1N3C1=1)&(e1N3C2=0|e1N3C2=1)&(e1N3C4=0|e1N3C4=1)&(e1N2C1=0|e1N2C1=1)&(e1N2C3=0|e1N2C3=1)&(e1N2C4=0|e1N2C4=1)&(e1N4C1=0|e1N4C1=1)&(e1N4C2=0|e1N4C2=1)&(e1N4C3=0|e1N4C3=1);") ; US("p1((•_0,•_1,•_2))~>•_1-•_0+2*•_2+1") ; US("systemtypeinvariant(•)~>•=1|•=2|•=3|•=4") ; US("lemma2invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0!=1|distance((•_2,•_3,•_4,•_5))<=•_1*•_6*•_7") ; US("initflagvars((•_0,•_1))~>•_0=0&•_1=0") ; US("DL()~>0") ; US("lemma2invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11))~>•_0!=1|distance((•_4,•_5,•_6,•_7))<=•_11-•_2*(•_3/•_10)-(•_1+•_2)*•_8*•_9") ; US("initstraightline((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0=0&•_1=0&•_2=15&•_3=0&•_4=60&•_5=0&•_6=80&•_7=0") ; US("program;~>flaginvariantspre;setvelocities;transmitter:=2;rotatetransmittingagent;moveagents;settransmitflag;flaginvariantspost;") ; US("flaginvariantspre;~>?A1FN2=1|A1FN2=0;?commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta>=0;?replan1=1|replan1=2|replan1=3|replan1=4;replan1:=replan1-1;") ; US("flaginvariantspost;~>?a2transmitted>=1&Rhat1>=0;?time=0&Vm>0&deltacopy=10&n=4&delta=10&commrange=100;") ; US("moveagents;~>x1o:=x1;y1o:=y1;x2o:=x2;y2o:=y2;x3o:=x3;y3o:=y3;x4o:=x4;y4o:=y4;timeo:=time;x1:=x1o+v1*deltacopy;y1:=y1o+w1*deltacopy;x2:=x2o+v2*deltacopy;y2:=y2o+w2*deltacopy;x3:=x3o+v3*deltacopy;y3:=y3o+w3*deltacopy;x4:=x4o+v4*deltacopy;y4:=y4o+w4*deltacopy;?distance((v1*deltacopy,w1*deltacopy,0,0))<=Rhat1old/n;") ; US("distance((•_0,•_1,•_2,•_3))~>((•_1-•_3)^2+(•_0-•_2)^2)^0.5") ; US("setvelocities;~>Rhat1old:=Rhat1;Rhat2old:=Rhat2;Rhat3old:=Rhat3;Rhat4old:=Rhat4;") ; US("rotatetransmittingagent;~>?transmitter=2;xt:=x2;yt:=y2;") ; US("settransmitflag;~>?transmitter=2&a2transmitted=4;a2transmitted:=5;") ; US("p2((•_0,•_1,•_2))~>•_1-•_0+•_2+1") ; QE
+  )
+End.
+
+End.

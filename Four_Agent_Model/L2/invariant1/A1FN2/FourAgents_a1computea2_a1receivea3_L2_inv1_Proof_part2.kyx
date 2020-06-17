@@ -1,20 +1,13 @@
-﻿/* Exported from KeYmaera X v4.8.0 */
-
-Theorem"FourAgents_a1computea2_a1receivea3_L2_inv1"
+Theorem "FourAgents_a1computea2_a1receivea3_L2_inv1_part2"
 Description "Specification for four agents".
 
 Definitions
 
-/*  Real n = 3;
- /* Real delta = 10;
-  Real commrange = 100.0;*/
+
   Real DL = 0;
 
   /*Function for calculating distance*/
   Real distance(Real x1, Real y1, Real x2, Real y2) = (((y1-y2)^2+(x1-x2)^2)^0.5);
-
-/*  Real p1(Real j, Real k, Real newtransmitter, Real n) = abs(newtransmitter-j) + n + 1;
-  Real p2(Real k, Real newtransmitter, Real n) = abs(newtransmitter-k) + n + 1;*/
 
   Real p1(Real j, Real newtransmitter, Real n) = newtransmitter - j + 2*n + 1; /* when j >= i_s*/
   Real p2(Real j, Real newtransmitter, Real n) = newtransmitter - j + n + 1; /* when j < i_s*/
@@ -24,16 +17,24 @@ Definitions
   {
     {
       {N1C2old:=N1C2; N1C3old:=N1C3; N1C4old:=N1C4;}
+      {P1F2old:=P1F2; P1F3old:=P1F3; P1F4old:=P1F4;}
     }
+  };
+  
+ HP computeNbar ::=
+ {
     {
         {?(N1C2=1 & e1N2C1=1); N1C2:= 1; N1C2bar:= 1; N1C3bar:= N1C3; N1C4bar:= N1C4;}
         /*++ {?(N1C2=1 & e1N2C1=0); N1C2:=0; N1C2bar:= 0; N1C3bar:=N1C3; N1C4bar:= N1C4;}
         ++ {?(N1C2=0 & e1N2C1=1); N1C2:=1; N1C2bar:= 1; N1C3bar:= N1C3; N1C4bar:= N1C4;}
         ++ {?(N1C2=0 & e1N2C1=0); N1C2:= 1; N1C2bar:= 1; N1C3bar:= N1C3; N1C4bar:= N1C4;}*/
     }
+ };
 /**********************************************************************************************************************************************************************************/
 /**********************************************************************************************************************************************************************************/
-    
+
+  HP computepath13 ::=
+  {
     {
         {
             ?(
@@ -73,7 +74,7 @@ Definitions
             );
             path13 := commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,4)*Vm*delta + p1(3,3,4)*Vm*delta + 2*DL);
             
-        } /*++
+        } ++
         {
             ?(
                 (N1C3bar=1 & e1N3C1=1 & N1C2bar=1 & e1N3C2=1 & e1N2C3=1 & N1C4bar=1 & e1N3C4=1 & e1N4C3=1 &
@@ -153,12 +154,15 @@ Definitions
         } ++
         {
             ?(N1C3bar=0);  path13:=0;
-        }*/
+        }
     }
+  };
 /**********************************************************************************************************************************************************************************/
 /**********************************************************************************************************************************************************************************/
     
-    /*{
+  HP computepath14 ::=
+  {
+    {
         {
             ?(
                 (N1C4bar=1 & e1N4C1=1 & N1C2bar=1 & e1N2C4=1 & e1N4C2=1 & N1C3bar=1 & e1N3C4=1 & e1N4C3=1 &
@@ -175,10 +179,10 @@ Definitions
                 commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL) <= commrange - (distance(e1x2,e1y2,e1x4,e1y4) + p2(2,3,4)*Vm*delta + p1(4,3,4)*Vm*delta + 2*DL) &
                 commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL) > commrange - (distance(x1+v1*delta,y1+w1*delta,e1x4,e1y4) + p1(4,3,4)*Vm*delta + DL))
             );
-            path14 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL);*/
+            path14 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL);
             /* 2 is a first degree neighbor of 1*/
             
-        /*} ++
+        } ++
 
         {
             ?(
@@ -282,14 +286,16 @@ Definitions
 
         {
             ?(N1C4bar=0);  path14:=0;
-        }*/
-    /*}*/    
+        }
+    }   
+  };
 
 /**********************************************************************************************************************************************************************************/
 /**********************************************************************************************************************************************************************************/
-    
-    /*{*/
-        /*{
+  HP computepath12 ::=
+  {
+    {
+        {
             ?(
                 (N1C2bar=1 & e1N2C1=1 & N1C3bar=1 & e1N3C2=1 & e1N2C3=1 & N1C4bar=1 & e1N4C2=1 & e1N2C4=1 &
                 commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3,4)*Vm*delta + DL) <= commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,4)*Vm*delta + p1(3,3,4)*Vm*delta + 2*DL) &
@@ -328,9 +334,9 @@ Definitions
             );
             path12 := commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,4)*Vm*delta + p1(3,3,4)*Vm*delta + 2*DL);
             
-        } ++*/
+        } ++
 
-        /*{
+        {
             ?(
                 (N1C2bar=1 & e1N2C1=1 & N1C3bar=1 & e1N3C2=1 & e1N2C3=1 & N1C4bar=1 & e1N4C2=1 & e1N2C4=1 &
                 commrange - (distance(x1+v1*delta,y1+w1*delta,e1x3,e1y3) + p1(3,3,4)*Vm*delta + DL) <= commrange - (distance(e1x2,e1y2,e1x3,e1y3) + p2(2,3,4)*Vm*delta + p1(3,3,4)*Vm*delta + 2*DL) &
@@ -366,10 +372,10 @@ Definitions
                 commrange - (distance(e1x4,e1y4,e1x2,e1y2) + p1(4,3,4)*Vm*delta + p2(2,3,4)*Vm*delta + 2*DL) <= commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL)) |
         (N1C2bar=1 & e1N2C1=1 & (N1C3bar=0 | e1N3C2=0 | e1N2C3=0) & (N1C4bar=0 | e1N4C2=0 | e1N2C4=0))
             );
-            path12 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL);*/
+            path12 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL);
             /*2 is first degree neighbor of 1*/
             
-        /*} ++
+        } ++
 
         {
             ?(
@@ -389,7 +395,7 @@ Definitions
             );
             path12 := commrange - (distance(x1+v1*delta,y1+w1*delta,e1x4,e1y4) + p1(4,3,4)*Vm*delta + DL);
             
-        }*//* ++
+        } ++
 
         {
             ?(
@@ -413,87 +419,106 @@ Definitions
 
         {
             ?(N1C2bar=0);  path12:=0;
-        }*/
-    /*}*/
+        }
+    }
+    };
 
+  HP computeRhat1 ::=
+  {
     {
         {
             ?(N1C3bar = 1 | N1C4bar = 1 | N1C2bar = 1);
-            {
-                {
-                    ?(path13<path12 & path13<path14 & path13>0);
-                    Rbar1 := path13;
-                }/*++
-                {
-                    ?(path12<=path13 & path12<=path14 & path12>0);
-                    Rbar1 := path12;
-                }++
-                {
-                    ?(path14<path12 & path14<=path13 & path14>0);
-                    Rbar1 := path14;
-                }++
-                {
-                    ?(path12<=0 & path14<=0 & path13<=0);
-                    Rbar1 := 0;
-                }*/
+            {  
+                {  
+                    ?(path13<=path12 & path13<=path14 & path13>0);  
+                    Rbar1 := path13;  
+                }++  
+                {  
+                    ?(path12<=path13 & path12<=path14 & path12>0);  
+                    Rbar1 := path12;  
+                }++  
+                {  
+                    ?(path14<=path12 & path14<=path13 & path14>0);  
+                    Rbar1 := path14;  
+                }++  
+                {  
+                    ?((path13<=path12 & path13<=path14 & path13<=0) | (path12<=path13 & path12<=path14 & path12<=0)| (path14<=path12 & path14<=path13 & path14<=0));  
+                    Rbar1 := 0;  
+                }  
             }
         
             {
                 {
                     ?((N1C2old=0 & e1N2C1=0 & Rbar1>Rhat1) | (N1C2old=1 | e1N2C1=1));
                     Rhat1 := Rbar1;
-                    replan1:=4;
-                }/*   ++
+                    {
+                        /*{?(Rhat1>0); replan1:=4;} ++*/
+                        {?(Rhat1=0);}
+                    }
+                }   ++
                 {
                     ?(N1C2old=0 & e1N2C1=0 & Rbar1<=Rhat1);
                     Rhat1:=Rhat1;
                     N1C2 := N1C2old;
                     N1C3 := N1C3old;
                     N1C4 := N1C4old;
-                }*/
+                }
             }
         } ++
         {
             ?(N1C3bar=0 & N1C4bar=0 & N1C2bar=0); Rhat1:=0; N1C2:=0; N1C3:=0; N1C4:=0;
         }
     }
+
     {
-        {
+        /*{
             ?(
-                path12=commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL) |
-                path13=commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL) |
-                path14=commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL)
+                Rhat1old!=Rhat1 & Rhat1>0 &
+                path12=commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL)
             );
             A1FN2:=1;
-        }++
+        } ++*/
         {
             ?(
-                path12!=commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL) & 
-                path13!=commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL) & 
-                path14!=commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL)
+                (
+                    Rhat1old!=Rhat1 & Rhat1>0 &
+                    path12!=commrange - (distance(x1+v1*delta,y1+w1*delta,e1x2,e1y2) + p2(2,3,4)*Vm*delta + DL)
+                ) |
+                (Rhat1old!=Rhat1 & Rhat1=0)
             );
             A1FN2:=0;
+        } ++
+        {
+            ?(Rhat1old=Rhat1);    
         }
     }
     
   };
 
   HP updatea1t2 ::= {
-    replan1:=max(replan1-1,0);
+    {
+        ?(replan1=1|replan1=2|replan1=3|replan1=4);
+        replan1:=replan1-1;
+    }{
     {
       ?(
            transmitter=2 & distance(x1,y1,xt,yt)<=commrange     
       );
       computea1t2;
-    }/*
+      /*computeNbar;*/
+      computepath13;
+      computepath14;
+      computepath12;
+      computeRhat1;
+    }
     ++
     { 
       ?(
           transmitter=2 & distance(x1,y1,xt,yt)>commrange 
       );
-      N1C2old:=N1C2;
       N1C2:=0;
-    }*/
+    }
+    }
   };
 
 
@@ -504,25 +529,12 @@ Definitions
         Rhat4old := Rhat4;
   };
   
-  HP checkreception ::= {
-      {
-          ?(a1receivea2=0);
-      }++
-      {
-          ?(a1receivea2=1);
-      }
-  };
   
-  HP settransmittedmessage ::= {
+  HP rotatetransmittingagent ::= {
     {
         ?(transmitter=3);
         xt:=x3;
         yt:=y3;
-    }  ++
-    {
-        ?(transmitter!=3);
-        xt:=*;
-        yt:=*;
     }
   };
   
@@ -533,36 +545,30 @@ Definitions
         x3:=x3o+v3*deltacopy; y3:=y3o+w3*deltacopy;
         x4:=x4o+v4*deltacopy; y4:=y4o+w4*deltacopy;
         ?(
-            distance(v1*deltacopy,w1*deltacopy,0,0) <= Vm*delta &
+            /*distance(v1*deltacopy,w1*deltacopy,0,0) <= Vm*delta &
             distance(v2*deltacopy,w2*deltacopy,0,0) <= Vm*delta &
             distance(v3*deltacopy,w3*deltacopy,0,0) <= Vm*delta &
-            distance(v4*deltacopy,w4*deltacopy,0,0) <= Vm*delta
-            /*((x1-x1o)^2+(y1-y1o)^2)^(1/2) <= Rhat1old &
-            ((x2-x2o)^2+(y2-y2o)^2)^(1/2) <= Rhat2old &
-            ((x3-x3o)^2+(y3-y3o)^2)^(1/2) <= Rhat3old &
-            ((x4-x4o)^2+(y4-y4o)^2)^(1/2) <= Rhat4old &*/
+            distance(v4*deltacopy,w4*deltacopy,0,0) <= Vm*delta*/
+            distance(v1*deltacopy,w1*deltacopy,0,0) <= Rhat1old/n /*&
+            distance(v2*deltacopy,w2*deltacopy,0,0) <= Rhat2old/n &
+            distance(v3*deltacopy,w3*deltacopy,0,0) <= Rhat3old/n &
+            distance(v4*deltacopy,w4*deltacopy,0,0) <= Rhat4old/n*/
         );
   };
   
-  HP receivetransmissions ::= {
-      
+  HP settransmitflag ::= {
     {
         {
             ?(transmitter=3 & a2transmitted=1);
             a2transmitted:=2;
         }
     }
-    /*{
-      {
-        ?(transmitter=3 & distance(xt,yt,x1,y1)<=commrange);
-        e1x3:=xt; e1y3:=yt; 
-      }++
-      {
-        ?(transmitter=3 & distance(xt,yt,x1,y1)>commrange);
-      }
-    }*/
   };
   
+  HP flaginvariantspre ::={
+      ?(A1FN2=1 | A1FN2=0);
+      ?(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta >=0);
+  };
   
   HP typeinvariants ::= {
       
@@ -571,20 +577,20 @@ Definitions
         
   };
   
-  HP flaginvariants::={
-      ?(a2transmitted>=1);
+  HP flaginvariantspost::={
+      ?(a2transmitted>=1 & Rhat1>=0);
       ?(time=0 & Vm>0 & delta=10 & commrange=100 & n=4 & deltacopy=10);
   };
   
   HP program ::= {
+        flaginvariantspre;
         setvelocities;
-        updatea1t2;
-        /*checkreception;*/
+        updatea1t2;     /*transmitinfo*/
         transmitter:=3;
-        /*settransmittedmessage;*/
+        rotatetransmittingagent;
         moveagents;
-        receivetransmissions;
-        flaginvariants;
+        settransmitflag;
+        flaginvariantspost;
     };
   
   
@@ -654,36 +660,268 @@ Problem
     )
 End.
 
-Tactic "FourAgents_a1computea2_a1receivea3_L2_inv1: Proof"
+
+Tactic "FourAgents_a1computea2_a1receivesa3_L2_inv1_part1: Proof"
 implyR(1) ; loop("systemtypeinvariant(transmitter)&lemma2invariant1((A1FN2,a2transmitted,replan1,Rhat1,x1,y1,e1x2,e1y2,Vm,delta,n,commrange))", 1) ; <(
-  US("checkreception;~>?a1receivea2=0;++?a1receivea2=1;");US("initsystemvars((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_0=0&•_1>0&•_2=10&•_3=100&•_4=1&•_5=4&•_6=10");US("typeinvariants;~>?(N1C2=0|N1C2=1)&(N1C3=0|N1C3=1)&(N1C4=0|N1C4=1)&(N1C2bar=0|N1C2bar=1)&(N1C3bar=0|N1C3bar=1)&(N1C4bar=0|N1C4bar=1)&(N1C2old=0|N1C2old=1)&(N1C3old=0|N1C3old=1)&(N1C4old=0|N1C4old=1);?(e1N3C1=0|e1N3C1=1)&(e1N3C2=0|e1N3C2=1)&(e1N3C4=0|e1N3C4=1)&(e1N2C1=0|e1N2C1=1)&(e1N2C3=0|e1N2C3=1)&(e1N2C4=0|e1N2C4=1)&(e1N4C1=0|e1N4C1=1)&(e1N4C2=0|e1N4C2=1)&(e1N4C3=0|e1N4C3=1);");US("settransmittedmessage;~>?transmitter=3;xt:=x3;yt:=y3;++?transmitter!=3;xt:=*;yt:=*;");US("systemtypeinvariant(•)~>•=1|•=2|•=3|•=4");US("lemma2invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0!=1|distance((•_2,•_3,•_4,•_5))<=•_1*•_6*•_7");US("initflagvars((•_0,•_1))~>•_0=0&•_1=0");US("lemma2invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11))~>•_0!=1|distance((•_4,•_5,•_6,•_7))<=•_11-•_2*(•_3/•_10)-(•_1+•_2)*•_8*•_9");US("initstraightline((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0=0&•_1=0&•_2=15&•_3=0&•_4=60&•_5=0&•_6=80&•_7=0");US("program;~>setvelocities;updatea1t2;transmitter:=3;moveagents;receivetransmissions;flaginvariants;");US("updatea1t2;~>replan1:=max((replan1-1,0));?transmitter=2&distance((x1,y1,xt,yt))<=commrange;computea1t2;");US("computea1t2;~>{N1C2old:=N1C2;N1C3old:=N1C3;N1C4old:=N1C4;}{?N1C2=1&e1N2C1=1;N1C2:=1;N1C2bar:=1;N1C3bar:=N1C3;N1C4bar:=N1C4;}{?N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())<=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())>commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&(N1C4bar=0|e1N3C4=0|e1N4C3=0)&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL());path13:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());++?N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())>commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())<=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&(N1C4bar=0|e1N3C4=0|e1N4C3=0)&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL());path13:=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL());}{?N1C3bar=1|N1C4bar=1|N1C2bar=1;{?path13 < path12&path13 < path14&path13>0;Rbar1:=path13;}?N1C2old=0&e1N2C1=0&Rbar1>Rhat1|N1C2old=1|e1N2C1=1;Rhat1:=Rbar1;replan1:=4;++?N1C3bar=0&N1C4bar=0&N1C2bar=0;Rhat1:=0;N1C2:=0;N1C3:=0;N1C4:=0;}{?path12=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())|path13=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())|path14=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());A1FN2:=1;++?path12!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())&path13!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())&path14!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());A1FN2:=0;}");US("p1((•_0,•_1,•_2))~>•_1-•_0+2*•_2+1");US("DL()~>0");US("moveagents;~>x1o:=x1;y1o:=y1;x2o:=x2;y2o:=y2;x3o:=x3;y3o:=y3;x4o:=x4;y4o:=y4;timeo:=time;x1:=x1o+v1*deltacopy;y1:=y1o+w1*deltacopy;x2:=x2o+v2*deltacopy;y2:=y2o+w2*deltacopy;x3:=x3o+v3*deltacopy;y3:=y3o+w3*deltacopy;x4:=x4o+v4*deltacopy;y4:=y4o+w4*deltacopy;?distance((v1*deltacopy,w1*deltacopy,0,0))<=Vm*delta&distance((v2*deltacopy,w2*deltacopy,0,0))<=Vm*delta&distance((v3*deltacopy,w3*deltacopy,0,0))<=Vm*delta&distance((v4*deltacopy,w4*deltacopy,0,0))<=Vm*delta;");US("distance((•_0,•_1,•_2,•_3))~>((•_1-•_3)^2+(•_0-•_2)^2)^0.5");US("setvelocities;~>Rhat1old:=Rhat1;Rhat2old:=Rhat2;Rhat3old:=Rhat3;Rhat4old:=Rhat4;");US("receivetransmissions;~>?transmitter=3&a2transmitted=1;a2transmitted:=2;");US("flaginvariants;~>?a2transmitted>=1;?time=0&Vm>0&delta=10&commrange=100&n=4&deltacopy=10;");US("p2((•_0,•_1,•_2))~>•_1-•_0+•_2+1") ; QE,
-  US("checkreception;~>?a1receivea2=0;++?a1receivea2=1;");US("initsystemvars((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_0=0&•_1>0&•_2=10&•_3=100&•_4=1&•_5=4&•_6=10");US("typeinvariants;~>?(N1C2=0|N1C2=1)&(N1C3=0|N1C3=1)&(N1C4=0|N1C4=1)&(N1C2bar=0|N1C2bar=1)&(N1C3bar=0|N1C3bar=1)&(N1C4bar=0|N1C4bar=1)&(N1C2old=0|N1C2old=1)&(N1C3old=0|N1C3old=1)&(N1C4old=0|N1C4old=1);?(e1N3C1=0|e1N3C1=1)&(e1N3C2=0|e1N3C2=1)&(e1N3C4=0|e1N3C4=1)&(e1N2C1=0|e1N2C1=1)&(e1N2C3=0|e1N2C3=1)&(e1N2C4=0|e1N2C4=1)&(e1N4C1=0|e1N4C1=1)&(e1N4C2=0|e1N4C2=1)&(e1N4C3=0|e1N4C3=1);");US("settransmittedmessage;~>?transmitter=3;xt:=x3;yt:=y3;++?transmitter!=3;xt:=*;yt:=*;");US("systemtypeinvariant(•)~>•=1|•=2|•=3|•=4");US("lemma2invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0!=1|distance((•_2,•_3,•_4,•_5))<=•_1*•_6*•_7");US("initflagvars((•_0,•_1))~>•_0=0&•_1=0");US("lemma2invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11))~>•_0!=1|distance((•_4,•_5,•_6,•_7))<=•_11-•_2*(•_3/•_10)-(•_1+•_2)*•_8*•_9");US("initstraightline((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0=0&•_1=0&•_2=15&•_3=0&•_4=60&•_5=0&•_6=80&•_7=0");US("program;~>setvelocities;updatea1t2;transmitter:=3;moveagents;receivetransmissions;flaginvariants;");US("updatea1t2;~>replan1:=max((replan1-1,0));?transmitter=2&distance((x1,y1,xt,yt))<=commrange;computea1t2;");US("computea1t2;~>{N1C2old:=N1C2;N1C3old:=N1C3;N1C4old:=N1C4;}{?N1C2=1&e1N2C1=1;N1C2:=1;N1C2bar:=1;N1C3bar:=N1C3;N1C4bar:=N1C4;}{?N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())<=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())>commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&(N1C4bar=0|e1N3C4=0|e1N4C3=0)&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL());path13:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());++?N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())>commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())<=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&(N1C4bar=0|e1N3C4=0|e1N4C3=0)&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL());path13:=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL());}{?N1C3bar=1|N1C4bar=1|N1C2bar=1;{?path13 < path12&path13 < path14&path13>0;Rbar1:=path13;}?N1C2old=0&e1N2C1=0&Rbar1>Rhat1|N1C2old=1|e1N2C1=1;Rhat1:=Rbar1;replan1:=4;++?N1C3bar=0&N1C4bar=0&N1C2bar=0;Rhat1:=0;N1C2:=0;N1C3:=0;N1C4:=0;}{?path12=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())|path13=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())|path14=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());A1FN2:=1;++?path12!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())&path13!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())&path14!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());A1FN2:=0;}");US("p1((•_0,•_1,•_2))~>•_1-•_0+2*•_2+1");US("DL()~>0");US("moveagents;~>x1o:=x1;y1o:=y1;x2o:=x2;y2o:=y2;x3o:=x3;y3o:=y3;x4o:=x4;y4o:=y4;timeo:=time;x1:=x1o+v1*deltacopy;y1:=y1o+w1*deltacopy;x2:=x2o+v2*deltacopy;y2:=y2o+w2*deltacopy;x3:=x3o+v3*deltacopy;y3:=y3o+w3*deltacopy;x4:=x4o+v4*deltacopy;y4:=y4o+w4*deltacopy;?distance((v1*deltacopy,w1*deltacopy,0,0))<=Vm*delta&distance((v2*deltacopy,w2*deltacopy,0,0))<=Vm*delta&distance((v3*deltacopy,w3*deltacopy,0,0))<=Vm*delta&distance((v4*deltacopy,w4*deltacopy,0,0))<=Vm*delta;");US("distance((•_0,•_1,•_2,•_3))~>((•_1-•_3)^2+(•_0-•_2)^2)^0.5");US("setvelocities;~>Rhat1old:=Rhat1;Rhat2old:=Rhat2;Rhat3old:=Rhat3;Rhat4old:=Rhat4;");US("receivetransmissions;~>?transmitter=3&a2transmitted=1;a2transmitted:=2;");US("flaginvariants;~>?a2transmitted>=1;?time=0&Vm>0&delta=10&commrange=100&n=4&deltacopy=10;");US("p2((•_0,•_1,•_2))~>•_1-•_0+•_2+1") ; unfold ; <(
-    andR(1) ; <(
+  expandAllDefs; QE,
+  expandAllDefs ; composeb(1) ; composeb(1.1) ; composeb(1.1.1) ; composeb(1.1.1) ; choiceb(1.1.1.1) ; boxAnd(1.1.1) ; boxAnd(1.1) ; boxAnd(1) ; andR(1) ; <(
+    composeb(1.1.1.1) ; composeb(1.1.1.1.1) ; composeb(1.1.1.1.1.1) ; composeb(1.1.1.1.1.1.1) ; composeb(1.1.1.1.1.1.1.1) ; GV(1.1.1.1.1.1) ; GV(1.1.1.1.1.1.0) ; GV(1.1.1.1.1.1.0.0) ; composeb(1.1.1.1.1.1.0.0.0) ; choiceb(1.1.1.1.1.1.0.0.0) ; composeb(1.1.1.1.1.1.0.0.0.0) ; composeb(1.1.1.1.1.1.0.0.0.0.1) ; GV(1.1.1.1.1.1.0.0.0.0.1) ; composeb(1.1.1.1.1) ; composeb(1.1.1.1.1.1) ; composeb(1.1.1.1.1.1.1) ; composeb(1) ; testb(1) ; implyR(1) ; composeb(1.1) ; testb(1) ; implyR(1) ; assignb(1) ; composeb(1) ; unfold ; <(
       QE,
-      allL2R(-15) ; hideL(-9=="N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&N1C4=1&e1N3C4=1&e1N4C3=1&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)<=commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)<=commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>=commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>=commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)|N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&N1C4=1&e1N3C4=1&e1N4C3=1&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)<=commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)>commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>=commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>=commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)|N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&(N1C4=0|e1N3C4=0|e1N4C3=0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)<=commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)") ; hideL(-9=="N1C3=1|N1C4=1|1=1") ; hideL(-9=="commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0) < path12") ; hideL(-9=="commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0) < path14") ; hideL(-9=="commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>0") ; hideL(-9=="N1C2old=0&e1N2C1=0&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>Rhat1_0|N1C2old=1|e1N2C1=1") ; hideL(-9=="Rhat1=commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)") ; hideL(-9=="path12=commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)|commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)=commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)|path14=commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)") ; hideL(-9=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Vm*delta") ; hideL(-9=="((w2*deltacopy-0)^2+(v2*deltacopy-0)^2)^0.5<=Vm*delta") ; hideL(-9=="((w3*deltacopy-0)^2+(v3*deltacopy-0)^2)^0.5<=Vm*delta") ; hideL(-9=="((w4*deltacopy-0)^2+(v4*deltacopy-0)^2)^0.5<=Vm*delta") ; hideL(-2=="A1FN2!=1|((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1_0*(Rhat1_0/n)-(a2transmitted+replan1_0)*Vm*delta") ; QE
-      ),
-    hideL(-11=="commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0) < path12") ; hideL(-11=="commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0) < path14") ; hideL(-11=="commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>0") ; hideL(-11=="N1C2old=0&e1N2C1=0&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>Rhat1|N1C2old=1|e1N2C1=1") ; hideL(-11=="path12=commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)|commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)=commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)|path14=commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)") ; hideL(-12=="((w2*deltacopy-0)^2+(v2*deltacopy-0)^2)^0.5<=Vm*delta") ; hideL(-12=="((w3*deltacopy-0)^2+(v3*deltacopy-0)^2)^0.5<=Vm*delta") ; hideL(-12=="((w4*deltacopy-0)^2+(v4*deltacopy-0)^2)^0.5<=Vm*delta") ; andR(1) ; <(
       QE,
-      hideL(-2=="A1FN2!=1|((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1_0*(Rhat1/n)-(a2transmitted+replan1_0)*Vm*delta") ; orL(-8) ; <(
-        andL(-8) ; andL(-20) ; andL(-21) ; andL(-22) ; andL(-23) ; andL(-24) ; andL(-25) ; andL(-26) ; andL(-27) ; hideL(-28=="commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)>commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>=commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>=commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)") ; hideL(-9=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Vm*delta") ; hideL(-4=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; QE,
-        orL(-8) ; <(
-          andL(-8) ; andL(-20) ; andL(-21) ; andL(-22) ; andL(-23) ; andL(-24) ; andL(-25) ; andL(-26) ; andL(-27) ; hideL(-28=="commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)<=commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>=commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>=commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)") ; hideL(-9=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Vm*delta") ; hideL(-4=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; QE,
-          hideL(-10=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Vm*delta") ; andL(-8) ; andL(-19) ; andL(-20) ; andL(-21) ; andL(-22) ; andL(-23) ; andL(-24) ; hideL(-25=="commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)") ; hideL(-4=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; QE
+      QE,
+      andR(1) ; <(
+        QE,
+        orR(1) ; allL2R(-3) ; allL2R(-12) ; pending("hideL(-10==\"N1C4=0&e1N4C1=0&Rbar1>Rbar1|N1C4=1|e1N4C1=1\") ; hideL(-9==\"N1C3bar=1|N1C4bar=1|N1C2bar=1\") ; hideL(-4==\"transmitter=1|transmitter=2|transmitter=3|transmitter=4\") ; hideL(-3==\"Rhat1old=Rbar1\") ; allL2R(-7) ; hideL(-7==\"Rbar1=0\") ; allL2R(-7) ; hideL(-1==\"A1FN2=1|A1FN2=0\") ; orL(-2) ; <(
+QE, 
+hideL(-7==\"1=1\") ; hideL(-6==\"Rhat1=0\") ; hideL(-7==\"1=1\") ; hideL(-8==\"4>=1\") ; hideL(-8==\"0>=0\") ; hideL(-8==\"time=0\") ; hideL(-12==\"commrange=100\") ; allL2R(-7) ; cut(\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2\") ; <(
+hideL(-6==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n\") ; hideL(-5==\"((y1-yt)^2+(x1-xt)^2)^0.5<=commrange\") ; hideL(-2==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(3+replan1)*Vm*delta\") ; hideL(-4==\"a2transmitted=3\") ; QE, 
+  hideR(1==\"A1FN2!=1\") ; hideR(1==\"((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(0/n)-(4+(replan1-1))*Vm*delta\") ; cut(\"(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(0/n)-(3+replan1)*Vm*delta)^2\") ; <(
+  cut(\"(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(0/n)^2\") ; <(
+    hideL(-6==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n\") ; hideL(-2==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(3+replan1)*Vm*delta\") ; hideL(-5==\"a2transmitted=3\") ; hideL(-4==\"((y1-yt)^2+(x1-xt)^2)^0.5<=commrange\") ; hideL(-3==\"transmitter=4\") ; QE, 
+      hideR(1==\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(4+(replan1-1))*Vm*delta)^2\") ; hideL(-1==\"commrange-replan1*(0/n)-(3+replan1)*Vm*delta>=0\") ; hideL(-1==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(3+replan1)*Vm*delta\") ; hideL(-1==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; hideL(-2==\"((y1-yt)^2+(x1-xt)^2)^0.5<=commrange\") ; hideL(-1==\"transmitter=4\") ; hideL(-2==\"a2transmitted=3\") ; hideL(-6==\"(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(0/n)-(3+replan1)*Vm*delta)^2\") ; QE
+    ), 
+    hideR(1==\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(4+(replan1-1))*Vm*delta)^2\") ; hideL(-5==\"((y1-yt)^2+(x1-xt)^2)^0.5<=commrange\") ; hideL(-5==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n\") ; QE
+  )
+)
+)") ; allL2R(-11) ; hideL(-4=="transmitter=1|transmitter=2|transmitter=3|transmitter=4") ; hideL(-1=="A1FN2=1|A1FN2=0") ; hideL(-2=="Rhat1old=0") ; hideL(-4=="transmitter=2") ; hideL(-4=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; hideL(-4=="N1C3bar=1|N1C4bar=1|N1C2bar=1") ; hideL(-4=="N1C2=0&e1N2C1=0&0>0|N1C2=1|e1N2C1=1") ; hideL(-4=="Rbar1=0") ; hideL(-4=="Rhat1=0") ; hideL(-4=="3=3") ; hideL(-5=="3=3") ; allL2R(-5) ; cut("(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2") ; <(
+          hideL(-4=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n") ; hideL(-2=="A1FN2!=1|((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(1+replan1)*Vm*delta") ; orL(-2) ; <(
+            allL2R(-2) ; QE,
+            orL(-2) ; <(
+              allL2R(-2) ; QE,
+              orL(-2) ; <(
+                allL2R(-2) ; QE,
+                allL2R(-2) ; QE
+                )
+              )
+            ),
+          cut("(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2") ; <(
+            hideL(-4=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n") ; hideL(-2=="A1FN2!=1|((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(1+replan1)*Vm*delta") ; orL(-2) ; <(
+              allL2R(-2) ; hideR(1=="A1FN2!=1") ; hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(1-1)*(0/n)-(2+(1-1))*Vm*delta") ; QE,
+              orL(-2) ; <(
+                allL2R(-2) ; QE,
+                orL(-2) ; <(
+                  allL2R(-2) ; QE,
+                  allL2R(-2) ; QE
+                  )
+                )
+              ),
+            orL(-2) ; <(
+              QE,
+              hideR(1=="A1FN2!=1") ; hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta") ; hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2") ; cut("(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(0/n)-(1+replan1)*Vm*delta)^2") ; <(
+                cut("(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(0/n)^2") ; <(
+                  hideL(-2=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(1+replan1)*Vm*delta") ; hideL(-3=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n") ; orL(-2) ; <(
+                    allL2R(-2) ; QE,
+                    orL(-2) ; <(
+                      allL2R(-2) ; QE,
+                      orL(-2) ; <(
+                        allL2R(-2) ; QE,
+                        allL2R(-2) ; QE
+                        )
+                      )
+                    ),
+                  hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2") ; hideL(-2=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(1+replan1)*Vm*delta") ; hideL(-2=="replan1=1|replan1=2|replan1=3|replan1=4") ; hideL(-12=="(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(0/n)-(1+replan1)*Vm*delta)^2") ; hideL(-1=="commrange-replan1*(0/n)-(1+replan1)*Vm*delta>=0") ; QE
+                  ),
+                hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2") ; hideL(-4=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n") ; orL(-3) ; <(
+                  allL2R(-3) ; QE,
+                  orL(-3) ; <(
+                    allL2R(-3) ; QE,
+                    orL(-3) ; <(
+                      allL2R(-3) ; QE,
+                      allL2R(-3) ; QE
+                      )
+                    )
+                  )
+                )
+              )
+            )
+          )
+        ),
+      andR(1) ; <(
+        QE,
+        hideL(-1=="A1FN2=1|A1FN2=0") ; hideL(-3=="transmitter=1|transmitter=2|transmitter=3|transmitter=4") ; orL(-3) ; <(
+          QE,
+          allL2R(-10) ; allR2L(-2) ; hideL(-6=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; orR(1) ; cut("(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2") ; <(
+            hideR(1=="A1FN2!=1") ; hideL(-3=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-5=="N1C3bar=0") ; hideL(-5=="N1C4bar=0") ; hideL(-5=="N1C2bar=0") ; hideL(-5=="Rhat1old=0") ; pending("hideL(-4==\"transmitter=4\") ; hideL(-2==\"0=Rhat1\") ; allL2R(-6) ; hideL(-6==\"a2transmitted=3\") ; hideL(-4==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n\") ; hideL(-3==\"1=1\") ; hideL(-3==\"1=1\") ; hideL(-3==\"4>=1\") ; hideL(-3==\"0>=0\") ; hideL(-3==\"time=0\") ; hideL(-7==\"commrange=100\") ; QE") ; hideL(-6=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n") ; allL2R(-7) ; hideL(-7=="a2transmitted=1") ; orL(-3) ; <(
+              allL2R(-3) ; QE,
+              orL(-3) ; <(
+                allL2R(-3) ; QE,
+                orL(-3) ; <(
+                  allL2R(-3) ; QE,
+                  allL2R(-3) ; QE
+                  )
+                )
+              ),
+            hideR(1=="A1FN2!=1") ; pending("hideR(1==\"((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(0/n)-(4+(replan1-1))*Vm*delta\") ; cut(\"(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta)^2\") ; <(
+cut(\"(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(0/n)^2\") ; <(
+hideL(-21==\"commrange=100\") ; hideL(-14==\"4>=1\") ; hideL(-14==\"0>=0\") ; hideL(-12==\"1=1\") ; hideL(-10==\"1=1\") ; hideL(-10==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n\") ; hideL(-3==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta\") ; allL2R(-9) ; hideL(-9==\"a2transmitted=3\") ; orL(-3) ; <(
+  allL2R(-3) ; hideL(-3==\"replan1=1\") ; hideL(-8==\"time=0\") ; hideL(-4==\"N1C3bar=0\") ; hideL(-4==\"N1C4bar=0\") ; hideL(-4==\"N1C2bar=0\") ; hideL(-4==\"Rhat1old=0\") ; hideL(-2==\"0=Rhat1\") ; QE, 
+    hideL(-5==\"N1C3bar=0\") ; hideL(-5==\"N1C4bar=0\") ; hideL(-5==\"N1C2bar=0\") ; hideL(-5==\"Rhat1old=0\") ; hideL(-5==\"time=0\") ; hideL(-2==\"0=Rhat1\") ; orL(-2) ; <(
+    allL2R(-2) ; hideL(-2==\"replan1=2\") ; QE, 
+      QE
+    )
+  ), 
+  hideR(1==\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(4+(replan1-1))*Vm*delta)^2\") ; hideL(-1==\"commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta>=0\") ; hideL(-1==\"0=Rhat1\") ; hideL(-1==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta\") ; hideL(-1==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; hideL(-2==\"N1C3bar=0\") ; hideL(-2==\"N1C4bar=0\") ; hideL(-2==\"N1C2bar=0\") ; hideL(-2==\"Rhat1old=0\") ; hideL(-1==\"transmitter=4\") ; hideL(-1==\"1=1\") ; hideL(-2==\"1=1\") ; hideL(-2==\"a2transmitted=3\") ; hideL(-2==\"4>=1\") ; hideL(-2==\"0>=0\") ; hideL(-2==\"time=0\") ; hideL(-6==\"commrange=100\") ; hideL(-6==\"(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta)^2\") ; QE
+), 
+hideR(1==\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(4+(replan1-1))*Vm*delta)^2\") ; hideL(-2==\"0=Rhat1\") ; hideL(-1==\"commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta>=0\") ; hideL(-2==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; hideL(-2==\"transmitter=4\") ; hideL(-2==\"N1C3bar=0\") ; hideL(-2==\"N1C4bar=0\") ; hideL(-2==\"N1C2bar=0\") ; hideL(-2==\"Rhat1old=0\") ; hideL(-2==\"1=1\") ; hideL(-3==\"1=1\") ; hideL(-4==\"4>=1\") ; hideL(-4==\"0>=0\") ; hideL(-4==\"time=0\") ; allL2R(-3) ; hideL(-3==\"a2transmitted=3\") ; hideL(-2==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n\") ; QE
+)") ; hideL(-5=="transmitter=2") ; hideL(-5=="N1C3bar=0") ; hideL(-5=="N1C4bar=0") ; hideL(-5=="N1C2bar=0") ; hideL(-5=="Rhat1old=0") ; hideL(-5=="3=3") ; hideL(-6=="3=3") ; hideL(-7=="2>=1") ; hideL(-7=="0>=0") ; hideL(-7=="time=0") ; hideL(-9=="commrange=100") ; cut("(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(0/n)-(1+replan1)*Vm*delta)^2") ; <(
+              cut("(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(0/n)^2") ; <(
+                hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta") ; hideL(-5=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n") ; hideL(-3=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta") ; orL(-3) ; <(
+                  allL2R(-3) ; QE,
+                  orL(-3) ; <(
+                    allL2R(-3) ; QE,
+                    orL(-3) ; <(
+                      allL2R(-3) ; QE,
+                      allL2R(-3) ; QE
+                      )
+                    )
+                  ),
+                hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta") ; hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2") ; hideL(-11=="(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(0/n)-(1+replan1)*Vm*delta)^2") ; hideL(-3=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-3=="replan1=1|replan1=2|replan1=3|replan1=4") ; hideL(-1=="commrange-replan1*(0/n)-(a2transmitted+replan1)*Vm*delta>=0") ; QE
+                ),
+              hideR(2=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta)^2") ; hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(0/n)-(2+(replan1-1))*Vm*delta") ; hideL(-5=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=0/n") ; orL(-4) ; <(
+                allL2R(-4) ; QE,
+                orL(-4) ; <(
+                  allL2R(-4) ; QE,
+                  orL(-4) ; <(
+                    allL2R(-4) ; QE,
+                    allL2R(-4) ; QE
+                    )
+                  )
+                )
+              )
+            )
+          )
+        ),
+      andR(1) ; <(
+        QE,
+        orR(1) ; orL(-5) ; <(
+          QE,
+          hideL(-1=="A1FN2=1|A1FN2=0") ; hideL(-3=="transmitter=1|transmitter=2|transmitter=3|transmitter=4") ; pending("hideL(-5==\"transmitter=4\") ; allL2R(-2) ; hideL(-5==\"((y1-yt)^2+(x1-xt)^2)^0.5<=commrange\") ; hideL(-5==\"N1C3bar=1|N1C4bar=1|N1C2bar=1\") ; hideL(-5==\"N1C4=0\") ; hideL(-5==\"e1N4C1=0\") ; hideL(-5==\"Rbar1<=Rhat1\") ; hideL(-5==\"Rhat1=Rhat1\") ; hideL(-5==\"1=1\") ; hideL(-6==\"1=1\") ; hideL(-14==\"commrange=100\") ; cut(\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta)^2\") ; <(
+hideL(-9==\"time=0\") ; hideL(-7==\"4>=1\") ; hideL(-5==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n\") ; hideL(-3==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta\") ; hideL(-2==\"Rhat1old=Rhat1\") ; hideL(-2==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; allL2R(-2) ; QE, 
+hideR(1==\"A1FN2!=1\") ; hideR(1==\"((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(4+(replan1-1))*Vm*delta\") ; cut(\"(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2\") ; <(
+cut(\"(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(Rhat1/n)^2\") ; <(
+  hideL(-5==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n\") ; hideL(-3==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta\") ; allL2R(-2) ; hideL(-2==\"Rhat1old=Rhat1\") ; allL2R(-3) ; hideL(-3==\"a2transmitted=3\") ; hideL(-3==\"4>=1\") ; hideL(-4==\"time=0\") ; orL(-2) ; <(
+    allL2R(-2) ; hideL(-2==\"replan1=1\") ; QE, 
+      orL(-2) ; <(
+      allL2R(-2) ; QE, 
+        orL(-2) ; <(
+        allL2R(-2) ; hideL(-2==\"replan1=3\") ; QE, 
+          allL2R(-2) ; hideL(-2==\"replan1=4\") ; QE
+        )
+      )
+    ), 
+    hideR(1==\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(4+(replan1-1))*Vm*delta)^2\") ; hideL(-4==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; hideL(-1==\"commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta>=0\") ; hideL(-2==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta\") ; hideL(-1==\"Rhat1old=Rhat1\") ; hideL(-3==\"4>=1\") ; hideL(-2==\"a2transmitted=3\") ; hideL(-8==\"(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2\") ; hideL(-3==\"time=0\") ; QE
+  ), 
+  hideR(1==\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(4+(replan1-1))*Vm*delta)^2\") ; hideL(-5==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n\") ; hideL(-4==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; hideL(-2==\"Rhat1old=Rhat1\") ; hideL(-3==\"a2transmitted=3\") ; QE
+)
+)") ; cut("(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta)^2") ; <(
+            hideL(-13=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1old/n") ; hideL(-7=="N1C3bar=1|N1C4bar=1|N1C2bar=1") ; hideL(-6=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; hideL(-3=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; allL2R(-11) ; orL(-3) ; <(
+              allL2R(-3) ; QE,
+              orL(-3) ; <(
+                allL2R(-3) ; QE,
+                orL(-3) ; <(
+                  allL2R(-3) ; QE,
+                  allL2R(-3) ; QE
+                  )
+                )
+              ),
+            cut("(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(Rhat1/n)^2") ; <(
+              cut("(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2") ; <(
+                hideR(1=="A1FN2!=1") ; hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta") ; hideL(-3=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-4=="transmitter=2") ; hideL(-4=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; hideL(-4=="N1C3bar=1|N1C4bar=1|N1C2bar=1") ; hideL(-4=="N1C2=0") ; hideL(-4=="e1N2C1=0") ; allL2R(-9) ; hideL(-7=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1old/n") ; hideL(-14=="commrange=100") ; orL(-3) ; <(
+                  allL2R(-3) ; QE,
+                  orL(-3) ; <(
+                    allL2R(-3) ; QE,
+                    orL(-3) ; <(
+                      allL2R(-3) ; QE,
+                      allL2R(-3) ; QE
+                      )
+                    )
+                  ),
+                hideR(1=="A1FN2!=1") ; hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta") ; hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta)^2") ; hideL(-13=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1old/n") ; hideL(-23=="(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(Rhat1/n)^2") ; allL2R(-14) ; hideL(-7=="N1C3bar=1|N1C4bar=1|N1C2bar=1") ; orL(-4) ; <(
+                  hideL(-6=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; allL2R(-4) ; QE,
+                  orL(-4) ; <(
+                    hideL(-6=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; allL2R(-4) ; QE,
+                    hideL(-6=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; orL(-4) ; <(
+                      allL2R(-4) ; QE,
+                      allL2R(-4) ; QE
+                      )
+                    )
+                  )
+                ),
+              hideR(1=="A1FN2!=1") ; hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta") ; hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta)^2") ; hideL(-7=="N1C3bar=1|N1C4bar=1|N1C2bar=1") ; hideL(-6=="((y1-yt)^2+(x1-xt)^2)^0.5<=commrange") ; hideL(-4=="replan1=1|replan1=2|replan1=3|replan1=4") ; hideL(-3=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-1=="commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta>=0") ; QE
+              )
+            )
           )
         )
       ),
-    hideL(-9=="N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&N1C4=1&e1N3C4=1&e1N4C3=1&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)<=commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)<=commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>=commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>=commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)|N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&N1C4=1&e1N3C4=1&e1N4C3=1&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)<=commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)>commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>=commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>=commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)|N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&(N1C4=0|e1N3C4=0|e1N4C3=0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)<=commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)") ; QE,
-    allL2R(-15) ; QE,
-    andR(1) ; <(
+    unfold ; andR(1) ; <(
       QE,
-      hideL(-9=="N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&N1C4=1&e1N3C4=1&e1N4C3=1&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)>commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>=commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>=commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)|N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&N1C4=1&e1N3C4=1&e1N4C3=1&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)<=commrange-(((e1y4-e1y3)^2+(e1x4-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+(3-4+2*4+1)*Vm*delta+2*0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>=commrange-(((y1+w1*delta-e1y4)^2+(x1+v1*delta-e1x4)^2)^0.5+(3-4+2*4+1)*Vm*delta+0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>=commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)|N1C3=1&e1N3C1=1&1=1&e1N3C2=1&e1N2C3=1&(N1C4=0|e1N3C4=0|e1N4C3=0)&commrange-(((y1+w1*delta-e1y2)^2+(x1+v1*delta-e1x2)^2)^0.5+(3-2+4+1)*Vm*delta+0)>commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)&commrange-(((e1y2-e1y3)^2+(e1x2-e1x3)^2)^0.5+(3-2+4+1)*Vm*delta+(3-3+2*4+1)*Vm*delta+2*0)>commrange-(((y1+w1*delta-e1y3)^2+(x1+v1*delta-e1x3)^2)^0.5+(3-3+2*4+1)*Vm*delta+0)") ; QE
-      ),
-    QE,
-    QE,
-    QE
-    ),
-  US("checkreception;~>?a1receivea2=0;++?a1receivea2=1;");US("initsystemvars((•_0,•_1,•_2,•_3,•_4,•_5,•_6))~>•_0=0&•_1>0&•_2=10&•_3=100&•_4=1&•_5=4&•_6=10");US("typeinvariants;~>?(N1C2=0|N1C2=1)&(N1C3=0|N1C3=1)&(N1C4=0|N1C4=1)&(N1C2bar=0|N1C2bar=1)&(N1C3bar=0|N1C3bar=1)&(N1C4bar=0|N1C4bar=1)&(N1C2old=0|N1C2old=1)&(N1C3old=0|N1C3old=1)&(N1C4old=0|N1C4old=1);?(e1N3C1=0|e1N3C1=1)&(e1N3C2=0|e1N3C2=1)&(e1N3C4=0|e1N3C4=1)&(e1N2C1=0|e1N2C1=1)&(e1N2C3=0|e1N2C3=1)&(e1N2C4=0|e1N2C4=1)&(e1N4C1=0|e1N4C1=1)&(e1N4C2=0|e1N4C2=1)&(e1N4C3=0|e1N4C3=1);");US("settransmittedmessage;~>?transmitter=3;xt:=x3;yt:=y3;++?transmitter!=3;xt:=*;yt:=*;");US("systemtypeinvariant(•)~>•=1|•=2|•=3|•=4");US("lemma2invariant2((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0!=1|distance((•_2,•_3,•_4,•_5))<=•_1*•_6*•_7");US("initflagvars((•_0,•_1))~>•_0=0&•_1=0");US("lemma2invariant1((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7,•_8,•_9,•_10,•_11))~>•_0!=1|distance((•_4,•_5,•_6,•_7))<=•_11-•_2*(•_3/•_10)-(•_1+•_2)*•_8*•_9");US("initstraightline((•_0,•_1,•_2,•_3,•_4,•_5,•_6,•_7))~>•_0=0&•_1=0&•_2=15&•_3=0&•_4=60&•_5=0&•_6=80&•_7=0");US("program;~>setvelocities;updatea1t2;transmitter:=3;moveagents;receivetransmissions;flaginvariants;");US("updatea1t2;~>replan1:=max((replan1-1,0));?transmitter=2&distance((x1,y1,xt,yt))<=commrange;computea1t2;");US("computea1t2;~>{N1C2old:=N1C2;N1C3old:=N1C3;N1C4old:=N1C4;}{?N1C2=1&e1N2C1=1;N1C2:=1;N1C2bar:=1;N1C3bar:=N1C3;N1C4bar:=N1C4;}{?N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())<=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())>commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&(N1C4bar=0|e1N3C4=0|e1N4C3=0)&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())<=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL());path13:=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());++?N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())>commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&N1C4bar=1&e1N3C4=1&e1N4C3=1&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())<=commrange-(distance((e1x4,e1y4,e1x3,e1y3))+p1((3,3,4))*Vm*delta+p1((4,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x4,e1y4))+p1((4,3,4))*Vm*delta+DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL())|N1C3bar=1&e1N3C1=1&N1C2bar=1&e1N3C2=1&e1N2C3=1&(N1C4bar=0|e1N3C4=0|e1N4C3=0)&commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())>commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())&commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL())>commrange-(distance((x1+v1*delta,y1+w1*delta,e1x3,e1y3))+p1((3,3,4))*Vm*delta+DL());path13:=commrange-(distance((e1x2,e1y2,e1x3,e1y3))+p2((2,3,4))*Vm*delta+p1((3,3,4))*Vm*delta+2*DL());}{?N1C3bar=1|N1C4bar=1|N1C2bar=1;{?path13 < path12&path13 < path14&path13>0;Rbar1:=path13;}?N1C2old=0&e1N2C1=0&Rbar1>Rhat1|N1C2old=1|e1N2C1=1;Rhat1:=Rbar1;replan1:=4;++?N1C3bar=0&N1C4bar=0&N1C2bar=0;Rhat1:=0;N1C2:=0;N1C3:=0;N1C4:=0;}{?path12=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())|path13=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())|path14=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());A1FN2:=1;++?path12!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())&path13!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL())&path14!=commrange-(distance((x1+v1*delta,y1+w1*delta,e1x2,e1y2))+p2((2,3,4))*Vm*delta+DL());A1FN2:=0;}");US("p1((•_0,•_1,•_2))~>•_1-•_0+2*•_2+1");US("DL()~>0");US("moveagents;~>x1o:=x1;y1o:=y1;x2o:=x2;y2o:=y2;x3o:=x3;y3o:=y3;x4o:=x4;y4o:=y4;timeo:=time;x1:=x1o+v1*deltacopy;y1:=y1o+w1*deltacopy;x2:=x2o+v2*deltacopy;y2:=y2o+w2*deltacopy;x3:=x3o+v3*deltacopy;y3:=y3o+w3*deltacopy;x4:=x4o+v4*deltacopy;y4:=y4o+w4*deltacopy;?distance((v1*deltacopy,w1*deltacopy,0,0))<=Vm*delta&distance((v2*deltacopy,w2*deltacopy,0,0))<=Vm*delta&distance((v3*deltacopy,w3*deltacopy,0,0))<=Vm*delta&distance((v4*deltacopy,w4*deltacopy,0,0))<=Vm*delta;");US("distance((•_0,•_1,•_2,•_3))~>((•_1-•_3)^2+(•_0-•_2)^2)^0.5");US("setvelocities;~>Rhat1old:=Rhat1;Rhat2old:=Rhat2;Rhat3old:=Rhat3;Rhat4old:=Rhat4;");US("receivetransmissions;~>?transmitter=3&a2transmitted=1;a2transmitted:=2;");US("flaginvariants;~>?a2transmitted>=1;?time=0&Vm>0&delta=10&commrange=100&n=4&deltacopy=10;");US("p2((•_0,•_1,•_2))~>•_1-•_0+•_2+1") ; QE
+      hideL(-1=="A1FN2=1|A1FN2=0") ; hideL(-2=="transmitter=1|transmitter=2|transmitter=3|transmitter=4") ; hideL(-5=="((y1-yt)^2+(x1-xt)^2)^0.5>commrange") ; pending("hideL(-4==\"transmitter=4\") ; hideL(-4==\"1=1\") ; hideL(-5==\"1=1\") ; hideL(-6==\"4>=1\") ; hideL(-12==\"commrange=100\") ; orL(-2) ; <(
+QE, 
+cut(\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta)^2\") ; <(
+hideL(-2==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta\") ; allL2R(-4) ; hideL(-4==\"a2transmitted=3\") ; hideL(-3==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n\") ; hideL(-4==\"time=0\") ; hideL(-2==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; QE, 
+  hideR(1==\"A1FN2!=1|((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(4+(replan1-1))*Vm*delta\") ; cut(\"(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2\") ; <(
+  cut(\"(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(Rhat1/n)^2\") ; <(
+    allL2R(-5) ; hideL(-5==\"a2transmitted=3\") ; hideL(-4==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n\") ; hideL(-2==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(3+replan1)*Vm*delta\") ; hideL(-4==\"time=0\") ; orL(-2) ; <(
+      allL2R(-2) ; hideL(-2==\"replan1=1\") ; QE, 
+        orL(-2) ; <(
+        allL2R(-2) ; hideL(-2==\"replan1=2\") ; QE, 
+          orL(-2) ; <(
+          allL2R(-2) ; hideL(-2==\"replan1=3\") ; QE, 
+            allL2R(-2) ; hideL(-2==\"replan1=4\") ; QE
+          )
+        )
+      ), 
+      hideR(1==\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(4+(replan1-1))*Vm*delta)^2\") ; hideL(-12==\"(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2\") ; hideL(-3==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; hideL(-2==\"((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta\") ; hideL(-1==\"commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta>=0\") ; QE
+    ), 
+    hideR(1==\"(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(4+(replan1-1))*Vm*delta)^2\") ; hideL(-3==\"replan1=1|replan1=2|replan1=3|replan1=4\") ; hideL(-3==\"((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n\") ; allL2R(-3) ; hideL(-3==\"a2transmitted=3\") ; QE
   )
+)
+)") ; orR(1) ; cut("(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta)^2") ; <(
+        hideL(-2=="A1FN2!=1|((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-5=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n") ; allL2R(-6) ; orL(-2) ; <(
+          allL2R(-2) ; QE,
+          orL(-2) ; <(
+            allL2R(-2) ; QE,
+            orL(-2) ; <(
+              allL2R(-2) ; QE,
+              allL2R(-2) ; QE
+              )
+            )
+          ),
+        orL(-2) ; <(
+          QE,
+          hideL(-4=="transmitter=2") ; hideL(-4=="3=3") ; hideR(1=="A1FN2!=1") ; hideR(1=="((y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2)^0.5<=commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta") ; cut("(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2") ; <(
+            cut("(w1*deltacopy-0)^2+(v1*deltacopy-0)^2<=(Rhat1/n)^2") ; <(
+              hideL(-2=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; hideL(-3=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n") ; hideL(-10=="commrange=100") ; orL(-2) ; <(
+                allL2R(-2) ; allL2R(-4) ; QE,
+                orL(-2) ; <(
+                  allL2R(-2) ; QE,
+                  orL(-2) ; <(
+                    allL2R(-2) ; QE,
+                    allL2R(-2) ; allL2R(-4) ; QE
+                    )
+                  )
+                ),
+              hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta)^2") ; hideL(-15=="(y1-e1y2)^2+(x1-e1x2)^2<=(commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta)^2") ; hideL(-3=="replan1=1|replan1=2|replan1=3|replan1=4") ; hideL(-1=="commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta>=0") ; hideL(-1=="((y1-e1y2)^2+(x1-e1x2)^2)^0.5<=commrange-replan1*(Rhat1/n)-(a2transmitted+replan1)*Vm*delta") ; QE
+              ),
+            hideR(1=="(y1+w1*deltacopy-e1y2)^2+(x1+v1*deltacopy-e1x2)^2<=(commrange-(replan1-1)*(Rhat1/n)-(2+(replan1-1))*Vm*delta)^2") ; allL2R(-6) ; hideL(-4=="((w1*deltacopy-0)^2+(v1*deltacopy-0)^2)^0.5<=Rhat1/n") ; orL(-3) ; <(
+              allL2R(-3) ; QE,
+              orL(-3) ; <(
+                allL2R(-3) ; QE,
+                orL(-3) ; <(
+                  allL2R(-3) ; QE,
+                  allL2R(-3) ; QE
+                  )
+                )
+              )
+            )
+          )
+        )
+      )
+    ),
+  expand ; QE
+  )
+
 End.
+
 
 End.
