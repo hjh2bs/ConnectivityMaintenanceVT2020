@@ -1,0 +1,650 @@
+Theorem "FourAgents_L4_inv6_a2a4_a2computeta1_a2transmits_template_2"
+Description "Specification for three agents".
+
+Definitions
+
+/*  Real n = 3;
+ /* Real delta = 10;
+  Real commrange = 100.0;*/
+  Real DL = 0;
+
+  /*Function for calculating distance*/
+  Real distance(Real x1, Real y1, Real x2, Real y2) = (((y1-y2)^2+(x1-x2)^2)^0.5);
+
+
+
+  Real p1(Real j, Real newtransmitter) = newtransmitter - j + 2*n + 1; /* when j >= i_s*/
+  Real p2(Real j, Real newtransmitter) = newtransmitter - j + n + 1; /* when j < i_s*/
+  
+/***************************************************************************************************************************************************************************************************************************/
+ HP computea2t1 ::=
+  {
+    {
+      {N2C1old:=N2C1; N2C3old:=N2C3; N2C4old:=N2C4;}
+      {P2F1old:=P2F1; P2F3old:=P2F3; P2F4old:=P2F4;}
+    }
+  };
+  
+  
+HP computepath21 ::=
+{
+    {
+        {
+            ?(
+                (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & (N2C4bar=0 | e2N4C1=0 | e2N1C4=0 | e2N4C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL))
+            );
+            A2SN1temp := 1;
+            path21 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL);
+        } ++
+
+        {
+            ?(
+                (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & (N2C4bar=0 | e2N4C1=0 | e2N1C4=0 | e2N4C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL))
+            );
+            A2SN1temp := 1;
+            path21 := commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL);
+        } ++
+
+        {
+            ?(
+                (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & (N2C4bar=0 | e2N4C1=0 | e2N1C4=0 | e2N4C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & (N2C4bar=0 | e2N4C1=0 | e2N1C4=0 | e2N4C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C1=0 | e2N1C3=0 | e2N3C2=0) & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C1=0 | e2N1C3=0 | e2N3C2=0) & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C1=0 | e2N1C3=0 | e2N3C2=0) & (N2C4bar=0 | e2N4C1=0 | e2N1C4=0 | e2N4C2=0))
+            );
+            A2SN1temp := 1;
+            path21 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL);
+        } ++
+
+        {
+            ?(
+                (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C1=0 | e2N1C3=0 | e2N3C2=0) & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL))
+            );
+            A2SN1temp := 1;
+            path21 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL);
+        } ++
+
+        {
+            ?(
+                (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) &
+                commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & N2C3bar=1 & e2N3C1=1 & e2N1C3=1 & e2N3C2=1 & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL)) |
+        (N2C1bar=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C1=0 | e2N1C3=0 | e2N3C2=0) & N2C4bar=1 & e2N4C1=1 & e2N1C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL))
+            );
+            A2SN1temp := 1;
+            path21 := commrange - (distance(e2x4,e2y4,e2x1,e2y1) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL);
+        } ++
+
+        {
+            ?(N2C1bar=0); A2SN1temp := 0; P2F1:=0; path21:=0;
+        }
+    }
+};
+    
+/**********************************************************************************************************************************************************************************/
+/**********************************************************************************************************************************************************************************/
+
+     
+HP computepath23 ::= 
+  {
+    {
+        {
+            ?(
+                (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & (N2C4bar=0 | e2N4C3=0 | e2N3C4=0 | e2N4C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL))
+            );
+            A2SN3temp := 1;
+            path23 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL);
+        } ++
+ 
+        {
+            ?(
+                (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & (N2C4bar=0 | e2N4C3=0 | e2N3C4=0 | e2N4C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL))
+            );
+            A2SN3temp := 1;
+            path23 := commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL);
+        } ++
+
+        {
+            ?(
+                (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & (N2C4bar=0 | e2N4C3=0 | e2N3C4=0 | e2N4C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & (N2C4bar=0 | e2N4C3=0 | e2N3C4=0 | e2N4C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & (N2C1bar=0 | e2N1C3=0 | e2N3C1=1 | e2N1C2=0) & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & (N2C1bar=0 | e2N1C3=0 | e2N3C1=1 | e2N1C2=0) & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & (N2C1bar=0 | e2N1C3=0 | e2N3C1=1 | e2N1C2=0) & (N2C4bar=0 | e2N4C3=0 | e2N3C4=0 | e2N4C2=0))
+            );
+            A2SN3temp := 0;
+            path23 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL);
+        } ++
+
+        {
+            ?(
+                (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & (N2C1bar=0 | e2N1C3=0 | e2N3C1=1 | e2N1C2=0) & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL))
+            );
+            A2SN3temp := 1;
+            path23 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL);
+        } ++
+
+        {
+            ?(
+                (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & N2C1bar=1 & e2N1C3=1 & e2N3C1=1 & e2N1C2=1 & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) >= commrange - (distance(e2x1,e2y1,e2x3,e2y3) + p1(3,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C3bar=1 & e2N3C2=1 & (N2C1bar=0 | e2N1C3=0 | e2N3C1=1 | e2N1C2=0) & N2C4bar=1 & e2N4C3=1 & e2N3C4=1 & e2N4C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL))
+            );
+            A2SN3temp := 1;
+            path23 := commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL);
+        } ++
+
+        {
+            ?(N2C3bar=0); A2SN3temp := 0; path23:=0;
+        }
+    }    
+  };
+
+/**********************************************************************************************************************************************************************************/
+/**********************************************************************************************************************************************************************************/
+
+    HP computepath24 ::= 
+    {
+        {
+        {
+            ?(
+                (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C4=0 | e2N4C3=0 | e2N3C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL))
+            );
+            A2SN4temp := 1;
+            path24 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL);
+        } ++
+
+        {
+            ?(
+                (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) &
+                commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C4=0 | e2N4C3=0 | e2N3C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL))
+            );
+            A2SN4temp := 1;
+            path24 := commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL);
+        } ++
+
+        {
+            ?(
+                (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C4=0 | e2N4C3=0 | e2N3C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & (N2C3bar=0 | e2N3C4=0 | e2N4C3=0 | e2N3C2=0) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & (N2C1bar=0 | e2N1C4=0 | e2N4C1=0 | e2N1C2=0) & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & (N2C1bar=0 | e2N1C4=0 | e2N4C1=0 | e2N1C2=0) & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) <= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & (N2C1bar=0 | e2N1C4=0 | e2N4C1=0 | e2N1C2=0) & (N2C3bar=0 | e2N3C4=0 | e2N4C3=0 | e2N3C2=0))
+            );
+            A2SN4temp := 0;
+            path24 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL);
+        } ++
+
+        {
+            ?(
+                (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & (N2C1bar=0 | e2N1C4=0 | e2N4C1=0 | e2N1C2=0) & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) <= commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL))
+            );
+            A2SN4temp := 1;
+            path24 := commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL);
+        } ++
+
+        {
+            ?(
+                (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) <= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & N2C1bar=1 & e2N1C4=1 & e2N4C1=1 & e2N1C2=1 & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x1,e2y1) + p2(1,2)*Vm*delta + DL) > commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) >= commrange - (distance(e2x1,e2y1,e2x4,e2y4) + p1(4,2)*Vm*delta + p2(1,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) >= commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL)) |
+        (N2C4bar=1 & e2N4C2=1 & (N2C1bar=0 | e2N1C4=0 | e2N4C1=0 | e2N1C2=0) & N2C3bar=1 & e2N3C4=1 & e2N4C3=1 & e2N3C2=1 &
+                commrange - (distance(x2+v2*delta,y2+w2*delta,e2x3,e2y3) + p1(3,2)*Vm*delta + DL) > commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) &
+                commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL) > commrange - (distance(x2+v2*delta,y2+w2*delta,e2x4,e2y4) + p1(4,2)*Vm*delta + DL))
+            );
+            A2SN4temp := 1;
+            path24 := commrange - (distance(e2x4,e2y4,e2x3,e2y3) + p1(4,2)*Vm*delta + p1(3,2)*Vm*delta + 2*DL);
+        } ++
+
+        {
+            ?(N2C4bar=0); A2SN4temp := 0;  path24:=0;
+        }
+    }
+  };
+
+/**********************************************************************************************************************************************************************************/
+/**********************************************************************************************************************************************************************************/
+
+  HP computeRhat2 ::=
+  {
+    {
+        {
+            /*?(N2C3bar = 1 | N2C4bar = 1 | N2C1bar = 1);
+            {
+                {
+                    ?(path23<path21 & path23<path24 & path23>0);
+                    Rbar2:=path23;
+                } ++
+                {
+                    ?(path23>path21 & path21<path24 & path21>0);
+                    Rbar2:=path21;
+                } ++
+                {
+                    ?(path24<path23 & path24<path21 & path24>0);
+                    Rbar2:=path24;
+                } ++
+                {
+                    ?(path23<=0 & path21<=0 & path24<=0);
+                    Rbar2:=0;
+                } 
+            }*/
+            {
+            
+                ?((N2C1old=1 | e2N1C2=1));
+                Rhat2:=Rbar2;
+                {
+                    /*{?(Rhat2>0); replan2:=4;} ++*/
+                    {?(Rhat2<=0);}
+                }
+                
+            }
+        } ++
+        
+        {
+            ?(
+                (N2C3bar = 1 | N2C4bar = 1 | N2C1bar = 1) &
+                (N2C1old=0 & e2N1C2=0)
+            );
+            N2C1 := N2C1old;
+                N2C3 := N2C3old;
+                N2C4 := N2C4old;
+        } ++
+        {
+            ?(N2C3bar=0 & N2C4bar=0 & N2C1bar=0);
+            Rhat2:=0; N2C1:=0; N2C3:=0; N2C4:=0;
+        }
+    }
+  };
+    
+    
+
+  HP updatea2t1 ::= {
+    {
+      ?(transmitter=1 & distance(x2,y2,xt,yt) <=commrange);
+      /*computea2t1;
+      computeNbar;
+      computepath21;
+      computepath23;
+      computepath24;*/
+      computeRhat2;
+    }
+    ++
+    { 
+      ?(transmitter=1 & distance(x2,y2,xt,yt) >commrange);
+      N2C1:=0; 
+    }
+  };
+  
+  HP setvelocities ::= {
+      Rhat1old := Rhat1;
+        Rhat2old := Rhat2;
+        Rhat3old := Rhat3;
+        Rhat4old := Rhat4;
+  };
+  
+  
+  HP rotatetransmittingagent ::= {
+    {
+        ?(transmitter=2);
+        xt:=x2;
+        yt:=y2;
+    }
+  };
+  
+  HP moveagents ::= {
+        x1o:= x1; y1o:=y1; x2o:=x2; y2o:=y2; x3o:=x3; y3o:=y3; x4o:=x4; y4o:=y4; timeo:=time;   
+        x1:=x1o+v1*deltacopy; y1:=y1o+w1*deltacopy;
+        x2:=x2o+v2*deltacopy; y2:=y2o+w2*deltacopy;
+        x3:=x3o+v3*deltacopy; y3:=y3o+w3*deltacopy;
+        x4:=x4o+v4*deltacopy; y4:=y4o+w4*deltacopy;
+        ?(
+            /*distance(v1*deltacopy,w1*deltacopy,0,0) <= Vm*delta &
+            distance(v2*deltacopy,w2*deltacopy,0,0) <= Vm*delta &
+            distance(v3*deltacopy,w3*deltacopy,0,0) <= Vm*delta &
+            distance(v4*deltacopy,w4*deltacopy,0,0) <= Vm*delta*/
+            (v2*deltacopy-0)^2 + (w2*deltacopy-0)^2 <= (Vm*delta)^2 &
+            (v3*deltacopy-0)^2 + (w3*deltacopy-0)^2 <= (Vm*delta)^2 &
+            (v4*deltacopy-0)^2 + (w4*deltacopy-0)^2 <= (Vm*delta)^2 &
+            (v1*deltacopy-0)^2 + (w1*deltacopy-0)^2 <= (Rhat1old/n)^2 /*&
+            distance(v2*deltacopy,w2*deltacopy,0,0) <= Rhat2old/n &
+            distance(v3*deltacopy,w3*deltacopy,0,0) <= Rhat3old/n &
+            distance(v4*deltacopy,w4*deltacopy,0,0) <= Rhat4old/n*/
+        );
+  };
+  
+  HP settransmitflag ::= {
+    {
+        {
+            ?(transmitter=3 & a2transmitted=1);
+            a2transmitted:=2;
+        }
+    }
+  };
+  
+  
+  HP flaginvariantspre ::={
+      ?(commrange-(2*replan2)*Vm*delta>0);
+      ?(commrange-replan2*(Rhat2/n)-replan2*Vm*delta>0);
+  };
+  
+  HP flaginvariantspost::={
+      ?(time=0 & Vm>0 & delta=10 & commrange=100 & n=4 & deltacopy=10);
+      ?(commrange-(2*replan2)*Vm*delta>0);
+      ?(commrange-replan2*(Rhat2/n)-replan2*Vm*delta>0);
+      ?(((y2 - (y1))^2 + (x2  - (x1))^2)  ≤ (commrange - (replan2) * (Rhat2 / n) - (replan2) * Vm * delta)^2);
+      ?(((y3 - (y1))^2 + (x3  - (x1))^2)  ≤ (commrange - (replan2) * (Rhat2 / n) - (replan2) * Vm * delta)^2);
+      ?(((y4 - (y1))^2 + (x4  - (x1))^2)  ≤ (commrange - (replan2) * (Rhat2 / n) - (replan2) * Vm * delta)^2);
+      ?(((y2 - (y3))^2 + (x2  - (x3))^2)  ≤ (commrange - (replan2) * (Rhat2 / n) - (replan2) * Vm * delta)^2);
+      ?(((y2 - (y4))^2 + (x2  - (x4))^2)  ≤ (commrange - (replan2) * (Rhat2 / n) - (replan2) * Vm * delta)^2);
+      ?(((y3 - (y4))^2 + (x3  - (x4))^2)  ≤ (commrange - (replan2) * (Rhat2 / n) - (replan2) * Vm * delta)^2);
+      ?(((y2  - (y1 ))^2 +  (x2  - (x1 ))^2) ≤ (commrange - 2 * (replan2) * Vm * delta)^2);
+      ?(((y3  - (y1 ))^2 +  (x3  - (x1 ))^2) ≤ (commrange - 2 * (replan2) * Vm * delta)^2);
+      ?(((y4  - (y1 ))^2 +  (x4  - (x1 ))^2) ≤ (commrange - 2 * (replan2) * Vm * delta)^2);
+      ?(((y2  - (y3 ))^2 +  (x2  - (x3 ))^2) ≤ (commrange - 2 * (replan2) * Vm * delta)^2);
+      ?(((y2  - (y4 ))^2 +  (x2  - (x4 ))^2) ≤ (commrange - 2 * (replan2) * Vm * delta)^2);
+      ?(((y4  - (y3 ))^2 +  (x4  - (x3 ))^2) ≤ (commrange - 2 * (replan2) * Vm * delta)^2);
+  };
+  
+  HP program ::= {
+        flaginvariantspre;
+        setvelocities;
+        updatea2t1;     /*transmitinfo*/
+        transmitter:=3;
+        rotatetransmittingagent;
+        moveagents;
+        settransmitflag;
+        flaginvariantspost;
+    };
+  
+  
+  
+
+/***************************************************************************************************************************************************************************************************************************/
+    Bool systemtypeinvariant(Real transmitter) <->
+    (
+        (transmitter=1|transmitter=2|transmitter=3|transmitter=4)
+    );
+    Bool initstraightline(Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real x4, Real y4)<->
+    (
+        x1=0 & y1=0 & x2=15 & y2=0 & x3=60 & y3=0 & x4=80 & y4=0
+    );
+    Bool initsystemvars(Real time, Real Vm, Real delta, Real commrange, Real transmitter, Real n, Real deltacopy)<->
+    (
+        time=0 & Vm>0 & delta=10 & commrange=100 & transmitter=1 & n=4 & deltacopy=10
+    );
+    
+    Bool initflagvars(Real a1receivea2, Real A2FN3, Real A2SN1, Real A2SN3, Real A2SN4)<->
+    (
+        a1receivea2=0 & A2FN3=0 & A2SN1=0 & A2SN3=0 & A2SN4=0
+    );
+    
+    Bool lemma4invariant6a2a4(Real A2SN4, Real replan2, Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real x4, Real y4, Real commrange, Real Vm, Real delta, Real Rhat1, Real n) <->
+    (
+        A2SN4+replan2 != 5 | A2SN4=0 | (A2SN4>=1 & A2SN4+replan2=5 & (
+            (distance(x2,y2,x1,y1)<=commrange-replan2*(Rhat1/n)-replan2*Vm*delta & distance(x3,y3,x2,y2)<=commrange-replan2*(Rhat1/n)-replan2*Vm*delta & distance(x1,y1,x4,y4)<= commrange-(2*replan2)*Vm*delta & distance(x4,y4,x3,y3)<= commrange-(2*replan2)*Vm*delta) | 
+            (distance(x2,y2,x1,y1)<=commrange-replan2*(Rhat1/n)-replan2*Vm*delta & distance(x1,y1,x4,y4)<= commrange-(2*replan2)*Vm*delta) | 
+            (distance(x3,y3,x2,y2)<=commrange-replan2*(Rhat1/n)-replan2*Vm*delta & distance(x4,y4,x3,y3)<= commrange-(2*replan2)*Vm*delta)))
+    );
+
+End.
+
+
+
+ProgramVariables
+
+    /* System Variables */
+    Real x1, y1, x2, y2, x3, y3, x4, y4, x1o, y1o, x2o, y2o, x3o, y3o, x4o, y4o;
+    Real v1, w1, v2, w2, v3, w3, v4, w4;
+    Real Rhat1old, Rhat2old, Rhat3old, Rhat4old, time, timeo, Vm;
+    Real Rhat1, Rhat2, Rhat3, Rhat4, delta, transmitter, commrange, n, xt, yt, deltacopy;
+    
+    /* Agent 2 Internal Variables */
+    Real N2C1, N2C3, N2C4, N2C1bar, N2C3bar, N2C4bar, N2C1old, N2C3old, N2C4old;
+    Real e2N1C2, e2N1C3, e2N1C4, e2N3C1, e2N3C2, e2N3C4, e2N4C1, e2N4C2, e2N4C3;
+    Real Rbar2, path21, path23, path24;
+    Real e2x1, e2y1, e2x3, e2y3, e2x4, e2y4;
+    
+    
+    /* Flag variables */
+    Real a1receivea2, a2transmitted, replan2;
+    Real A2SN1temp, A2FN3temp, A2FN4temp, A2SN1, A2FN3, A2FN4;
+    Real A2SN3, A2SN4, A2SN3temp, A2SN4temp;
+  
+End.
+
+
+Problem
+
+  
+  initstraightline(x1,y1,x2,y2,x3,y3,x4,y4) & initsystemvars(time, Vm, delta, commrange, transmitter, n, deltacopy) & initflagvars(a1receivea2, A2FN3, A2SN1, A2SN3, A2SN4)
+    ->
+    [{program;}*@invariant(lemma4invariant6a2a4(A2SN4, replan2, x1, y1, x2, y2, x3, y3, x4, y4, commrange, Vm, delta, Rhat1, n))]
+    (
+        A2SN4+replan2 != 5 | A2SN4=0 | (A2SN4>=1 & A2SN4+replan2=5 & (
+            (distance(x2,y2,x1,y1)<=commrange-replan2*(Rhat1/n)-replan2*Vm*delta & distance(x3,y3,x2,y2)<=commrange-replan2*(Rhat1/n)-replan2*Vm*delta & distance(x1,y1,x4,y4)<= commrange-(2*replan2)*Vm*delta & distance(x4,y4,x3,y3)<= commrange-(2*replan2)*Vm*delta) | 
+            (distance(x2,y2,x1,y1)<=commrange-replan2*(Rhat1/n)-replan2*Vm*delta & distance(x1,y1,x4,y4)<= commrange-(2*replan2)*Vm*delta) | 
+            (distance(x3,y3,x2,y2)<=commrange-replan2*(Rhat1/n)-replan2*Vm*delta & distance(x4,y4,x3,y3)<= commrange-(2*replan2)*Vm*delta)))
+    )
+End.
+
+
+
+End.
