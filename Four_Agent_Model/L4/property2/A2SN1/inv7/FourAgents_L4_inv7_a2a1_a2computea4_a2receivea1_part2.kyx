@@ -567,7 +567,7 @@ HP computeRhat2 ::=
   HP program ::= {
         flaginvariantspre;
         setvelocities;
-        updatea2t1;     /*transmitinfo*/
+        updatea2t4;     /*transmitinfo*/
         transmitter:=3;
         rotatetransmittingagent;
         moveagents;
