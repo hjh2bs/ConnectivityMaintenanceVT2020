@@ -1,0 +1,600 @@
+Theorem "FourAgents_L2_Inv2_A3R1"
+Description "Specification for four agents".
+
+Definitions
+
+/*  Real n = 3;
+ /* Real delta = 10;
+  Real commrange = 100.0;
+  Real DL = 0;*/
+
+  /*Function for calculating distance*/
+  Real distance(Real x1, Real y1, Real x2, Real y2) = (((y1-y2)^2+(x1-x2)^2)^0.5);
+
+/*  Real p1(Real j, Real newtransmitter) = newtransmitter - j + 2*n + 1; /* when j >= i_s*/
+/*  Real p2(Real j, Real newtransmitter) = newtransmitter - j + n + 1; /* when j < i_s*/
+  
+/***************************************************************************************************************************************************************************************************************************/
+
+  /*Discrete program that decides which agent is transmitting*/
+  HP rotatetransmittingagent ::= {
+  {
+    ?(transmitter=4); transmitter:=1;
+    xt:=x1; yt:=y1; 
+    /*NIC2t:=N1C2; NIC3t:=N1C3; NIC4t:=N1C4;
+    PIF2t:=P1F2old; PIF3t:=P1F3old; PIF4t:=P1F4old; */
+  } ++
+  {
+    ?(transmitter=3); transmitter:=4;
+    xt:=x4; yt:=y4; 
+    /*NIC1t:=N4C1; NIC2t:=N4C2; NIC3t:=N4C3;
+    PIF1t:=P4F1old; PIF2t:=P4F2old; PIF3t:=P4F3old;*/
+  } ++
+  {?(transmitter=2); transmitter:=3;
+    xt:=x3; yt:=y3; 
+    /*NIC1t:=N3C1; NIC2t:=N3C2; NIC4t:=N3C4; 
+    PIF1t:=P3F1old; PIF2t:=P3F2old; PIF4t:=P3F4old;*/
+  } ++
+  {?(transmitter=1); transmitter:=2;
+    xt:=x2; yt:=y2; 
+    /*NIC1t:=N2C1; NIC3t:=N2C3; NIC4t:=N2C4; 
+    PIF1t:=P2F1old; PIF3t:=P2F3old; PIF4t:=P2F4old;*/
+  } 
+  };
+  
+/***************************************************************************************************************************************************************************************************************************/
+  /*Discrete program that decides which agent is transmitting*/
+  HP settransmitflag ::= {
+   /*{{?(transmitter=1); a1transmitted:=1;} ++ {?(transmitter=2 | transmitter=3 | transmitter=4); a1transmitted:= a1transmitted + 1;}}*/
+   /*{{?(transmitter=2); a2transmitted:=1;} ++ {?(transmitter=1 | transmitter=3 | transmitter=4); a2transmitted:= a2transmitted + 1;}}*/
+   {{?(transmitter=3); a3transmitted:=1;} ++ {?(transmitter=1 | transmitter=2 | transmitter=4); a3transmitted:= a3transmitted + 1;}}
+   /*{{?(transmitter=4); a4transmitted:=1;} ++ {?(transmitter=1 | transmitter=2 | transmitter=3); a4transmitted:= a4transmitted + 1;}}*/
+  };
+  
+  HP updatetransmitinfo ::= {
+  {
+/*  {
+    {?(transmitter=1 & distance(xt,yt,x2,y2)<=commrange); 
+      e2x1:=xt; e2y1:=yt;
+      e2N1C2:=NIC2t;              
+      e2N1C3:=NIC3t;
+      e2N1C4:=NIC4t;
+      e2P1F2:=PIF2t;    
+      e2P1F3:=PIF3t;
+      e2P1F4:=PIF4t;
+      rflga2t1:= 1;} ++ {?(transmitter=1 & distance(xt,yt,x2,y2)>commrange); rflga2t1:= 0;}
+  }*/
+  {
+    {?(transmitter=1 & distance(xt,yt,x3,y3)<=commrange); 
+      e3x1:=xt; e3y1:=yt;
+  /*    e3N1C2:=NIC2t;               
+      e3N1C3:=NIC3t;
+      e3N1C4:=NIC4t;
+      e3P1F2:=PIF2t;        
+      e3P1F3:=PIF3t;
+      e3P1F4:=PIF4t; */
+      rflga3t1:= 1;} ++ {?(transmitter=1 & distance(xt,yt,x3,y3)>commrange); rflga3t1:= 0;}    
+  }
+/*  {
+    {?(transmitter=1 & distance(xt,yt,x4,y4)<=commrange); 
+      e4x1:=xt; e4y1:=yt;
+      e4N1C2:=NIC2t;               
+      e4N1C3:=NIC3t;
+      e4N1C4:=NIC4t;
+      e4P1F2:=PIF2t;        
+      e4P1F3:=PIF3t;
+      e4P1F4:=PIF4t; 
+      a4receivea1:= 1;} ++ {?(transmitter=1 & distance(xt,yt,x4,y4)>commrange); a4receivea1:= 0;}    
+  } */  
+  } ++ 
+  {
+  {{?(transmitter=2 & distance(xt,yt,x1,y1)<=commrange); 
+      e1x2:=xt; e1y2:=yt;
+      /*e1N2C1:=NIC1t;               
+      e1N2C3:=NIC3t;
+      e1N2C4:=NIC4t;
+      e1P2F1:=PIF1t;        
+      e1P2F3:=PIF3t;
+      e1P2F4:=PIF4t;*/
+      a1receivea2:= 1;} ++ {?(transmitter=2 & distance(xt,yt,x1,y1)>commrange); a1receivea2:= 0;}   
+  }
+/*  {{?(transmitter=2 & distance(xt,yt,x3,y3)<=commrange); 
+      e3x2:=xt; e3y2:=yt;
+      e3N2C1:=NIC1t;               
+      e3N2C3:=NIC3t;
+      e3N2C4:=NIC4t;
+      e3P2F1:=PIF1t;        
+      e3P2F3:=PIF3t; 
+      e3P2F4:=PIF4t; 
+      rflga3t2:= 1;} ++ {?(transmitter=2 & distance(xt,yt,x3,y3)>commrange); rflga3t2:= 0;}
+  }
+  {{?(transmitter=2 & distance(xt,yt,x4,y4)<=commrange); 
+      e4x2:=xt; e4y2:=yt;
+      e4N2C1:=NIC1t;               
+      e4N2C3:=NIC3t;
+      e4N2C4:=NIC4t;
+      e4P2F1:=PIF1t;        
+      e4P2F3:=PIF3t; 
+      e4P2F4:=PIF4t; 
+      rflga4t2:= 1;} ++ {?(transmitter=2 & distance(xt,yt,x4,y4)>commrange); rflga4t2:= 0;}
+  }  */
+  } ++ 
+   {
+  {{?(transmitter=3 & distance(xt,yt,x1,y1)<=commrange); 
+      e1x3:=xt;e1y3:=yt;
+    /*  e1N3C1:=NIC1t;               
+      e1N3C2:=NIC2t;
+      e1N3C4:=NIC4t;
+      e1P3F1:=PIF1t;        
+      e1P3F2:=PIF2t; 
+      e1P3F4:=PIF4t; */
+      a1receivea3:= 1;} ++ {?(transmitter=3 & distance(xt,yt,x1,y1)>commrange); a1receivea3:= 0;}
+  }
+/* {{?(transmitter=3 & distance(xt,yt,x2,y2)<=commrange); 
+      e2x3:=xt;e2y3:=yt;
+      e2N3C1:=NIC1t;               
+      e2N3C2:=NIC3t;
+      e2N3C4:=NIC4t;
+      e2P3F1:=PIF1t;        
+      e2P3F2:=PIF3t;
+      e2P3F4:=PIF4t;
+      rflga2t3:= 1;} ++ {?(transmitter=3 & distance(xt,yt,x2,y2)>commrange); rflga2t3:= 0;}
+  }
+  {{?(transmitter=3 & distance(xt,yt,x4,y4)<=commrange); 
+      e4x3:=xt;e4y3:=yt;
+      e4N3C1:=NIC1t;               
+      e4N3C2:=NIC3t;
+      e4N3C4:=NIC4t;
+      e4P3F1:=PIF1t;        
+      e4P3F2:=PIF3t;
+      e4P3F4:=PIF4t;
+      rflga4t3:= 1;} ++ {?(transmitter=3 & distance(xt,yt,x4,y4)>commrange); rflga4t3:= 0;}
+  } */
+  } ++ 
+  {
+  {{?(transmitter=4 & distance(xt,yt,x1,y1)<=commrange); 
+      e1x4:=xt;e1y4:=yt;
+    /*  e1N4C1:=NIC1t;               
+      e1N4C2:=NIC2t;
+      e1N4C3:=NIC3t;
+      e1P4F1:=PIF1t;        
+      e1P4F2:=PIF2t; 
+      e1P4F3:=PIF3t; */
+      a1receivea4:= 1;} ++ {?(transmitter=4 & distance(xt,yt,x1,y1)>commrange); a1receivea4:= 0;}
+  }
+/*  {{?(transmitter=4 & distance(xt,yt,x2,y2)<=commrange); 
+      e2x4:=xt;e2y4:=yt;
+      e2N4C1:=NIC1t;               
+      e2N4C2:=NIC2t;
+      e2N4C3:=NIC3t;
+      e2P4F1:=PIF1t;        
+      e2P4F2:=PIF2t; 
+      e2P4F3:=PIF3t; 
+      rflga2t4:= 1;} ++ {?(transmitter=4 & distance(xt,yt,x2,y2)>commrange); rflga2t4:= 0;}
+  }
+  {{?(transmitter=4 & distance(xt,yt,x3,y3)<=commrange); 
+      e3x4:=xt;e3y4:=yt;
+      e3N4C1:=NIC1t;               
+      e3N4C2:=NIC2t;
+      e3N4C3:=NIC3t;
+      e3P4F1:=PIF1t;        
+      e3P4F2:=PIF2t; 
+      e3P4F3:=PIF3t; 
+      rflga3t4:= 1;} ++ {?(transmitter=4 & distance(xt,yt,x3,y3)>commrange); rflga3t4:= 0;}
+  } */
+  } 
+/*  { 
+      {?(N1C3=0);} ++ {?(N1C3=1 & distance(x3,y3,e3x1,e3y1) <= trflg1*Vm*delta);}   
+  }*/
+  };
+  
+/***************************************************************************************************************************************************************************************************************************/  
+  
+  HP transmitinfo ::= {
+    /*flgN31old:= flgN31;   
+    {{?(trflg1=2 | trflg1=1); flgN31:= new31;} ++ {?(trflg1=3); flgN31:= flgN31old;}}*/
+    slot1 := max(slot1 - 1,0);
+    slot2 := max(slot2 - 1,0);
+    slot3 := max(slot3 - 1,0);
+    slot4 := max(slot4 - 1,0);
+    
+    { /* AiFNj denotes whether j is a first-degree neighbor of agent i in the previous time slot*/
+        A1FN2:= N1C2*P1F2;
+        A1FN3:= N1C3*P1F3;
+        A1FN4:= N1C4*P1F4;
+        A2FN1:= N2C1*P2F1;
+        A2FN3:= N2C3*P2F3;
+        A2FN4:= N2C4*P2F4;
+        A3FN1:= N3C1*P3F1;
+        A3FN2:= N3C2*P3F2;
+        A3FN4:= N3C4*P3F4;
+    }
+    {{?(transmitter=1);
+      updatea2t1;
+      updatea3t1;
+      updatea4t1;
+      /*transmit23:=0;*/
+    }
+    ++ {?(transmitter=2);
+      updatea1t2;
+      updatea3t2;
+      updatea4t2;
+      /*transmit23:=4;*/
+    }
+    ++ {?(transmitter=3);
+      updatea1t3;
+      updatea2t3;
+      updatea4t3;
+      /*transmit23:=3;*/
+    }
+    ++ {?(transmitter=4);
+      updatea1t4;
+      updatea2t4;
+      updatea3t4;
+      /*transmit23:=3;*/
+    }}
+    /*{new12:= (1-N1C2old)*(1-e1N2C1)*N1C2;}
+    {{?(new12=1); slot12:=1;} ++ 
+     {?(new12=0 & slot12=0); slot12:=0;} ++
+     {?(new12=0 & slot12=1); slot12:=2;} ++
+     {?(new12=0 & slot12=2 & transmitter=1); slot12:=3;} ++
+     {?(new12=0 & slot12=3); slot12:=0;}}
+    */
+    /*{
+     {?(slot1=4); flgl4:= N1C3*N1C2*(1-A1FN3);} ++
+     {?(slot1!=4); flgl4:=0;}
+    }
+    {
+     {?(flgl4=1);flgl4:=2;}++
+     {?(flgl4=2);flgl4:=3;}++
+     {?(flgl4=3);flgl4:=4;}++
+     {?(flgl4=4);flgl4:=0;}++
+     {?(flgl4=0);flgl4:=0;}
+    } */
+    
+  };
+  
+    /***************************************************************************************************************************************************************************************************************************/
+  
+  /* Continuous Evolution*/
+  /* We only execute all following programs if the norm of v,w is equal to the correct linear velocities*/
+  /* Continuous Evolution*/
+  /* We only execute all following programs if the norm of v,w is equal to the correct linear velocities*/
+  HP setvelocities ::= {
+    {
+      /*v1:=*; w1:=*; */
+      /*v2:=*; w2:=*; */
+      v3:=*; w3:=*; 
+      /* v4:=*; w4:=*;*/
+      ?(
+      /*(v1^2+w1^2) = (er1/(n*delta))^2) &*/
+     /* (v2^2+w2^2) = (er2/(n*delta))^2 & */
+      (v3^2+w3^2) = (er3/(n*delta))^2 &
+     /* (v4^2+w4^2) = (er4/(n*delta))^2) & 
+      ((v1*delta)^2+(w1*delta)^2<=delta^2*Vm^2) &
+      (v2*delta)^2+(w2*delta)^2<=delta^2*Vm^2) & */
+      (v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2); /*&
+      ((v4*delta)^2+(w4*delta)^2<=delta^2*Vm^2); */
+      velocityflag := 1;
+    }
+  };
+
+  HP program ::= {
+      setvelocities;
+      /*{?(velocityflag=1);*/
+      /*transmitinfo;*/
+      /*time:=0;*/
+      rotatetransmittingagent;
+      moveagents; 
+      settransmitflag;
+      updatetransmitinfo;
+      /*}
+      ++ {?(velocityflag=0);}*/
+  };
+
+  HP moveagents ::= {
+    { 
+     /* {?(velocityflag=1); */
+      { 
+        /* x1o:= x1; y1o:=y1; */ 
+        /* x2o:=x2; y2o:=y2; */
+        x3o:=x3; y3o:=y3; 
+        /*x4o:=x4; y4o:=y4; timeo:=time;   
+        x1:= x1o+v1*delta; y1:= y1o+w1*delta;    
+        x2:= x2o+v2*delta; y2:= y2o+w2*delta; */
+        x3:= x3o+v3*delta; y3:= y3o+w3*delta;
+       /* x4:= x4o+v4*delta; y4:= y4o+w4*delta;  
+        time:= timeo+delta; */
+      }
+     /* } */
+    }
+    /*++ {?(velocityflag=0);}*/
+  };
+
+  HP typeinvariants ::= {
+      
+      ?((N1C2=0|N1C2=1) & (N1C3=0|N1C3=1) & (N1C4=0|N1C4=1) & (N1C2bar=0|N1C2bar=1) & (N1C3bar=0|N1C3bar=1) & (N1C4bar=0|N1C4bar=1) & (N1C2old=0|N1C2old=1) & (N1C3old=0|N1C3old=1) &  (N1C4old=0|N1C4old=1));
+      ?((e1N3C1=0|e1N3C1=1) & (e1N3C2=0|e1N3C2=1) & (e1N3C4=0|e1N3C4=1) & (e1N2C1=0|e1N2C1=1) & (e1N2C3=0|e1N2C3=1) & (e1N2C4=0|e1N2C4=1) & (e1N4C1=0|e1N4C1=1) & (e1N4C2=0|e1N4C2=1) & (e1N4C3=0|e1N4C3=1));
+        
+  };
+
+
+/***************************************************************************************************************************************************************************************************************************/
+  
+  /*Bool inittriangle() <-> (transmitter=1 & time=10 & n=3 & delta = 10 & commrange=100 & velocityflag=0 & inita1tr() & inita2tr() & inita3tr() & initdistancestriangle());*/
+    Bool systemtypeinvariant(Real transmitter, Real a1receivea2) <->
+    (
+        (transmitter=1|transmitter=2|transmitter=3|transmitter=4) & (a1receivea2=0|a1receivea2=1) /*& (a1receivea3=0|a1receivea3=1) & (a1receivea4=0|a1receivea4=1)*/
+    );
+    
+    Bool initstraightline(Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real x4, Real y4)<->
+    (
+        x1=0 & y1=0 & x2=15 & y2=0 & x3=60 & y3=0 & x4=80 & y4=0
+    );
+    
+    Bool initsystemvars(Real time, Real Vm, Real delta, Real commrange, Real transmitter, Real n)<->
+    (
+        time=0 & Vm>0 & delta=10 & commrange=100 & transmitter=4 & n=4 
+    );
+    
+    Bool initflagvars(Real a1receivea2, Real a2transmitted)<->
+    (
+        a1receivea2=0 & a2transmitted=3
+    );
+    
+    Bool lemma2invariant2(Real a1receivea2, Real a2transmitted, Real x2, Real y2, Real e1x2, Real e1y2, Real Vm, Real delta) <->
+    (
+        a1receivea2=0 | a1receivea2=1 & distance(x2,y2, e1x2,e1y2)<= a2transmitted * Vm * delta
+    );
+
+
+End.
+
+
+
+ProgramVariables
+
+  Real x1, y1, x2, y2, x3, y3, x4, y4, a2transmitted, a3transmitted, a1receivea2, a1receivea3, a1receivea4;
+  Real N1C2, N1C3, N1C4, P1C2, P1C3, P1F2, P1F3, P1F4, P2F1, P2F3, P2F4, P3F1, P3F2, P3F4, P4F1, P4F2, P4F3;
+  Real A1FN4, A2FN4, A3FN4, A4FN1, A4FN2, A4FN3;
+  Real N1tilde2, N1tilde3, N1tilde3_2, N1tilde3_4, N1C2bar, N1C3bar, N1C4bar;
+  Real Vm, v1, w1, N1C2old, N1C3old, P1C2old, P1C3old;
+  Real e1x2, e1y2, e1x3, e1y3, e1N2C1, e1N2C3, e1N3C1, e1N3C2;
+  Real e1P2C1, e1P2C3, e1P3C1, e1P3C2;
+  Real pathdist123, pathdist132, pathdist124;
+  Real er1bar, er1;
+
+  Real N2C1, N2C3, N2C4, P2C1, P2C3;
+  Real N2tilde1, N2tilde3, N2C1bar, N2C3bar;
+  Real v2, w2, N2C1old, N2C3old, P2C1old, P2C3old;
+  Real e2x1, e2y1, e2x3, e2y3, e2N1C2, e2N1C3, e2N3C1, e2N3C2;
+  Real e2P1C2, e2P1C3, e2P3C1, e2P3C2;
+  Real pathdist213, pathdist231;
+  Real er2bar, er2;
+  
+  Real N3C1, N3C2, N3C4, P3C1, P3C2;
+  Real N4C1, N4C2, N4C3;
+  Real N3tilde1, N3tilde2, N3C2bar, N3C1bar;
+  Real v3, w3, N3C1old, N3C2old, P3C1old, P3C2old;
+  Real e3x2, e3y2, e3x1, e3y1, e3N2C1, e3N2C3, e3N1C2, e3N1C3;
+  Real e3P2C1, e3P2C3, e3P1C2, e3P1C3;
+  Real pathdist312, pathdist321;
+  Real er3bar, er3, t, time;
+  Real x1o, y1o, x2o, y2o, x3o, y3o, timeo;
+
+  /*Transmitted coordinates*/
+  Real xt, yt, vt, wt, NIC1t, NIC2t, NIC3t, PIC1t, PIC2t, PIC3t, transmitter;
+  Real pathdist123A, pathdist123B, pathdist132A, pathdist132B, pathdist231A, pathdist231B;
+  Real pathdist213A, pathdist213B, pathdist321A, pathdist321B, pathdist312A, pathdist312B;
+
+  /*additional variables*/
+  Real omega1, omega2, omega3, unchange1, unchange2, unchange3, commrange, velocityflag, delta, n;
+  /*Real n, delta, commrange, DL; */
+  Real A1moving, A2moving, A3moving, A1FN2, A1FN3, A2FN1, A2FN3, A3FN1, A3FN2;
+  Real trflg1, trflg2, trflg3, rflga2t1, rflga3t1, rflga1t2, rflga3t2, rflga1t3, rflga2t3, er1old, er2old, er3old;
+  Real new31, flgN31old, flgN31, slot3, slot31; 
+  Real new12, slot1, slot12, flgl4, transmit23; /*initialize flgl4 to 0, set to 1 whenever slot1=3&N1C3=1&N1C2=1&A1FN3=0*/
+  
+  
+End.
+
+
+Problem
+
+  
+initstraightline(x1,y1,x2,y2,x3,y3,x4,y4) & initsystemvars(time, Vm, delta, commrange, transmitter, n) & a1receivea3=0 & a3transmitted=2 ->                          
+  [{program;}* @invariant(Vm>0 & delta=10 & a3transmitted>0 & lemma2invariant2(a1receivea3, a3transmitted, x3, y3, e1x3, e1y3, Vm, delta))]
+  (a1receivea3=0 | a1receivea3=1 & distance(x3,y3, e1x3,e1y3)<= a3transmitted*Vm*delta) 
+  
+/*Vm>0 & delta=10 & a2transmitted>0 & (w2*delta)^2+(v2*delta)^2<=(delta*Vm)^2 & (y2-e1y2)^2+(x2-e1x2)^2<=(a2transmitted*Vm*delta)^2 ->
+(y2+w2*delta-e1y2)^2+(x2+v2*delta-e1x2)^2<=((a2transmitted+1)*Vm*delta)^2 */
+
+/*Vm>0 & delta=10 & a2transmitted>0 & ((y2-e1y2)^2+(x2-e1x2)^2)^0.5<= a2transmitted*Vm*delta -> (y2-e1y2)^2+(x2-e1x2)^2<=(a2transmitted*Vm*delta)^2*/
+
+/*a2transmitted>0 -> a2transmitted + 1>0*/
+
+End. 
+
+Tactic "FourAgents_L2_Inv2_A3R1: Proof"
+implyR(1) ; loop("Vm>0 & delta=10 & a3transmitted>0 & lemma2invariant2(a1receivea3, a3transmitted, x3, y3, e1x3, e1y3, Vm, delta)", 1) ; <(
+  expandAllDefs ; master,
+  expandAllDefs ; andL(-1) ; andL(-2) ; andL(-3) ; orL(-4) ; <(
+    master,
+    composeb(1) ; composeb(1.1) ; composeb(1.1.1) ; unfold ; <(
+      master,
+      hideL(-11=="((y4-(y3+w3*delta))^2+(x4-(x3+v3*delta))^2)^0.5<=commrange") ; 
+      hideL(-10=="4=1") ; master,
+      hideL(-11=="((y1-(y3+w3*delta))^2+(x1-(x3+v3*delta))^2)^0.5<=commrange") ; 
+      hideL(-10=="1=1") ; 
+      hideL(-9=="1=1|1=3|1=4") ; 
+      hideL(-8=="transmitter=4") ; 
+      cut("(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+      <(cut("(y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2<=((a3transmitted+1)*Vm*delta)^2") ; 
+      <(hideL(-8=="(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+      hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+      hideL(-5=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; 
+      hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master,
+      hideR(1=="Vm>0&delta=10&a3transmitted+1>0&(a1receivea3=0|a1receivea3=1&((y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2)^0.5<=(a3transmitted+1)*Vm*delta)") ; 
+      hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+      hideL(-6=="a1receivea3=1") ; 
+      hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master),
+      hideR(1=="Vm>0&delta=10&a3transmitted+1>0&(a1receivea3=0|a1receivea3=1&((y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2)^0.5<=(a3transmitted+1)*Vm*delta)") ; 
+      hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; 
+      hideL(-4=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; master),
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      hideL(-11=="((y1-(y3+w3*delta))^2+(x1-(x3+v3*delta))^2)^0.5>commrange") ; 
+	  hideL(-10=="1=1") ; 
+	  hideL(-9=="1=1|1=3|1=4") ; 
+	  hideL(-8=="transmitter=4") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; 
+	  cut("(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  <(cut("(y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2<=((a3transmitted+1)*Vm*delta)^2") ; 
+	  <(hideL(-7=="(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  hideL(-6=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-4=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; master,
+	  hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2 + (x3+v3*delta-e1x3)^2)^0.5 <= (a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-6=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-5=="a1receivea3=1") ; master), 
+	  hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2 + (x3+v3*delta-e1x3)^2)^0.5 <=(a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-4=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; master),
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      hideL(-11=="((y4-(y3+w3*delta))^2+(x4-(x3+v3*delta))^2)^0.5<=commrange") ; master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      hideL(-11=="((y4-(y3+w3*delta))^2+(x4-(x3+v3*delta))^2)^0.5>commrange") ; master,
+      master,
+      master,
+	  cut("(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  <(cut("(y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2<=((a3transmitted+1)*Vm*delta)^2") ; 
+	  <(hideL(-12=="(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  hideL(-11=="((y4-y1)^2+(x4-x1)^2)^0.5<=commrange") ; 
+	  hideL(-10=="4=4") ; 
+	  hideL(-9=="4=1|4=3|4=4") ; 
+	  hideL(-8=="transmitter=3") ; 
+	  hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-5=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master,
+      hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2)^0.5<=(a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-11=="((y4-y1)^2+(x4-x1)^2)^0.5<=commrange") ; 
+	  hideL(-10=="4=4") ; 
+	  hideL(-9=="4=1|4=3|4=4") ; 
+	  hideL(-8=="transmitter=3") ; 
+	  hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-6=="a1receivea3=1") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master),
+      hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2)^0.5<=(a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-11=="((y4-y1)^2+(x4-x1)^2)^0.5<=commrange") ; 
+	  hideL(-10=="4=4") ; 
+	  hideL(-9=="4=1|4=3|4=4") ; 
+	  hideL(-8=="transmitter=3") ; master),
+      master,
+	  cut("(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  <(cut("(y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2<=((a3transmitted+1)*Vm*delta)^2") ; 
+	  <(hideL(-12=="(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  hideL(-11=="((y4-y1)^2+(x4-x1)^2)^0.5<=commrange") ; 
+	  hideL(-10=="4=4") ; 
+	  hideL(-9=="4=1|4=3|4=4") ; 
+	  hideL(-8=="transmitter=3") ; 
+	  hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-5=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master,
+      hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2)^0.5<=(a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-11=="((y4-y1)^2+(x4-x1)^2)^0.5<=commrange") ; 
+	  hideL(-10=="4=4") ; 
+	  hideL(-9=="4=1|4=3|4=4") ; 
+	  hideL(-8=="transmitter=3") ; 
+	  hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-6=="a1receivea3=1") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master),
+      hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2)^0.5<=(a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-11=="((y4-y1)^2+(x4-x1)^2)^0.5<=commrange") ; 
+	  hideL(-10=="4=4") ; 
+	  hideL(-9=="4=1|4=3|4=4") ; 
+	  hideL(-8=="transmitter=3") ; master),
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+	  hideL(-11=="((y3-y1)^2+(x3-x1)^2)^0.5<=commrange") ; 
+	  hideL(-10=="3=3") ; hideL(-9=="3=1|3=3|3=4") ; 
+	  hideL(-8=="transmitter=2") ; 
+	  cut("(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  <(cut("(y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2<=((a3transmitted+1)*Vm*delta)^2") ; 
+	  <(hideL(-8=="(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-5=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master,
+	  hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2 + (x3+v3*delta-e1x3)^2)^0.5 <= (a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-6=="a1receivea3=1") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master),
+	  hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2 + (x3+v3*delta-e1x3)^2)^0.5 <=(a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-5=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master),
+      master,
+      master,
+	  hideL(-11=="((y3-y1)^2+(x3-x1)^2)^0.5<=commrange") ; 
+	  hideL(-10=="3=3") ; 
+	  hideL(-9=="3=1|3=3|3=4") ; 
+	  hideL(-8=="transmitter=2") ; 
+	  cut("(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  <(cut("(y3+w3*delta-e1y3)^2+(x3+v3*delta-e1x3)^2<=((a3transmitted+1)*Vm*delta)^2") ; 
+	  <(hideL(-8=="(y3-e1y3)^2+(x3-e1x3)^2<=(a3transmitted*Vm*delta)^2") ; 
+	  hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-5=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master,
+	  hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2 + (x3+v3*delta-e1x3)^2)^0.5 <= (a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-7=="((y3-e1y3)^2+(x3-e1x3)^2)^0.5<=a3transmitted*Vm*delta") ; 
+	  hideL(-6=="a1receivea3=1") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master),
+	  hideR(1=="Vm>0 & delta=10 & a3transmitted+1>0 & (a1receivea3=0 | a1receivea3=1 & ((y3+w3*delta-e1y3)^2 + (x3+v3*delta-e1x3)^2)^0.5 <=(a3transmitted+1)*Vm*delta)") ; 
+	  hideL(-5=="(v3*delta)^2+(w3*delta)^2<=delta^2*Vm^2") ; 
+	  hideL(-4=="v3^2+w3^2=(er3/(n*delta))^2") ; master),
+      master,
+      hideL(-13=="((yt-(y3+w3*delta))^2+(xt-(x3+v3*delta))^2)^0.5<=commrange") ; master,
+      master,
+      hideL(-13=="((yt-(y3+w3*delta))^2+(xt-(x3+v3*delta))^2)^0.5>commrange") ; master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master,
+      master
+      )
+    ),
+  expandAllDefs ; master
+  )
+End.
+
+End.
