@@ -3,6 +3,19 @@ Description "Specification for three agents".
 
 Definitions
 
+
+/***********************************************************
+The procedure for 
+conducting the proof is to:
+
+- Expand definitions for all hybrid programs
+- Use Godel Vacuous to hide all HP specifications except for flaginvariantspost
+- Use master or unfold/master to prove the system
+
+The tactic found at the end of this file provides a template that needs the corresponding invariant to be filled in
+************************************************************/
+
+
 /*  Real n = 3;
  /* Real delta = 10;
   Real commrange = 100.0;*/
@@ -549,10 +562,15 @@ HP computepath23 ::=
       ?(time=0 & Vm>0 & delta=10 & commrange=100 & n=4 & deltacopy=10);
       ?(commrange-(2*replan2)*Vm*delta>0);
       ?(commrange-replan2*(Rhat2/n)-replan2*Vm*delta>0);
-      ?( 
-          A2SN4=0 | A2SN4+replan2 != 5 | (A2SN4+replan2=5 & ((N1C4=1 & N2C1=1 & N4C1=1 & N3C4=1 & N4C3=1 & N2C3=1) | (N1C4=1 & N2C1=1 & N4C1=1 & (N3C4=0 | N4C3=0 | N2C3=0))
-          | ((N1C4=0 | N2C1=0 | N4C1=0) & N3C4=1 & N4C3=1 & N4C1=1)))
-      );
+      ?(
+        A2SN4=0 | A2SN4+replan2!=5 |  (
+            A2SN4+replan2=5 & (
+                (distance(x2,y2,x1,y1)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x4,y4,x1,y1)<= commrange-2*replan2*Vm*delta) |
+                (distance(x2,y2,x3,y3)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x4,y4,x3,y3)<= commrange-2*replan2*Vm*delta) |
+                (distance(x2,y2,x1,y1)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x1,y1,x4,y4)<=commrange-replan2*(Rhat2/n)-replan2*Vm*delta & 
+                 distance(x2,y2,x3,y3)<= commrange-2*replan2*Vm*delta & distance(x3,y3,x4,y4)<= commrange-2*replan2*Vm*delta)
+                 ))
+        );
   };
   
   HP program ::= {
@@ -588,12 +606,16 @@ HP computepath23 ::=
         a1receivea2=0 & A2FN3=0 & A2SN1=0 & A2SN3=0 & A2SN4=0
     );
     
-    Bool lemma6invariant1(Real A2SN4, Real replan2, Real N1C4, Real N1C4old, Real N4C2, Real N2C1, Real N4C1, Real N3C4, Real N4C3, Real N2C3, Real Rhat4old) <->
+    Bool lemma6invariant1(Real A2SN4, Real replan2, Real N2C4, Real N2C4old, Real Rhat2old,  Real x1, Real y1, Real x2, Real y2, Real x3, Real y3, Real x4, Real y4, Real commrange, Real replan2, Real Rhat2, Real n, Real Vm, Real delta) <->
     (
-        A2SN4=0 | A2SN4+replan2!=5 | N4C2>=N4C2old | Rhat4old != 0 | (A2SN4+replan2=5 & N4C2<N4C2old & Rhat4old=0 & ((N1C4=1 & N2C1=1 & N4C1=1 & N3C4=1 & N4C3=1 & N2C3=1) | 
-        (N1C4=1 & N2C1=1 & N4C1=1 & (N3C4=0 | N4C3=0 | N2C3=0)) | ((N1C4=0 | N2C1=0 | N4C1=0) & N3C4=1 & N4C3=1 & N2C3=1)))  
+        A2SN4=0 | A2SN4+replan2!=5 | N2C4>=N2C4old | Rhat2old != 0 | (
+            A2SN4+replan2=5 & N2C4<N2C4old & Rhat2old = 0 & (
+                (distance(x2,y2,x1,y1)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x4,y4,x1,y1)<= commrange-2*replan2*Vm*delta) |
+                (distance(x2,y2,x3,y3)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x4,y4,x3,y3)<= commrange-2*replan2*Vm*delta) |
+                (distance(x2,y2,x1,y1)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x1,y1,x4,y4)<=commrange-replan2*(Rhat2/n)-replan2*Vm*delta & 
+                 distance(x2,y2,x3,y3)<= commrange-2*replan2*Vm*delta & distance(x3,y3,x4,y4)<= commrange-2*replan2*Vm*delta)
+                 ))  
     );
-
 End.
 
 
@@ -626,11 +648,28 @@ Problem
   
   initstraightline(x1,y1,x2,y2,x3,y3,x4,y4) & initsystemvars(time, Vm, delta, commrange, transmitter, n, deltacopy) & initflagvars(a1receivea2, A2FN3, A2SN1, A2SN3, A2SN4)
     ->
-    [{program;}*@invariant(lemma6invariant1( A2SN4,  replan2,  N1C4,  N1C4old,  N4C2,  N2C1,  N4C1,  N3C4,  N4C3,  N2C3, Rhat4old))]
+    [{program;}*@invariant(lemma6invariant1( A2SN4,  replan2,  N2C4,  N2C4old, Rhat2old,  x1,  y1,  x2,  y2,  x3,  y3,  x4,  y4,  commrange,  replan2,  Rhat2,  n,  Vm,  delta))]
     (
-        A2SN4=0 | A2SN4+replan2!=5 | N4C2>=N4C2old | Rhat4old != 0 | (A2SN4+replan2=5 & N4C2<N4C2old & Rhat4old=0 & ((N1C4=1 & N2C1=1 & N4C1=1 & N3C4=1 & N4C3=1 & N2C3=1) | 
-        (N1C4=1 & N2C1=1 & N4C1=1 & (N3C4=0 | N4C3=0 | N2C3=0)) | ((N1C4=0 | N2C1=0 | N4C1=0) & N3C4=1 & N4C3=1 & N2C3=1)))  
+        A2SN4=0 | A2SN4+replan2!=5 | N2C4>=N2C4old | Rhat2old != 0 | (
+            A2SN4+replan2=5 & N2C4<N2C4old & Rhat2old = 0 & (
+                (distance(x2,y2,x1,y1)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x4,y4,x1,y1)<= commrange-2*replan2*Vm*delta) |
+                (distance(x2,y2,x3,y3)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x4,y4,x3,y3)<= commrange-2*replan2*Vm*delta) |
+                (distance(x2,y2,x1,y1)<= commrange-replan2*(Rhat2/n)-replan2*Vm*delta & distance(x1,y1,x4,y4)<=commrange-replan2*(Rhat2/n)-replan2*Vm*delta & 
+                 distance(x2,y2,x3,y3)<= commrange-2*replan2*Vm*delta & distance(x3,y3,x4,y4)<= commrange-2*replan2*Vm*delta)
+                 ))  
     )
+End.
+
+
+
+Tactic "FourAgents_Tactic_Template"
+
+   implyR(1) ; loop("invariant_name_with_arguments", 1) ; <(
+  expandAllDefs; master,
+  expandAllDefs; composeb(1) ; composeb(1.1) ; composeb(1.1.1) ; composeb(1.1.1.1) ; composeb(1.1.1.1.1) ; GV(1) ; GV(1) ; GV(1.0.0.0.0.0) ; GV(1.0.0.0.0.0.0) ; GV(1.0.0.0.0.0.0) ; unfold ; master,
+  expandAllDefs; master
+  )
+
 End.
 
 

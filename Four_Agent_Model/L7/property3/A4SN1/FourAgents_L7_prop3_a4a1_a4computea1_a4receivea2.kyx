@@ -3,6 +3,19 @@ Description "Specification for four agents".
 
 Definitions
 
+
+/***********************************************************
+The procedure for 
+conducting the proof is to:
+
+- Expand definitions for all hybrid programs
+- Use Godel Vacuous to hide all HP specifications except for flaginvariantspost
+- Use master or unfold/master to prove the system
+
+The tactic found at the end of this file provides a template that needs the corresponding invariant to be filled in
+************************************************************/
+
+
 /*  Real n = 3;
  /* Real delta = 10;
   Real commrange = 100.0;*/
@@ -645,6 +658,19 @@ Problem
         )
     )
 End.
+
+
+
+Tactic "FourAgents_Tactic_Template"
+
+   implyR(1) ; loop("invariant_name_with_arguments", 1) ; <(
+  expandAllDefs; master,
+  expandAllDefs; composeb(1) ; composeb(1.1) ; composeb(1.1.1) ; composeb(1.1.1.1) ; composeb(1.1.1.1.1) ; GV(1) ; GV(1) ; GV(1.0.0.0.0.0) ; GV(1.0.0.0.0.0.0) ; GV(1.0.0.0.0.0.0) ; unfold ; master,
+  expandAllDefs; master
+  )
+
+End.
+
 
 
 

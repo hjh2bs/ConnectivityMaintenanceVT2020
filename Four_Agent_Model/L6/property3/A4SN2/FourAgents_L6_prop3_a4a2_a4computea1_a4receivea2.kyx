@@ -3,6 +3,19 @@ Description "Specification for four agents".
 
 Definitions
 
+
+/***********************************************************
+The procedure for 
+conducting the proof is to:
+
+- Expand definitions for all hybrid programs
+- Use Godel Vacuous to hide all HP specifications except for flaginvariantspost
+- Use master or unfold/master to prove the system
+
+The tactic found at the end of this file provides a template that needs the corresponding invariant to be filled in
+************************************************************/
+
+
 /*  Real n = 3;
  /* Real delta = 10;
   Real commrange = 100.0;*/
@@ -626,6 +639,18 @@ Problem
     (
         A4SN2=0 | A4SN2+replan4!=5 | N2C4>=N2C4old | Rhat2old != 0 | (A4SN2+replan4=5 & N2C4<N2C4old &  Rhat2old=0 & (((slot41=0 | ((slot41=1 | slot41=2) & distance(x1,y1,x4,y4)<=commrange) | (slot41=3 & distance(x1,y1,x4,y4)<=commrange & e1N4C1=1) | (slot41=4 & distance(x1,y1,x4,y4)<=commrange & N1C4=1)) & (slot43=0 | ((slot43=1 | slot43=2) & distance(x3,y3,x4,y4)<=commrange) | (slot43=3 & distance(x3,y3,x4,y4)<=commrange & e3N4C3=1) | (slot43=4 & distance(x3,y3,x4,y4)<=commrange & N3C4=1))) | (slot41=0 | ((slot41=1 | slot41=2) & distance(x1,y1,x4,y4)<=commrange) | (slot41=3 & distance(x1,y1,x4,y4)<=commrange & e1N4C1=1) | (slot41=4 & distance(x1,y1,x4,y4)<=commrange & N1C4=1)) | (slot43=0 | ((slot43=1 | slot43=2) & distance(x3,y3,x4,y4)<=commrange) | (slot43=3 & distance(x3,y3,x4,y4)<=commrange & e3N4C3=1) | (slot43=4 & distance(x3,y3,x4,y4)<=commrange & N3C4=1))) )     
     )
+End.
+
+
+
+Tactic "FourAgents_Tactic_Template"
+
+   implyR(1) ; loop("invariant_name_with_arguments", 1) ; <(
+  expandAllDefs; master,
+  expandAllDefs; composeb(1) ; composeb(1.1) ; composeb(1.1.1) ; composeb(1.1.1.1) ; composeb(1.1.1.1.1) ; GV(1) ; GV(1) ; GV(1.0.0.0.0.0) ; GV(1.0.0.0.0.0.0) ; GV(1.0.0.0.0.0.0) ; unfold ; master,
+  expandAllDefs; master
+  )
+
 End.
 
 
